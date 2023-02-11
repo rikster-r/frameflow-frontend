@@ -5,6 +5,8 @@ import { type FormEventHandler, useState } from "react";
 import { env } from "../env/server.mjs";
 import axios, { type AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { setCookie } from "nookies";
 
 const Login: NextPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -13,6 +15,8 @@ const Login: NextPage = () => {
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [passwordShown, setPasswordShown] = useState<boolean>(false);
 
+  const router = useRouter();
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     setUsernameErrors([]);
@@ -20,8 +24,14 @@ const Login: NextPage = () => {
 
     axios
       .post(`${env.NEXT_PUBLIC_API_HOST}/auth/login`, { username, password })
-      .then((user) => {
-        // todo
+      .then(async (res) => {
+        setCookie(null, "userToken", (res.data as { token: string }).token, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          sameSite: "lax",
+          path: "/",
+        });
+
+        await router.push("/");
       })
       .catch((err: AxiosError) => {
         type data = {

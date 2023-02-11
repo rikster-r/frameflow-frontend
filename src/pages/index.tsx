@@ -1,7 +1,41 @@
-import { type NextPage } from "next";
+import { type NextPage, type NextPageContext } from "next";
 import Head from "next/head";
+import axios from "axios";
+import { env } from "../env/server.mjs";
+import { type IUser } from "./_app";
+import nookies from "nookies";
 
-const Home: NextPage = () => {
+export async function getServerSideProps(ctx: NextPageContext) {
+  try {
+    const { userToken } = nookies.get(ctx);
+    if (!userToken) {
+      return {
+        props: {},
+      };
+    }
+
+    const res = await axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/profile`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+    return {
+      props: {
+        user: res.data as IUser,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {},
+    };
+  }
+}
+
+type Props = {
+  user?: IUser;
+};
+
+const Home: NextPage = ({ user }: Props) => {
   return (
     <>
       <Head>

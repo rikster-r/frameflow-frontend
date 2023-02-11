@@ -3,6 +3,18 @@ import "../styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+export interface IUser {
+  id: string;
+  __v: number;
+  publicName: string;
+  username: string;
+  password: string;
+  image: string;
+  follows: string[];
+  visited: string[];
+  savedPosts: string[];
+}
+
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
