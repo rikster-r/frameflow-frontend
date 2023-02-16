@@ -45,7 +45,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   useEffect(() => {
     localStorage.setItem("theme", isDark ? "dark" : "light");
-    console.log(localStorage.getItem("theme"));
 
     document.documentElement.className = isDark ? "dark" : "";
   }, [isDark]);

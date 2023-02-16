@@ -15,7 +15,7 @@ const Menu = ({ username }: Props) => {
     <div className="relative mt-auto w-full">
       <button
         onClick={() => setIsOpen((open) => !open)}
-        className="flex w-full items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800"
+        className="flex w-full items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"

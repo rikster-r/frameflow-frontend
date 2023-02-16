@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
+import CreatePost from "./CreatePost";
 
 type Props = {
   username: string;
@@ -27,7 +28,7 @@ const Sidebar = ({ username }: Props) => {
       </Link>
       <Link
         href="/"
-        className="flex items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800"
+        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +48,7 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Home</p>
       </Link>
-      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -68,7 +69,7 @@ const Sidebar = ({ username }: Props) => {
       </button>
       <Link
         href="/explore"
-        className="flex items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800"
+        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
       >
         <motion.svg
           className="h-7 w-7"
@@ -83,7 +84,7 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Explore</p>
       </Link>
-      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
+      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -102,28 +103,10 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Notifications</p>
       </button>
-      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800">
-        <motion.svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-7 w-7"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </motion.svg>
-        <p className="hidden text-lg xl:block">Create</p>
-      </button>
+      <CreatePost />
       <Link
         href={`/${username}`}
-        className="flex items-center gap-4 rounded-3xl py-3 px-2 hover:bg-neutral-200 hover:dark:bg-neutral-800"
+        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"

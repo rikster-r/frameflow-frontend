@@ -1,28 +1,12 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
+import CreatePost from "./CreatePost";
 
 const Header = () => {
   return (
     <header className="flex items-center border-b border-neutral-300 px-4 py-3 dark:border-neutral-700 sm:hidden">
       <div className="mr-auto font-logo text-4xl">Frameflow</div>
-      <button>
-        <motion.svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-7 w-7 dark:stroke-white"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </motion.svg>
-      </button>
+      <CreatePost />
       <Link href="/notifications">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"

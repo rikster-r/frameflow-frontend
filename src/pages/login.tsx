@@ -55,7 +55,7 @@ const Login: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Login &bull; FrameFlow</title>
+        <title>Login &bull; Frameflow</title>
         <meta
           name="description"
           content="Welcome back to FrameFlow. Login to check out more"
@@ -64,7 +64,7 @@ const Login: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-neutral-100 py-6">
         <div className="w-full max-w-[400px] border-2 border-neutral-200 bg-white p-12 shadow-sm ">
-          <h1 className="py-10 text-center font-logo text-6xl">FrameFlow</h1>
+          <h1 className="py-10 text-center font-logo text-6xl">Frameflow</h1>
           <form onSubmit={handleSubmit}>
             <input
               type="text"

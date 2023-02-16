@@ -31,6 +31,10 @@ export async function getServerSideProps(ctx: NextPageContext) {
     };
   } catch (err) {
     return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
       props: {},
     };
   }

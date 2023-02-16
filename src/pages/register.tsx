@@ -60,7 +60,7 @@ const Register: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Register &bull; FrameFlow</title>
+        <title>Register &bull; Frameflow</title>
         <meta
           name="description"
           content="Register to check out photos of your friends"
@@ -70,7 +70,7 @@ const Register: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-neutral-100 py-6">
         <div className="w-full max-w-[400px] border-2 border-neutral-200 bg-white p-12 shadow-sm">
           <h1 className="pt-10 pb-3 text-center font-logo text-6xl">
-            FrameFlow
+            Frameflow
           </h1>
           <p className="pb-10 text-center font-semibold text-neutral-500">
             Register to check out photos of your friends
