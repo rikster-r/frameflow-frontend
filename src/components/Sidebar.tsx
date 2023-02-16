@@ -28,7 +28,7 @@ const Sidebar = ({ username }: Props) => {
       </Link>
       <Link
         href="/"
-        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
+        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Home</p>
       </Link>
-      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800">
+      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -69,7 +69,7 @@ const Sidebar = ({ username }: Props) => {
       </button>
       <Link
         href="/explore"
-        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
+        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
       >
         <motion.svg
           className="h-7 w-7"
@@ -84,7 +84,7 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Explore</p>
       </Link>
-      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800">
+      <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -106,7 +106,7 @@ const Sidebar = ({ username }: Props) => {
       <CreatePost />
       <Link
         href={`/${username}`}
-        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
+        className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"

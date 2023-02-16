@@ -89,7 +89,7 @@ const CreatePost = () => {
   return (
     <div className="relative">
       <button
-        className="flex w-full items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-200 dark:xl:hover:bg-neutral-800"
+        className="flex w-full items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
         onClick={() => setOpen(true)}
       >
         <motion.svg
