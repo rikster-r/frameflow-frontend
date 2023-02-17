@@ -31,33 +31,49 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
   const [rotations, setRotations] = useState<number[]>(Array(9).fill(0));
 
   // for images menu
+  const [editedImages, setEditedImages] = useState<File[]>(files);
   const [imageUrls, setImageUrls] = useState<string[]>();
 
   useEffect(() => {
-    setImageUrls(files.map((file) => URL.createObjectURL(file)));
+    setImageUrls(editedImages.map((file) => URL.createObjectURL(file)));
 
-    const cleanUp = () => {
+    return () => {
       if (imageUrls) {
         imageUrls.forEach((url) => URL.revokeObjectURL(url));
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editedImages]);
 
-    return cleanUp;
+  // on new files adds new files and keeps already edited files
+  useEffect(() => {
+    setEditedImages(
+      files.map((file, i) => {
+        if (i < editedImages.length) return editedImages[i] as File;
+        return file;
+      })
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
+
+  const nextStep = () => {
+    saveFileChanges();
+    setFiles(editedImages);
+    setStep(3);
+  };
 
   const saveFileChanges = () => {
     if (!editorRef.current) return;
     const canvas = editorRef.current.getImage();
 
-    const filesCopy = [...files];
-    const name = filesCopy[currentFileIndex]?.name as string;
+    const editedImagesCopy = [...editedImages];
+    const name = editedImagesCopy[currentFileIndex]?.name as string;
 
     canvas.toBlob((blob) => {
       const file = new File([blob as Blob], name, { type: "image/png" });
 
-      filesCopy[currentFileIndex] = file;
-      setFiles(filesCopy);
+      editedImagesCopy[currentFileIndex] = file;
+      setEditedImages(editedImagesCopy);
     }, "image/png");
   };
 
@@ -91,9 +107,19 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
 
   return (
     <>
-      <Dialog.Title className="py-3 text-center font-semibold">
-        Crop image
-      </Dialog.Title>
+      <div className="flex items-center justify-between">
+        <div className="invisible ml-4">
+          <p className="font-semibold text-blue-500">Next</p>
+        </div>
+        <Dialog.Title className="flex-1 py-3 text-center font-semibold">
+          Crop image
+        </Dialog.Title>
+        <button className="mr-4 " onClick={nextStep}>
+          <p className="font-semibold text-blue-500 hover:text-blue-200">
+            Next
+          </p>
+        </button>
+      </div>
       <div className="relative flex flex-1 flex-col items-center justify-center border-t border-neutral-300 dark:border-neutral-900">
         <AvatarEditor
           ref={editorRef}
