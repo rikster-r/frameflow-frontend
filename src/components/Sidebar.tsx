@@ -2,12 +2,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
 import CreatePost from "./CreatePost";
+import type { IUser } from "../pages/_app";
 
 type Props = {
-  username: string;
+  user: IUser;
 };
 
-const Sidebar = ({ username }: Props) => {
+const Sidebar = ({ user }: Props) => {
   return (
     <div className="hidden flex-col gap-2 border-r border-neutral-300 py-8 px-4 dark:border-neutral-700 sm:flex xl:w-[270px]">
       <Link href="/" className="mb-8 pl-3">
@@ -103,9 +104,9 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Notifications</p>
       </button>
-      <CreatePost />
+      <CreatePost user={user} />
       <Link
-        href={`/${username}`}
+        href={`/${user.username}`}
         className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
       >
         <motion.svg
@@ -126,7 +127,7 @@ const Sidebar = ({ username }: Props) => {
         </motion.svg>
         <p className="hidden text-lg xl:block">Profile</p>
       </Link>
-      <Menu username={username} />
+      <Menu username={user.username} />
     </div>
   );
 };

@@ -55,7 +55,7 @@ const Home: NextPage = ({ user }: Props) => {
       <div className="flex min-h-screen flex-col dark:bg-black dark:text-neutral-100 sm:flex-row">
         {/* Header and BottomNav only for mobile, Sidebar only for bigger than mobile */}
         <Header />
-        <Sidebar username={user?.username as string} />
+        <Sidebar user={user as IUser} />
         <main className="flex-1 sm:flex sm:flex-grow-0">
           {/* main scroll */}
         </main>

@@ -7,11 +7,15 @@ import {
   type MouseEventHandler,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import FirstStep from "./CreatePostSteps/FirstStep";
-import SecondStep from "./CreatePostSteps/SecondStep";
+import { FirstStep, SecondStep, ThirdStep } from "./CreatePostSteps";
 import { toast } from "react-toastify";
+import type { IUser } from "../pages/_app";
 
-const CreatePost = () => {
+type Props = {
+  user: IUser;
+};
+
+const CreatePost = ({ user }: Props) => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [step, setStep] = useState(1);
@@ -81,6 +85,8 @@ const CreatePost = () => {
             handleSelectClick={handleSelectClick}
           />
         );
+      case 3:
+        return <ThirdStep user={user} />;
     }
   };
 

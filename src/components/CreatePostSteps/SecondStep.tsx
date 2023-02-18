@@ -31,11 +31,19 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
   const [rotations, setRotations] = useState<number[]>(Array(9).fill(0));
 
   // for images menu
-  const [editedImages, setEditedImages] = useState<File[]>(files);
+  const [uneditedImages, setUneditedImages] = useState<File[]>(files);
   const [imageUrls, setImageUrls] = useState<string[]>();
 
   useEffect(() => {
-    setImageUrls(editedImages.map((file) => URL.createObjectURL(file)));
+    setImageUrls(files.map((file) => URL.createObjectURL(file)));
+
+    // add new images
+    setUneditedImages(
+      files.map((file, i) => {
+        if (i < uneditedImages.length) return uneditedImages[i] as File;
+        return file;
+      })
+    );
 
     return () => {
       if (imageUrls) {
@@ -43,22 +51,10 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editedImages]);
-
-  // on new files adds new files and keeps already edited files
-  useEffect(() => {
-    setEditedImages(
-      files.map((file, i) => {
-        if (i < editedImages.length) return editedImages[i] as File;
-        return file;
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
   const nextStep = () => {
     saveFileChanges();
-    setFiles(editedImages);
     setStep(3);
   };
 
@@ -66,14 +62,14 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
     if (!editorRef.current) return;
     const canvas = editorRef.current.getImage();
 
-    const editedImagesCopy = [...editedImages];
-    const name = editedImagesCopy[currentFileIndex]?.name as string;
+    const filesCopy = [...files];
+    const name = filesCopy[currentFileIndex]?.name as string;
 
     canvas.toBlob((blob) => {
       const file = new File([blob as Blob], name, { type: "image/png" });
 
-      editedImagesCopy[currentFileIndex] = file;
-      setEditedImages(editedImagesCopy);
+      filesCopy[currentFileIndex] = file;
+      setFiles(filesCopy);
     }, "image/png");
   };
 
@@ -89,7 +85,6 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
     setRotations(
       rotations.map((rotation, i) => {
         if (i === currentFileIndex) return newRotation;
-
         return rotation;
       })
     );
@@ -99,7 +94,6 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
     setScales(
       scales.map((scale, i) => {
         if (i === currentFileIndex) return value;
-
         return scale;
       })
     );
@@ -123,7 +117,7 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
       <div className="relative flex flex-1 flex-col items-center justify-center border-t border-neutral-300 dark:border-neutral-900">
         <AvatarEditor
           ref={editorRef}
-          image={files[currentFileIndex] as File}
+          image={uneditedImages[currentFileIndex] as File}
           width={editorWidth}
           height={(editorWidth as number) - 50}
           className=" dark:bg-neutral-900"
