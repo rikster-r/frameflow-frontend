@@ -1,16 +1,8 @@
 import { Dialog } from "@headlessui/react";
-import {
-  type MouseEventHandler,
-  type ChangeEventHandler,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { type MouseEventHandler } from "react";
 
 type Props = {
-  setStep: Dispatch<SetStateAction<number>>;
-  inputRef: { current: HTMLInputElement | null };
   handleSelectClick: MouseEventHandler<HTMLButtonElement>;
-  handleFilesInput: ChangeEventHandler<HTMLInputElement>;
 };
 
 // First input step

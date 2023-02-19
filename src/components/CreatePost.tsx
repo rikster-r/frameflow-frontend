@@ -103,14 +103,7 @@ const CreatePost = ({ user }: Props) => {
   const getCurrentStep = () => {
     switch (step) {
       case 1:
-        return (
-          <FirstStep
-            inputRef={inputRef}
-            handleSelectClick={handleSelectClick}
-            handleFilesInput={handleFilesInput}
-            setStep={setStep}
-          />
-        );
+        return <FirstStep handleSelectClick={handleSelectClick} />;
       case 2:
         return (
           <SecondStep

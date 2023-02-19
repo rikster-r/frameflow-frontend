@@ -1,5 +1,4 @@
 import {
-  useEffect,
   type ChangeEventHandler,
   type Dispatch,
   type SetStateAction,
@@ -30,6 +29,7 @@ type Props = {
   setStep: Dispatch<SetStateAction<number>>;
 };
 
+// Caption input step
 const ThirdStep = ({ text, setText, user, setStep }: Props) => {
   const width = useImageEditorWidth();
 
@@ -111,7 +111,7 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
               leaveFrom="transform scale-100 opacity-100"
               leaveTo="transform scale-95 opacity-0"
             >
-              <Popover.Panel className="-z-50Z absolute -left-2 bottom-10 origin-bottom-left rounded-md p-3 dark:bg-neutral-900">
+              <Popover.Panel className="absolute -left-2 bottom-10 origin-bottom-left rounded-md p-3 dark:bg-neutral-900">
                 <EmojiPicker
                   theme={localStorage.getItem("theme") as Theme}
                   // arbitrary

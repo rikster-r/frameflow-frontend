@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import CreatePost from "./CreatePost";
-import type { IUser } from "../../pages/_app";
+import type { IUser } from "../pages/_app";
 
 type Props = {
   user: IUser;

@@ -5,6 +5,7 @@ type Props = {
   status: string;
 };
 
+// submitting step
 const FourthStep = ({ status }: Props) => {
   return (
     <>
