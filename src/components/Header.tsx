@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import CreatePost from "./CreatePost";
+import type { IUser } from "../../pages/_app";
 
-const Header = () => {
+type Props = {
+  user: IUser;
+};
+
+const Header = ({ user }: Props) => {
   return (
     <header className="flex items-center border-b border-neutral-300 px-4 py-3 dark:border-neutral-700 sm:hidden">
       <div className="mr-auto font-logo text-4xl">Frameflow</div>
-      <CreatePost />
+      <CreatePost user={user} />
       <Link href="/notifications">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"

@@ -2,14 +2,23 @@ import { motion } from "framer-motion";
 import {
   Fragment,
   useState,
+  useEffect,
   useRef,
   type ChangeEventHandler,
   type MouseEventHandler,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { FirstStep, SecondStep, ThirdStep } from "./CreatePostSteps";
+import {
+  FirstStep,
+  SecondStep,
+  ThirdStep,
+  FourthStep,
+} from "./CreatePostSteps";
 import { toast } from "react-toastify";
 import type { IUser } from "../pages/_app";
+import axios from "axios";
+import { env } from "../env/server.mjs";
+import { parseCookies } from "nookies";
 
 type Props = {
   user: IUser;
@@ -19,11 +28,37 @@ const CreatePost = ({ user }: Props) => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [step, setStep] = useState(1);
+  const [text, setText] = useState("");
+  const [status, setStatus] = useState("pending");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (step !== 4) return;
+
+    const { userToken } = parseCookies();
+    const data = new FormData();
+    files.forEach((file) => data.append("images", file));
+    data.append("text", text);
+    axios
+      .post(`${env.NEXT_PUBLIC_API_HOST}/posts`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${userToken as string}`,
+        },
+      })
+      .then(() => {
+        setTimeout(() => setStatus("success"), 1000);
+      })
+      .catch(() => {
+        setTimeout(() => setStatus("error"), 1000);
+      });
+  }, [step]);
 
   const handleClose = () => {
     if (inputRef.current) inputRef.current.value = "";
     setFiles([]);
+    setText("");
+    setStatus("pending");
     setStep(1);
     setOpen(false);
   };
@@ -86,7 +121,16 @@ const CreatePost = ({ user }: Props) => {
           />
         );
       case 3:
-        return <ThirdStep user={user} />;
+        return (
+          <ThirdStep
+            user={user}
+            text={text}
+            setText={setText}
+            setStep={setStep}
+          />
+        );
+      case 4:
+        return <FourthStep status={status} />;
     }
   };
 

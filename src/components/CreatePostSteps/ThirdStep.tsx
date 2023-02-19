@@ -1,4 +1,9 @@
-import { type ChangeEventHandler, useState } from "react";
+import {
+  useEffect,
+  type ChangeEventHandler,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { Dialog, Popover, Transition } from "@headlessui/react";
 import type { IUser } from "../../pages/_app";
 import {
@@ -7,6 +12,7 @@ import {
   type EmojiClickData,
 } from "emoji-picker-react";
 import useImageEditorWidth from "../../hooks/useImageEditorWidth";
+
 import dynamic from "next/dynamic";
 
 // https://github.com/ealush/emoji-picker-react#nextjs
@@ -19,10 +25,12 @@ const EmojiPicker = dynamic(
 
 type Props = {
   user: IUser;
+  text: string;
+  setText: Dispatch<SetStateAction<string>>;
+  setStep: Dispatch<SetStateAction<number>>;
 };
 
-const ThirdStep = ({ user }: Props) => {
-  const [text, setText] = useState("");
+const ThirdStep = ({ text, setText, user, setStep }: Props) => {
   const width = useImageEditorWidth();
 
   const updateText: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -33,17 +41,17 @@ const ThirdStep = ({ user }: Props) => {
     setText((text) => text + emojiData.emoji);
   };
 
-  // todo change svg to profile picture, add allow comments and show likes toggles
+  // todo: change svg to profile picture
   return (
     <>
       <div className="flex items-center justify-between">
         <div className="invisible ml-4">
-          <p className="font-semibold text-blue-500">Post</p>
+          <p className="font-semibold text-blue-500">Share</p>
         </div>
         <Dialog.Title className="flex-1 py-3 text-center font-semibold">
-          Create post
+          Add caption
         </Dialog.Title>
-        <button className="mr-4">
+        <button className="mr-4" onClick={() => setStep(4)}>
           <p className="font-semibold text-blue-500 hover:text-blue-200">
             Share
           </p>
