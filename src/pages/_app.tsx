@@ -1,6 +1,6 @@
 import { type AppType } from "next/dist/shared/lib/utils";
 import "../styles/globals.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, type Theme } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createContext, useEffect, useState } from "react";
 
@@ -53,9 +53,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <ThemeContext.Provider value={{ isDark, setIsDark }}>
       <Component {...pageProps} />
       <ToastContainer
+        position="top-center"
         hideProgressBar={true}
-        autoClose={2000}
-        position="bottom-right"
+        autoClose={2500}
       />
     </ThemeContext.Provider>
   );

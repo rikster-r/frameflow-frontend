@@ -3,6 +3,7 @@ import { useContext, Fragment } from "react";
 import Link from "next/link";
 import { ThemeContext } from "../pages/_app";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
+import LogoutButton from "./LogoutButton";
 
 type Props = {
   username: string;
@@ -117,9 +118,7 @@ const Menu = ({ username }: Props) => {
               </button>
             </HeadlessMenu.Item>
             <HeadlessMenu.Item>
-              <button className="flex w-full items-center px-4 py-3 hover:bg-neutral-100  dark:hover:bg-neutral-900 ">
-                <p className="text-lg text-red-500">Log out</p>
-              </button>
+              <LogoutButton />
             </HeadlessMenu.Item>
           </HeadlessMenu.Items>
         </Transition>

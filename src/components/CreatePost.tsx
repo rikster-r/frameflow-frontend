@@ -39,6 +39,7 @@ const CreatePost = ({ user }: Props) => {
     const data = new FormData();
     files.forEach((file) => data.append("images", file));
     data.append("text", text);
+
     axios
       .post(`${env.NEXT_PUBLIC_API_HOST}/posts`, data, {
         headers: {
@@ -49,7 +50,8 @@ const CreatePost = ({ user }: Props) => {
       .then(() => {
         setTimeout(() => setStatus("success"), 1000);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         setTimeout(() => setStatus("error"), 1000);
       });
   }, [step]);
@@ -76,6 +78,12 @@ const CreatePost = ({ user }: Props) => {
     // size check
     if (newFiles.length + files.length > 9) {
       toast.error("Only 9 images are allowed");
+      return;
+    }
+
+    // 2097152 bytes === 2mb
+    if (newFiles.some((file) => file.size > 2097152)) {
+      toast.error("Maximum image size allowed is 2mb");
       return;
     }
 
