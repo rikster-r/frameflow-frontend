@@ -1,0 +1,22 @@
+interface IUser {
+  id: string;
+  __v: number;
+  publicName: string;
+  username: string;
+  password: string;
+  avatar?: string;
+  description?: string;
+  follows: string[];
+  visited: string[];
+  savedPosts: string[];
+}
+
+interface IPost {
+  id: string;
+  __v: number;
+  author: string;
+  images: string[];
+  text: string;
+  likedBy: string;
+  timestamp: Date;
+}

@@ -15,7 +15,6 @@ import {
   FourthStep,
 } from "./CreatePostSteps";
 import { toast } from "react-toastify";
-import type { IUser } from "../pages/_app";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { parseCookies } from "nookies";
@@ -51,7 +50,6 @@ const CreatePost = ({ user }: Props) => {
         setTimeout(() => setStatus("success"), 1000);
       })
       .catch((err) => {
-        console.log(err);
         setTimeout(() => setStatus("error"), 1000);
       });
   }, [step]);

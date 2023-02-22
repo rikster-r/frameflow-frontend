@@ -4,7 +4,6 @@ import {
   type SetStateAction,
 } from "react";
 import { Dialog, Popover, Transition } from "@headlessui/react";
-import type { IUser } from "../../pages/_app";
 import {
   type Theme,
   EmojiStyle,

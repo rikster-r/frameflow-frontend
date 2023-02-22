@@ -2,7 +2,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
 import CreatePost from "./CreatePost";
-import type { IUser } from "../pages/_app";
+import * as Avatar from "@radix-ui/react-avatar";
+import Image from "next/image";
 
 type Props = {
   user: IUser;
@@ -10,7 +11,7 @@ type Props = {
 
 const Sidebar = ({ user }: Props) => {
   return (
-    <div className="hidden flex-col gap-2 border-r border-neutral-300 py-8 px-4 dark:border-neutral-700 sm:flex xl:w-[270px]">
+    <div className="sm:w- hidden flex-col gap-2 border-r border-neutral-300 py-8 px-4 dark:border-neutral-700 sm:flex xl:w-[270px]">
       <Link href="/" className="mb-8 pl-3">
         <motion.svg
           fill="currentColor"
@@ -109,22 +110,26 @@ const Sidebar = ({ user }: Props) => {
         href={`/${user.username}`}
         className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
       >
-        <motion.svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-7 w-7"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </motion.svg>
+        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+          <Avatar.Root className="inline-flex h-7 w-7 select-none items-center justify-center overflow-hidden rounded-full align-middle">
+            <Avatar.Image
+              className="h-full w-full rounded-[inherit] object-cover object-center"
+              src={user?.avatar as string}
+              alt={user.publicName}
+            />
+            <Avatar.Fallback
+              className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
+              delayMs={600}
+            >
+              <Image
+                src="/defaultAvatar.png"
+                width={100}
+                height={100}
+                alt={user.publicName}
+              />
+            </Avatar.Fallback>
+          </Avatar.Root>
+        </motion.div>
         <p className="hidden text-lg xl:block">Profile</p>
       </Link>
       <Menu username={user.username} />
