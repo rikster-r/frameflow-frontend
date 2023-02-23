@@ -165,12 +165,12 @@ const CreatePost = ({ user }: Props) => {
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
-            enterTo="opacity-100"
+            enterTo="opacity-70"
             leave="ease-in duration-200"
-            leaveFrom="opacity-100"
+            leaveFrom="opacity-70"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-black bg-opacity-90 transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -188,6 +188,24 @@ const CreatePost = ({ user }: Props) => {
                   {currentStep}
                 </Dialog.Panel>
               </Transition.Child>
+              <Dialog.Panel className="fixed right-5 top-5 text-white">
+                <button onClick={() => setOpen(false)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-8 w-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </Dialog.Panel>
               <input
                 className="hidden"
                 accept="image/png, image/jpeg"

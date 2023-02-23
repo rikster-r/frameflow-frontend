@@ -1,5 +1,5 @@
 interface IUser {
-  id: string;
+  _id: string;
   __v: number;
   publicName: string;
   username: string;
@@ -12,7 +12,7 @@ interface IUser {
 }
 
 interface IPost {
-  id: string;
+  _id: string;
   __v: number;
   author: string;
   images: string[];

@@ -44,6 +44,8 @@ type Props = {
 };
 
 const Home: NextPage = ({ user }: Props) => {
+  if (!user) return <></>;
+
   return (
     <>
       <Head>
@@ -51,7 +53,7 @@ const Home: NextPage = ({ user }: Props) => {
         <meta name="description" content="Photos from all over the world" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout user={user as IUser}>
+      <Layout user={user}>
         <main className="flex-1 sm:flex sm:flex-grow-0">
           {/* main scroll */}
         </main>
