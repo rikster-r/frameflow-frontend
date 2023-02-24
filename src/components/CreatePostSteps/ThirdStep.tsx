@@ -10,6 +10,9 @@ import {
   type EmojiClickData,
 } from "emoji-picker-react";
 import useImageEditorWidth from "../../hooks/useImageEditorWidth";
+import useImageEditorHeight from "../../hooks/useImageEditorHeight";
+import * as Avatar from "@radix-ui/react-avatar";
+import Image from "next/image";
 
 import dynamic from "next/dynamic";
 
@@ -31,6 +34,7 @@ type Props = {
 // Caption input step
 const ThirdStep = ({ text, setText, user, setStep }: Props) => {
   const width = useImageEditorWidth();
+  const height = useImageEditorHeight();
 
   const updateText: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setText(e.target.value.slice(0, 1000));
@@ -58,20 +62,24 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
       </div>
       <div className="relative flex h-full flex-1 flex-col gap-6 border-t border-neutral-300 p-6 dark:border-neutral-900">
         <div className="flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-8 w-8"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+          <Avatar.Root className="inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
+            <Avatar.Image
+              className="h-full w-full rounded-[inherit] object-cover object-center"
+              src={user?.avatar as string}
+              alt={user.publicName}
             />
-          </svg>
+            <Avatar.Fallback
+              className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
+              delayMs={600}
+            >
+              <Image
+                src="/defaultAvatar.png"
+                width={100}
+                height={100}
+                alt={user.publicName}
+              />
+            </Avatar.Fallback>
+          </Avatar.Root>
           <p className="font-semibold ">{user.username}</p>
         </div>
         <div className="h-full">
@@ -114,10 +122,8 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
                 <EmojiPicker
                   theme={localStorage.getItem("theme") as Theme}
                   // arbitrary
-                  width={(width as number) - 80}
-                  height={
-                    (width as number) === 350 ? 150 : (width as number) - 250
-                  }
+                  width={(width as number) - 50}
+                  height={Math.min((height as number) - 200, 300)}
                   // most performant
                   emojiStyle={EmojiStyle.NATIVE}
                   onEmojiClick={addEmoji}

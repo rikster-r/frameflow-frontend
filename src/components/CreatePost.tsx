@@ -184,11 +184,13 @@ const CreatePost = ({ user }: Props) => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative flex h-[400px] w-full max-w-[350px] transform flex-col overflow-hidden rounded-lg bg-white text-left shadow-xl  transition-all dark:bg-neutral-800  dark:text-gray-50 md:h-[450px] md:max-w-[450px] 2xl:h-[600px] 2xl:max-w-[600px]">
-                  {currentStep}
-                </Dialog.Panel>
+                <div className="flex w-full items-center justify-center">
+                  <Dialog.Panel className="relative flex h-[55vh] max-h-[900px] w-[90vw] max-w-[900px] flex-col overflow-hidden rounded-lg bg-white text-left shadow-xl  dark:bg-neutral-800 dark:text-gray-50 sm:h-[70vh] sm:w-[70vh]">
+                    {currentStep}
+                  </Dialog.Panel>
+                </div>
               </Transition.Child>
-              <Dialog.Panel className="fixed right-5 top-5 text-white">
+              <div className="fixed right-5 top-5 text-white">
                 <button onClick={() => setOpen(false)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +207,7 @@ const CreatePost = ({ user }: Props) => {
                     />
                   </svg>
                 </button>
-              </Dialog.Panel>
+              </div>
               <input
                 className="hidden"
                 accept="image/png, image/jpeg"

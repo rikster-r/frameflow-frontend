@@ -5,12 +5,10 @@ const useImageEditorWidth = () => {
 
   useEffect(() => {
     const getWidth = () => {
-      if (window.innerWidth > 1536) {
-        setWidth(600);
-      } else if (window.innerWidth > 768) {
-        setWidth(450);
+      if (window.innerWidth < 640) {
+        setWidth(window.innerWidth * 0.9);
       } else {
-        setWidth(350);
+        setWidth(Math.min(window.innerHeight * 0.7, 900));
       }
     };
 
