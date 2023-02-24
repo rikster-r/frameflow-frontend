@@ -190,7 +190,7 @@ const CreatePost = ({ user }: Props) => {
                   </Dialog.Panel>
                 </div>
               </Transition.Child>
-              <div className="fixed right-5 top-5 text-white">
+              <div className="fixed right-10 top-5 text-white">
                 <button onClick={() => setOpen(false)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

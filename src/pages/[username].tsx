@@ -112,7 +112,7 @@ const UserPage: NextPage = ({ user, pageOwner, posts, subscribers }: Props) => {
                       <Image
                         src={post.images.at(0) as string}
                         alt=""
-                        className="h-full w-full object-cover group-hover:brightness-75"
+                        className="aspect-square w-full object-cover group-hover:brightness-75"
                         width={200}
                         height={200}
                       />
@@ -182,7 +182,7 @@ const UserPage: NextPage = ({ user, pageOwner, posts, subscribers }: Props) => {
                           postOwner={pageOwner}
                         />
                       </Transition.Child>
-                      <div className="fixed right-5 top-5 text-white">
+                      <div className="fixed right-10 top-5 text-white">
                         <button onClick={() => setOpen(false)}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

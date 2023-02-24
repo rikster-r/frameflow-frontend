@@ -128,15 +128,15 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
         </div>
       </div>
 
-      <div className="mb-4 flex w-full items-center justify-evenly border-y border-neutral-300 px-2 text-sm dark:border-neutral-700 md:mb-7">
+      <div className="mb-4 flex w-full items-center justify-evenly border-t border-neutral-300 px-2 text-sm dark:border-neutral-700 md:mb-7">
         {user.username === pageOwner.username && (
           <>
             <Link
-              href={`/${pageOwner.username}/saved`}
+              href={`/${pageOwner.username}`}
               className={`${
                 router.pathname.includes("saved")
                   ? ""
-                  : "border-t border-neutral-100"
+                  : "border-t dark:border-neutral-100 border-neutral-800"
               } dark flex items-center gap-2 py-4`}
             >
               <svg
@@ -159,7 +159,7 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
               href={`/${pageOwner.username}/saved`}
               className={`${
                 router.pathname.includes("saved")
-                  ? "border-t border-neutral-100"
+                  ? "border-t dark:border-neutral-100 border-neutral-800"
                   : ""
               } dark flex items-center gap-2 py-4`}
             >

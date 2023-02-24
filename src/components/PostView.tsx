@@ -13,7 +13,7 @@ const PostView = ({ post, postOwner }: Props) => {
 
   return (
     <Dialog.Panel className="flex h-[70vh] w-[calc(100vw-4rem)] flex-col overflow-hidden rounded-lg bg-white shadow-xl dark:bg-neutral-800 sm:w-[65vw] md:h-[calc(100vh-4rem)] lg:flex-row">
-      <div className="relative flex w-full flex-1 items-center">
+      <div className="relative order-1 flex w-full flex-1 items-center justify-center lg:order-none">
         <Image
           src={post.images.at(currentImageIndex) as string}
           alt=""
@@ -65,8 +65,8 @@ const PostView = ({ post, postOwner }: Props) => {
         )}
       </div>
       <div className="flex w-[500px] flex-col">
-        <div className="flex h-max w-full items-center gap-2 border-b border-neutral-200 p-4 dark:border-neutral-700 lg:w-1/2">
-          <Avatar.Root className="inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
+        <div className="flex h-max w-full items-center border-b border-neutral-200 p-4 dark:border-neutral-700">
+          <Avatar.Root className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
             <Avatar.Image
               className="h-full w-full rounded-[inherit] object-cover object-center"
               src={postOwner?.avatar as string}
@@ -84,7 +84,10 @@ const PostView = ({ post, postOwner }: Props) => {
               />
             </Avatar.Fallback>
           </Avatar.Root>
-          <p className="font-semibold">{postOwner.username} &bull;</p>
+          <p className="font-semibold dark:text-white">
+            {postOwner.username}{" "}
+          </p>
+          <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
           <button className="font-semibold text-blue-500">Follow</button>
         </div>
       </div>
