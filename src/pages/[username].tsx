@@ -178,6 +178,7 @@ const UserPage: NextPage = ({ user, pageOwner, posts, subscribers }: Props) => {
                         leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-110"
                       >
                         <PostView
+                          user={user}
                           post={posts.at(currentPostIndex as number) as IPost}
                           postOwner={pageOwner}
                         />
