@@ -71,7 +71,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
   };
 
   return (
-    <Dialog.Panel className="grid h-[70vh] w-[calc(100vw-4rem)] grid-cols-1 grid-rows-[4rem_400px_auto]  rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto]">
+    <Dialog.Panel className="grid h-[70vh] w-[calc(100vw-4rem)] grid-cols-1 grid-rows-[4rem_400px_auto]  overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden">
       <div className="relative flex flex-1 items-center justify-center md:row-span-full">
         <Image
           src={post.images.at(currentImageIndex) as string}
@@ -124,7 +124,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
         )}
       </div>
       <div className="-order-1 flex h-max w-full items-center border-b border-neutral-200 p-4 dark:border-neutral-700">
-        <Avatar.Root className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle ">
+        <Avatar.Root className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
           <Avatar.Image
             className="h-full w-full rounded-[inherit] object-cover object-center"
             src={postOwner?.avatar as string}
@@ -150,7 +150,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
           </>
         )}
       </div>
-      <div className="scrollbar-hide flex-1 overflow-y-scroll">
+      <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
         {post.text && (
           <Comment
             author={postOwner}
@@ -168,7 +168,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
           />
         ))}
       </div>
-      <div className="border-t border-neutral-200 p-4 text-left dark:border-neutral-700">
+      <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 md:block">
         <div className="flex gap-4">
           <button>
             <svg
@@ -225,7 +225,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
         </p>
       </div>
       {user && (
-        <div className="flex items-center gap-3 border-t border-neutral-200 p-4 dark:border-neutral-700">
+        <div className="sticky bottom-0 items-center gap-3 border-t border-neutral-200 bg-white p-4 dark:border-neutral-700 md:flex">
           <Popover className="relative h-full">
             <Popover.Button className="h-full text-sm text-neutral-900 hover:cursor-pointer dark:text-neutral-100 ">
               <svg
