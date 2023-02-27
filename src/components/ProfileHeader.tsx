@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 type Props = {
-  user: IUser;
+  user?: IUser;
   pageOwner: IUser;
   posts: IPost[];
   subscribers: IUser[];
@@ -42,24 +42,20 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
         <div className="flex flex-1 flex-col sm:items-start lg:mt-6">
           <div className="flex flex-col justify-evenly gap-2 sm:flex-row sm:gap-6">
             <p className="text-xl">{pageOwner.username}</p>
-            {user.username === pageOwner.username ? (
-              <Link
-                href={`/${user.username}/edit`}
-                className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 sm:px-6"
-              >
-                Edit profile
-              </Link>
-            ) : (
-              <button
-                className={`${
-                  user
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : " bg-neutral-100 hover:bg-neutral-200"
-                } h-max w-max rounded-lg px-12 py-1 font-semibold capitalize focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 sm:px-10`}
-              >
-                Follow
-              </button>
-            )}
+            {user ? (
+              user.username === pageOwner.username ? (
+                <Link
+                  href={`/${user.username}/edit`}
+                  className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 sm:px-6"
+                >
+                  Edit profile
+                </Link>
+              ) : (
+                <button className="h-max w-max rounded-lg bg-blue-500 px-12 py-1 font-semibold capitalize text-white hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 sm:px-10">
+                  Follow
+                </button>
+              )
+            ) : null}
           </div>
           <div className="mt-6 hidden w-full max-w-[500px] justify-between sm:flex md:pr-16">
             <div className="flex flex-wrap gap-1.5">
@@ -129,14 +125,14 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
       </div>
 
       <div className="mb-4 flex w-full items-center justify-evenly border-t border-neutral-300 px-2 text-sm dark:border-neutral-700 md:mb-7">
-        {user.username === pageOwner.username && (
+        {user && user.username === pageOwner.username && (
           <>
             <Link
               href={`/${pageOwner.username}`}
               className={`${
                 router.pathname.includes("saved")
                   ? ""
-                  : "border-t dark:border-neutral-100 border-neutral-800"
+                  : "border-t border-neutral-800 dark:border-neutral-100"
               } dark flex items-center gap-2 py-4`}
             >
               <svg
@@ -159,7 +155,7 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
               href={`/${pageOwner.username}/saved`}
               className={`${
                 router.pathname.includes("saved")
-                  ? "border-t dark:border-neutral-100 border-neutral-800"
+                  ? "border-t border-neutral-800 dark:border-neutral-100"
                   : ""
               } dark flex items-center gap-2 py-4`}
             >

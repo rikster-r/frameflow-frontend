@@ -4,19 +4,23 @@ export function getCurrentTimeDifference(timestamp: string) {
   const date = DateTime.fromISO(timestamp);
   const now = DateTime.now();
   const diff = now
-    .diff(date, ["years", "weeks", "days", "hours", "minutes"])
+    .diff(date, ["years", "weeks", "days", "hours", "minutes", "seconds"])
     .toObject();
 
-  if (diff.years && diff.years > 0) {
-    return `${diff.years} y.`;
-  } else if (diff.weeks && diff.weeks > 0) {
-    return `${diff.weeks} w.`;
-  } else if (diff.days && diff.days > 0) {
-    return `${diff.days} d.`;
-  } else if (diff.hours && diff.hours > 0) {
-    return `${diff.hours} h.`;
-  } else if (diff.minutes && diff.minutes > 0) {
-    return `${diff.minutes} m.`;
+  if (diff.years && Math.floor(diff.years) > 0) {
+    return `${Math.floor(diff.years)} y.`;
+  } else if (diff.weeks && Math.floor(diff.weeks) > 0) {
+    return `${Math.floor(diff.weeks)} w.`;
+  } else if (diff.days && Math.floor(diff.days) > 0) {
+    return `${Math.floor(diff.days)} d.`;
+  } else if (diff.hours && Math.floor(diff.hours) > 0) {
+    return `${Math.floor(diff.hours)} h.`;
+  } else if (diff.minutes && Math.floor(diff.minutes) > 0) {
+    return `${Math.floor(diff.minutes)} m.`;
+  } else if (diff.seconds && Math.floor(diff.seconds) > 0) {
+    return `${Math.floor(diff.seconds)} s.`;
+  } else {
+    return "now";
   }
 }
 

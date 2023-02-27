@@ -6,6 +6,7 @@ import LogoutButton from "./LogoutButton";
 import Layout from "./Layout";
 import PostView from "./PostView";
 import Comment from "./Comment";
+import PostImage from "./PostImage";
 
 export {
   Header,
@@ -16,4 +17,5 @@ export {
   Layout,
   PostView,
   Comment,
+  PostImage,
 };

@@ -20,3 +20,13 @@ interface IPost {
   likedBy: string;
   timestamp: string;
 }
+
+interface IComment {
+  _id: string;
+  __v: number;
+  author: IUser;
+  post: string;
+  text: string;
+  likedBy: string[];
+  timestamp: string;
+}
