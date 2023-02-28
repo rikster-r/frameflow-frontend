@@ -70,8 +70,30 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
       });
   };
 
+  const updateLikesCount = () => {
+    // todo add dialog to show those who liked
+    if (!user) return;
+
+    const newLikesField = post.likedBy.includes(user._id)
+      ? post.likedBy.filter((id) => id !== user._id)
+      : [...post.likedBy, user._id];
+
+    axios
+      .put(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`, {
+        likedBy: newLikesField,
+      })
+      .then(async () => {
+        await mutate(
+          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/posts`
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
-    <Dialog.Panel className="grid h-[70vh] w-[calc(100vw-4rem)] grid-cols-1 grid-rows-[4rem_400px_auto]  overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden">
+    <Dialog.Panel className="scrollbar-hide grid h-[80vh] w-[calc(100vw-4rem)] grid-cols-1  grid-rows-[4rem_400px_auto] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden">
       <div className="relative flex flex-1 items-center justify-center md:row-span-full">
         <Image
           src={post.images.at(currentImageIndex) as string}
@@ -151,33 +173,49 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
         )}
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
-        {post.text && (
-          <Comment
-            author={postOwner}
-            text={post.text}
-            timestamp={post.timestamp}
-          />
+        {post.text || comments.length ? (
+          <>
+            {post.text && (
+              <Comment
+                author={postOwner}
+                text={post.text}
+                timestamp={post.timestamp}
+              />
+            )}
+            {comments.map((comment) => (
+              <Comment
+                key={comment._id}
+                userId={user?._id}
+                postId={post._id}
+                commentId={comment._id}
+                author={comment.author}
+                text={comment.text}
+                likedBy={comment.likedBy}
+                timestamp={comment.timestamp}
+              />
+            ))}
+          </>
+        ) : (
+          <div className="flex h-full flex-col items-center justify-center gap-2">
+            <p className="text-2xl font-bold">No comments.</p>
+            <p>Start discourse</p>
+          </div>
         )}
-        {comments.map((comment) => (
-          <Comment
-            key={comment._id}
-            author={comment.author}
-            text={comment.text}
-            likedBy={comment.likedBy}
-            timestamp={comment.timestamp}
-          />
-        ))}
       </div>
       <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 md:block">
         <div className="flex gap-4">
-          <button>
+          <button onClick={updateLikesCount}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="h-7 w-7 hover:text-neutral-400"
+              className={`${
+                user && post.likedBy.includes(user._id)
+                  ? "fill-red-500 stroke-red-500"
+                  : ""
+              } h-7 w-7 hover:text-neutral-400`}
             >
               <path
                 strokeLinecap="round"
@@ -219,13 +257,15 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
             </svg>
           </button>
         </div>
-        <p className="mt-3 pl-1 font-semibold">{post.likedBy.length} likes</p>
+        <p className="mt-3 pl-1 font-semibold">
+          {post.likedBy.length} like{post.likedBy.length !== 1 && "s"}
+        </p>
         <p className="capt mt-1 pl-1 text-sm text-neutral-400">
           {formatTimestamp(post.timestamp)}
         </p>
       </div>
       {user && (
-        <div className="sticky bottom-0 items-center gap-3 border-t border-neutral-200 bg-white p-4 dark:border-neutral-700 md:flex">
+        <div className="sticky bottom-0 flex items-center gap-3 border-t border-neutral-200 bg-white p-4 dark:border-neutral-700">
           <Popover className="relative h-full">
             <Popover.Button className="h-full text-sm text-neutral-900 hover:cursor-pointer dark:text-neutral-100 ">
               <svg

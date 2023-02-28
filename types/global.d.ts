@@ -17,7 +17,7 @@ interface IPost {
   author: string;
   images: string[];
   text: string;
-  likedBy: string;
+  likedBy: string[];
   timestamp: string;
 }
 

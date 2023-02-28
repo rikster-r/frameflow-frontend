@@ -1,17 +1,52 @@
 import * as Avatar from "@radix-ui/react-avatar";
 import Image from "next/image";
 import { getCurrentTimeDifference } from "../lib/luxon";
+import axios from "axios";
+import { env } from "../env/server.mjs";
+import { useSWRConfig } from "swr";
 
 type Props = {
   author: IUser;
   text: string;
   timestamp: string;
   likedBy?: string[];
+  userId?: string;
+  postId?: string;
+  commentId?: string;
 };
 
-const Comment = ({ author, text, timestamp, likedBy }: Props) => {
+const Comment = ({
+  author,
+  text,
+  timestamp,
+  likedBy,
+  userId,
+  postId,
+  commentId,
+}: Props) => {
+  const { mutate } = useSWRConfig();
+
+  const updateLikesCount = () => {
+    if (!likedBy || !userId || !postId || !commentId) return;
+
+    const newLikesField = likedBy.includes(userId)
+      ? likedBy.filter((id) => id !== userId)
+      : [...likedBy, userId];
+
+    axios
+      .put(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}/likes`, {
+        likedBy: newLikesField,
+      })
+      .then(async () => {
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
-    <div className="flex h-max w-full px-4 py-3 dark:text-white">
+    <div className="flex h-max w-full items-start px-4 py-3 dark:text-white">
       <Avatar.Root className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
         <Avatar.Image
           className="h-full w-full rounded-[inherit] object-cover object-center"
@@ -41,15 +76,19 @@ const Comment = ({ author, text, timestamp, likedBy }: Props) => {
           )}
         </div>
       </div>
-      {likedBy && (
-        <button>
+      {likedBy && userId && (
+        <button onClick={updateLikesCount}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="mt-1 h-5 w-5 hover:text-gray-500"
+            className={`${
+              userId && likedBy.includes(userId)
+                ? "fill-red-500 stroke-red-500"
+                : ""
+            } mt-1 h-5 w-5 hover:text-neutral-400`}
           >
             <path
               strokeLinecap="round"
