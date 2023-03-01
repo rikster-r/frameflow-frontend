@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import * as Avatar from "@radix-ui/react-avatar";
 import { env } from "../env/server.mjs";
 import {
@@ -36,6 +36,7 @@ type Props = {
 const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
+  const commentTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const { mutate } = useSWRConfig();
 
   const addEmoji = (emojiData: EmojiClickData) => {
@@ -255,7 +256,11 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
               />
             </svg>
           </button>
-          <button>
+          <button
+            onClick={() => {
+              commentTextAreaRef.current?.focus();
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -341,6 +346,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
             </Transition>
           </Popover>
           <textarea
+            ref={commentTextAreaRef}
             name="commentText"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
