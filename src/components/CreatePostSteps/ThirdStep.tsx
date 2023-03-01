@@ -44,7 +44,6 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
     setText((text) => text + emojiData.emoji);
   };
 
-  // todo: change svg to profile picture
   return (
     <>
       <div className="flex items-center justify-between">

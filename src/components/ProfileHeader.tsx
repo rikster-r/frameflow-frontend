@@ -2,17 +2,21 @@ import * as Avatar from "@radix-ui/react-avatar";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import usePosts from "../hooks/usePosts";
+import useUser from "../hooks/useUser";
 
 type Props = {
-  user?: IUser;
   pageOwner: IUser;
-  posts: IPost[];
   subscribers: IUser[];
 };
 
-const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
+const ProfileHeader = ({  pageOwner, subscribers }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
   const router = useRouter();
+  const { posts, error } = usePosts(pageOwner.username);
+  const { user } = useUser();
+
+  if (error) return <></>;
 
   return (
     <>
@@ -60,7 +64,7 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
           <div className="mt-6 hidden w-full max-w-[500px] justify-between sm:flex md:pr-16">
             <div className="flex flex-wrap gap-1.5">
               <span className="font-semibold">
-                {formatter.format(posts.length)}
+                {formatter.format(posts?.length || 0)}
               </span>
               <span>publications</span>
             </div>
@@ -106,7 +110,7 @@ const ProfileHeader = ({ user, pageOwner, posts, subscribers }: Props) => {
       <div className="mt-4 flex w-full items-center justify-evenly border-t border-neutral-300 py-3 px-2 text-sm dark:border-neutral-700 sm:hidden">
         <div className="flex flex-col items-center justify-center">
           <span className="font-semibold">
-            {formatter.format(posts.length)}
+            {formatter.format(posts?.length || 0)}
           </span>
           <span className="text-neutral-500">publications</span>
         </div>

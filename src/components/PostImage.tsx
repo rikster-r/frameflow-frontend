@@ -12,7 +12,7 @@ type Props = {
 
 const PostImages = ({ post, user, postOwner }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
-  const { comments, err, loading } = useComments(post._id);
+  const { comments } = useComments(post._id);
   const [open, setOpen] = useState(false);
 
   return (
@@ -53,7 +53,7 @@ const PostImages = ({ post, user, postOwner }: Props) => {
                 clipRule="evenodd"
               />
             </svg>
-            {!loading && !err && <p>{comments.length}</p>}
+            {comments && <p>{comments.length}</p>}
           </div>
         </div>
       </button>

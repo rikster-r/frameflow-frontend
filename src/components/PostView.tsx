@@ -29,7 +29,7 @@ type Props = {
   user?: IUser;
   post: IPost;
   postOwner: IUser;
-  comments: IComment[];
+  comments?: IComment[];
 };
 
 const PostView = ({ user, post, postOwner, comments }: Props) => {
@@ -44,7 +44,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
   const postComment = () => {
     if (!commentText.trim()) return;
     const { userToken } = parseCookies();
-    if (!userToken) return;
+    if (!userToken || !comments) return;
 
     axios
       .post(
@@ -86,6 +86,34 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
         await mutate(
           `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/posts`
         );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const updateUserSavedList = () => {
+    const { userToken } = parseCookies();
+    if (!user || !userToken) return;
+
+    const newSavedList = user.savedPosts.includes(post._id)
+      ? user.savedPosts.filter((id) => id !== post._id)
+      : [...user.savedPosts, post._id];
+
+    axios
+      .put(
+        `${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/saved`,
+        {
+          savedPosts: newSavedList,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      )
+      .then(async () => {
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`);
       })
       .catch((err) => {
         console.error(err);
@@ -173,7 +201,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
         )}
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
-        {post.text || comments.length ? (
+        {post.text || comments?.length ? (
           <>
             {post.text && (
               <Comment
@@ -182,18 +210,19 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
                 timestamp={post.timestamp}
               />
             )}
-            {comments.map((comment) => (
-              <Comment
-                key={comment._id}
-                userId={user?._id}
-                postId={post._id}
-                commentId={comment._id}
-                author={comment.author}
-                text={comment.text}
-                likedBy={comment.likedBy}
-                timestamp={comment.timestamp}
-              />
-            ))}
+            {comments &&
+              comments.map((comment) => (
+                <Comment
+                  key={comment._id}
+                  userId={user?._id}
+                  postId={post._id}
+                  commentId={comment._id}
+                  author={comment.author}
+                  text={comment.text}
+                  likedBy={comment.likedBy}
+                  timestamp={comment.timestamp}
+                />
+              ))}
           </>
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-2">
@@ -202,7 +231,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
           </div>
         )}
       </div>
-      <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 md:block">
+      <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
         <div className="flex gap-4">
           <button onClick={updateLikesCount}>
             <svg
@@ -240,14 +269,18 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
               />
             </svg>
           </button>
-          <button className="ml-auto">
+          <button className="ml-auto" onClick={updateUserSavedList}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="h-7 w-7 hover:text-neutral-400"
+              className={`${
+                user && user.savedPosts.includes(post._id)
+                  ? "fill-black stroke-black dark:fill-white dark:stroke-white"
+                  : ""
+              } h-7 w-7 hover:text-neutral-400`}
             >
               <path
                 strokeLinecap="round"
@@ -265,7 +298,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
         </p>
       </div>
       {user && (
-        <div className="sticky bottom-0 flex items-center gap-3 border-t border-neutral-200 bg-white p-4 dark:border-neutral-700">
+        <div className="sticky bottom-0 flex items-center gap-3 border-t border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-black">
           <Popover className="relative h-full">
             <Popover.Button className="h-full text-sm text-neutral-900 hover:cursor-pointer dark:text-neutral-100 ">
               <svg

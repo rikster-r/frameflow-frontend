@@ -11,7 +11,7 @@ type Props = {
 
 const Sidebar = ({ user }: Props) => {
   return (
-    <div className="sticky top-0 hidden h-screen flex-col gap-2 border-r border-neutral-300 py-8 px-4 dark:border-neutral-700 sm:flex xl:w-[270px]">
+    <div className="sticky top-0 z-10 hidden h-screen flex-col gap-2 border-r border-neutral-300 py-8 px-4 dark:border-neutral-700 sm:flex xl:w-[270px]">
       <Link href="/" className="mb-8 pl-3">
         <motion.svg
           fill="currentColor"
