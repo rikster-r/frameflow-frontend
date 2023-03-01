@@ -8,9 +8,10 @@ type Props = {
   post: IPost;
   user?: IUser;
   postOwner: IUser;
+  path: "saved" | "posts";
 };
 
-const PostImages = ({ post, user, postOwner }: Props) => {
+const PostImages = ({ post, user, postOwner, path }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
   const { comments } = useComments(post._id);
   const [open, setOpen] = useState(false);
@@ -90,6 +91,7 @@ const PostImages = ({ post, user, postOwner }: Props) => {
                   post={post}
                   postOwner={postOwner}
                   comments={comments}
+                  path={path}
                 />
               </Transition.Child>
               <div className="fixed right-10 top-5 text-white">

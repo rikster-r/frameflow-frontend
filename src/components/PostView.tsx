@@ -30,9 +30,10 @@ type Props = {
   post: IPost;
   postOwner: IUser;
   comments?: IComment[];
+  path: "saved" | "posts";
 };
 
-const PostView = ({ user, post, postOwner, comments }: Props) => {
+const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
   const { mutate } = useSWRConfig();
@@ -56,14 +57,12 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
           },
         }
       )
-      .then((res) => {
+      .then(async (res) => {
         setCommentText("");
-        mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/comments`, [
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/comments`, [
           res.data,
           ...comments,
-        ]).catch(() => {
-          toast.error("Something went wrong");
-        });
+        ]);
       })
       .catch(() => {
         toast.error("Something went wrong. Please try again");
@@ -84,7 +83,7 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
       })
       .then(async () => {
         await mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/posts`
+          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
         );
       })
       .catch((err) => {
@@ -114,6 +113,9 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
       )
       .then(async () => {
         await mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`);
+        await mutate(
+          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/saved`
+        );
       })
       .catch((err) => {
         console.error(err);

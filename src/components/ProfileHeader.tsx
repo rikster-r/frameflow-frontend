@@ -10,10 +10,10 @@ type Props = {
   subscribers: IUser[];
 };
 
-const ProfileHeader = ({  pageOwner, subscribers }: Props) => {
+const ProfileHeader = ({ pageOwner, subscribers }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
   const router = useRouter();
-  const { posts, error } = usePosts(pageOwner.username);
+  const { posts, error } = usePosts(pageOwner.username, "posts");
   const { user } = useUser();
 
   if (error) return <></>;

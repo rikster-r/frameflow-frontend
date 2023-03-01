@@ -1,9 +1,9 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Head from "next/head";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import nookies from "nookies";
-import { Layout, ProfileHeader, PostImagesGrid } from "../components";
+import { Layout, ProfileHeader, PostImagesGrid } from "../../components";
 import { SWRConfig } from "swr";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const promises = [
       axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}`),
       axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/subscribers`),
-      axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/posts`),
+      axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/saved`),
     ];
 
     if (userToken) {
@@ -27,16 +27,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       );
     }
 
-    const [pageOwnerRes, subscribersRes, postsRes, userRes] = await Promise.all(
-      promises
-    );
+    const [pageOwnerRes, subscribersRes, savedPostsRes, userRes] =
+      await Promise.all(promises);
+
+    if (
+      (userRes?.data as IUser)?.username !==
+      (pageOwnerRes?.data as IUser)?.username
+    ) {
+      return {
+        redirect: {
+          permanent: true,
+          destination: `/${(pageOwnerRes?.data as IUser).username}`,
+        },
+      };
+    }
 
     return {
       props: {
         user: userRes ? (userRes?.data as IUser) : null,
-        pageOwner: pageOwnerRes?.data as IUser,
         subscribers: subscribersRes?.data as IUser[],
-        posts: postsRes?.data as IPost[],
+        posts: savedPostsRes?.data as IPost[],
       },
     };
   } catch (err) {
@@ -54,21 +64,20 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 type Props = {
   user?: IUser;
-  pageOwner?: IUser;
   subscribers?: IUser[];
   posts?: IPost[];
 };
 
-const UserPage: NextPage = ({ user, pageOwner, subscribers, posts }: Props) => {
-  if (!pageOwner || !subscribers) return <></>;
+const SavedPage: NextPage = ({ user, subscribers, posts }: Props) => {
+  if (!user || !subscribers || !posts) return <></>;
 
   return (
     <>
       <Head>
-        <title>{`@${pageOwner.username} \u2022 Frameflow`}</title>
+        <title>{`@${user.username} \u2022 Frameflow`}</title>
         <meta
           name="description"
-          content={`View photos of ${pageOwner.publicName}`}
+          content={`View saved posts of ${user.username}`}
         />
       </Head>
       <div
@@ -81,15 +90,12 @@ const UserPage: NextPage = ({ user, pageOwner, subscribers, posts }: Props) => {
             <div className="w-full flex-1 justify-center sm:flex">
               <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
                 <SWRConfig value={{ fallback: posts }}>
-                  <ProfileHeader
-                    pageOwner={pageOwner}
-                    subscribers={subscribers}
-                  />
+                  <ProfileHeader pageOwner={user} subscribers={subscribers} />
                 </SWRConfig>
 
                 <main className="grid w-full grid-cols-3 gap-1 md:gap-7">
                   <SWRConfig value={{ fallback: posts }}>
-                    <PostImagesGrid pageOwner={pageOwner} />
+                    <PostImagesGrid pageOwner={user} path="saved" />
                   </SWRConfig>
                 </main>
               </div>
@@ -101,4 +107,4 @@ const UserPage: NextPage = ({ user, pageOwner, subscribers, posts }: Props) => {
   );
 };
 
-export default UserPage;
+export default SavedPage;
