@@ -242,9 +242,9 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
               stroke="currentColor"
               className={`${
                 user && post.likedBy.includes(user._id)
-                  ? "fill-red-500 stroke-red-500"
-                  : ""
-              } h-7 w-7 hover:text-neutral-400`}
+                  ? "fill-red-500 stroke-red-500 text-red-500"
+                  : "hover:text-neutral-400"
+              } h-7 w-7`}
             >
               <path
                 strokeLinecap="round"
@@ -279,8 +279,8 @@ const PostView = ({ user, post, postOwner, comments }: Props) => {
               className={`${
                 user && user.savedPosts.includes(post._id)
                   ? "fill-black stroke-black dark:fill-white dark:stroke-white"
-                  : ""
-              } h-7 w-7 hover:text-neutral-400`}
+                  : "hover:text-neutral-400"
+              } h-7 w-7`}
             >
               <path
                 strokeLinecap="round"

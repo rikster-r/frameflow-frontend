@@ -18,7 +18,7 @@ const Layout = ({ children }: Props) => {
       {/* Header and BottomNav only for mobile, except if not loggen in, Sidebar only for bigger than mobile */}
       <Header user={user} />
       {user && <Sidebar user={user} />}
-      <div className="">{children}</div>
+      {children}
       {user && <BottomNav username={user.username} />}
     </div>
   );
