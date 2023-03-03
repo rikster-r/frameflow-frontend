@@ -11,8 +11,7 @@ import {
 } from "emoji-picker-react";
 import useImageEditorWidth from "../../hooks/useImageEditorWidth";
 import useImageEditorHeight from "../../hooks/useImageEditorHeight";
-import * as Avatar from "@radix-ui/react-avatar";
-import Image from "next/image";
+import { Avatar } from "../";
 
 import dynamic from "next/dynamic";
 
@@ -61,24 +60,10 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
       </div>
       <div className="relative flex h-full flex-1 flex-col gap-6 border-t border-neutral-300 p-6 dark:border-neutral-900">
         <div className="flex items-center gap-2">
-          <Avatar.Root className="inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-            <Avatar.Image
-              className="h-full w-full rounded-[inherit] object-cover object-center"
-              src={user?.avatar as string}
-              alt={user.publicName}
-            />
-            <Avatar.Fallback
-              className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
-              delayMs={600}
-            >
-              <Image
-                src="/defaultAvatar.png"
-                width={100}
-                height={100}
-                alt={user.publicName}
-              />
-            </Avatar.Fallback>
-          </Avatar.Root>
+          <Avatar
+            className="inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+            user={user}
+          />
           <p className="font-semibold ">{user.username}</p>
         </div>
         <div className="h-full">

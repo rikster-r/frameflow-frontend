@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
-import CreatePost from "./CreatePost";
-import * as Avatar from "@radix-ui/react-avatar";
-import Image from "next/image";
+import { Avatar, CreatePost } from "./";
 
 type Props = {
   user: IUser;
@@ -111,24 +109,10 @@ const Sidebar = ({ user }: Props) => {
         className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
       >
         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <Avatar.Root className="inline-flex h-7 w-7 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-            <Avatar.Image
-              className="h-full w-full rounded-[inherit] object-cover object-center"
-              src={user?.avatar as string}
-              alt={user.publicName}
-            />
-            <Avatar.Fallback
-              className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
-              delayMs={600}
-            >
-              <Image
-                src="/defaultAvatar.png"
-                width={100}
-                height={100}
-                alt={user.publicName}
-              />
-            </Avatar.Fallback>
-          </Avatar.Root>
+          <Avatar
+            className="inline-flex h-7 w-7 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+            user={user}
+          />
         </motion.div>
         <p className="hidden text-lg xl:block">Profile</p>
       </Link>

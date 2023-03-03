@@ -3,8 +3,7 @@ import { Fragment, type Dispatch, type SetStateAction } from "react";
 import useSWR from "swr";
 import { env } from "../env/server.mjs";
 import axios from "axios";
-import * as Avatar from "@radix-ui/react-avatar";
-import Image from "next/image";
+import { Avatar } from "./";
 
 type Props = {
   open: boolean;
@@ -93,24 +92,10 @@ const LikesList = ({ open, setOpen, path }: Props) => {
                         className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left"
                         key={liker._id}
                       >
-                        <Avatar.Root className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                          <Avatar.Image
-                            className="h-full w-full rounded-[inherit] object-cover object-center"
-                            src={liker?.avatar as string}
-                            alt={liker.publicName}
-                          />
-                          <Avatar.Fallback
-                            className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
-                            delayMs={600}
-                          >
-                            <Image
-                              src="/defaultAvatar.png"
-                              width={100}
-                              height={100}
-                              alt={liker.publicName}
-                            />
-                          </Avatar.Fallback>
-                        </Avatar.Root>
+                        <Avatar
+                          className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+                          user={liker}
+                        />
                         <div>
                           <p className="text-sm font-semibold">
                             {liker.username}

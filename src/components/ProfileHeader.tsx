@@ -1,9 +1,8 @@
-import * as Avatar from "@radix-ui/react-avatar";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import usePosts from "../hooks/usePosts";
 import useUser from "../hooks/useUser";
+import { Avatar } from "./";
 
 type Props = {
   pageOwner: IUser;
@@ -25,24 +24,10 @@ const ProfileHeader = ({ pageOwner, followers }: Props) => {
           pageOwner?.publicName || pageOwner?.description ? "mb-4" : ""
         } flex w-full`}
       >
-        <Avatar.Root className="mx-6 inline-flex h-20 w-20 select-none items-center justify-center overflow-hidden rounded-full bg-black align-middle sm:mx-6 sm:h-36 sm:w-36 md:mb-4 md:h-40 md:w-40 lg:my-6 lg:ml-12 lg:mr-24">
-          <Avatar.Image
-            className="h-full w-full rounded-[inherit] object-cover"
-            src={pageOwner?.avatar as string}
-            alt={pageOwner.publicName}
-          />
-          <Avatar.Fallback
-            className="flex h-full w-full items-center justify-center"
-            delayMs={600}
-          >
-            <Image
-              src="/defaultAvatar.png"
-              width={300}
-              height={300}
-              alt={pageOwner.publicName}
-            />
-          </Avatar.Fallback>
-        </Avatar.Root>
+        <Avatar
+          className="mx-6 inline-flex h-20 w-20 select-none items-center justify-center overflow-hidden rounded-full bg-black align-middle sm:mx-6 sm:h-36 sm:w-36 md:mb-4 md:h-40 md:w-40 lg:my-6 lg:ml-12 lg:mr-24"
+          user={pageOwner}
+        />
         <div className="flex flex-1 flex-col sm:items-start lg:mt-6">
           <div className="flex flex-col justify-evenly gap-2 sm:flex-row sm:gap-6">
             <p className="text-xl">{pageOwner.username}</p>

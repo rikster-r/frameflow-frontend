@@ -1,13 +1,12 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
-import * as Avatar from "@radix-ui/react-avatar";
 import { env } from "../env/server.mjs";
 import {
   type Theme,
   EmojiStyle,
   type EmojiClickData,
 } from "emoji-picker-react";
-import { Comment, LikesList } from "./";
+import { Comment, LikesList, Avatar } from "./";
 import { formatTimestamp } from "../lib/luxon";
 import { Popover, Transition, Dialog } from "@headlessui/react";
 import dynamic from "next/dynamic";
@@ -177,24 +176,10 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
         )}
       </div>
       <div className="-order-1 flex h-max w-full items-center border-b border-neutral-200 p-4 dark:border-neutral-700">
-        <Avatar.Root className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-          <Avatar.Image
-            className="h-full w-full rounded-[inherit] object-cover object-center"
-            src={postOwner?.avatar as string}
-            alt={postOwner.publicName}
-          />
-          <Avatar.Fallback
-            className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
-            delayMs={600}
-          >
-            <Image
-              src="/defaultAvatar.png"
-              width={100}
-              height={100}
-              alt={postOwner.publicName}
-            />
-          </Avatar.Fallback>
-        </Avatar.Root>
+        <Avatar
+          className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+          user={postOwner}
+        />
         <p className="font-semibold dark:text-white">{postOwner.username} </p>
         {user && user.username !== postOwner.username && (
           <>

@@ -9,6 +9,8 @@ import Comment from "./Comment";
 import PostImage from "./PostImage";
 import PostImagesGrid from "./PostImagesGrid";
 import LikesList from "./LikesList";
+import Avatar from "./Avatar";
+import CreatePost from "./CreatePost";
 
 export {
   Header,
@@ -22,4 +24,6 @@ export {
   PostImage,
   PostImagesGrid,
   LikesList,
+  Avatar,
+  CreatePost,
 };

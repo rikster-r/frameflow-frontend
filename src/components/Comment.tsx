@@ -1,11 +1,9 @@
-import * as Avatar from "@radix-ui/react-avatar";
 import { useState } from "react";
-import Image from "next/image";
 import { getCurrentTimeDifference } from "../lib/luxon";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { useSWRConfig } from "swr";
-import { LikesList } from "./";
+import { LikesList, Avatar } from "./";
 
 type Props = {
   author: IUser;
@@ -51,24 +49,10 @@ const Comment = ({
 
   return (
     <div className="flex h-max w-full items-start px-4 py-3 dark:text-white">
-      <Avatar.Root className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-        <Avatar.Image
-          className="h-full w-full rounded-[inherit] object-cover object-center"
-          src={author?.avatar as string}
-          alt={author.username}
-        />
-        <Avatar.Fallback
-          className="flex h-full w-full items-center justify-center rounded-[inherit] object-cover object-center"
-          delayMs={600}
-        >
-          <Image
-            src="/defaultAvatar.png"
-            width={100}
-            height={100}
-            alt={author.username}
-          />
-        </Avatar.Fallback>
-      </Avatar.Root>
+      <Avatar
+        className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+        user={author}
+      />
       <div className="flex w-full flex-col gap-1 text-left text-sm">
         <p className="font-semibold">
           {author.username} <span className="font-normal">{text}</span>
