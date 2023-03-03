@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     const promises = [
       axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}`),
-      axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/subscribers`),
+      axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/followers`),
       axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/posts`),
     ];
 
@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       );
     }
 
-    const [pageOwnerRes, subscribersRes, postsRes, userRes] = await Promise.all(
+    const [pageOwnerRes, followersRes, postsRes, userRes] = await Promise.all(
       promises
     );
 
@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: {
         user: userRes ? (userRes?.data as IUser) : null,
         pageOwner: pageOwnerRes?.data as IUser,
-        subscribers: subscribersRes?.data as IUser[],
+        followers: followersRes?.data as IUser[],
         posts: postsRes?.data as IPost[],
       },
     };
@@ -55,12 +55,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 type Props = {
   user?: IUser;
   pageOwner?: IUser;
-  subscribers?: IUser[];
+  followers?: IUser[];
   posts?: IPost[];
 };
 
-const UserPage: NextPage = ({ user, pageOwner, subscribers, posts }: Props) => {
-  if (!pageOwner || !subscribers) return <></>;
+const UserPage: NextPage = ({ user, pageOwner, followers, posts }: Props) => {
+  if (!pageOwner || !followers) return <></>;
 
   return (
     <>
@@ -81,10 +81,7 @@ const UserPage: NextPage = ({ user, pageOwner, subscribers, posts }: Props) => {
             <div className="w-full flex-1 justify-center sm:flex">
               <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
                 <SWRConfig value={{ fallback: { posts } }}>
-                  <ProfileHeader
-                    pageOwner={pageOwner}
-                    subscribers={subscribers}
-                  />
+                  <ProfileHeader pageOwner={pageOwner} followers={followers} />
                 </SWRConfig>
 
                 <main className="grid w-full grid-cols-3 gap-1 md:gap-7">

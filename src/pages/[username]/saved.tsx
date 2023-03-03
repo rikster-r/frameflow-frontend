@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     const promises = [
       axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}`),
-      axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/subscribers`),
+      axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/followers`),
       axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/${username}/saved`),
     ];
 
@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       );
     }
 
-    const [pageOwnerRes, subscribersRes, savedPostsRes, userRes] =
+    const [pageOwnerRes, followersRes, savedPostsRes, userRes] =
       await Promise.all(promises);
 
     if (
@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {
         user: userRes ? (userRes?.data as IUser) : null,
-        subscribers: subscribersRes?.data as IUser[],
+        followers: followersRes?.data as IUser[],
         posts: savedPostsRes?.data as IPost[],
       },
     };
@@ -64,12 +64,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 type Props = {
   user?: IUser;
-  subscribers?: IUser[];
+  followers?: IUser[];
   posts?: IPost[];
 };
 
-const SavedPage: NextPage = ({ user, subscribers, posts }: Props) => {
-  if (!user || !subscribers || !posts) return <></>;
+const SavedPage: NextPage = ({ user, followers, posts }: Props) => {
+  if (!user || !followers || !posts) return <></>;
 
   return (
     <>
@@ -90,7 +90,7 @@ const SavedPage: NextPage = ({ user, subscribers, posts }: Props) => {
             <div className="w-full flex-1 justify-center sm:flex">
               <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
                 <SWRConfig value={{ fallback: posts }}>
-                  <ProfileHeader pageOwner={user} subscribers={subscribers} />
+                  <ProfileHeader pageOwner={user} followers={followers} />
                 </SWRConfig>
 
                 <main className="grid w-full grid-cols-3 gap-1 md:gap-7">

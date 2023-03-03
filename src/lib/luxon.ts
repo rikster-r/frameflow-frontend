@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
-export function getCurrentTimeDifference(timestamp: string) {
-  const date = DateTime.fromISO(timestamp);
+export function getCurrentTimeDifference(createdAt: string) {
+  const date = DateTime.fromISO(createdAt);
   const now = DateTime.now();
   const diff = now
     .diff(date, ["years", "weeks", "days", "hours", "minutes", "seconds"])

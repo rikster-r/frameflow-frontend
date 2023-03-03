@@ -18,7 +18,7 @@ interface IPost {
   images: string[];
   text: string;
   likedBy: string[];
-  timestamp: string;
+  createdAt: string;
 }
 
 interface IComment {
@@ -28,5 +28,5 @@ interface IComment {
   post: string;
   text: string;
   likedBy: string[];
-  timestamp: string;
+  createdAt: string;
 }

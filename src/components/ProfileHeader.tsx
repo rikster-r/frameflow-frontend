@@ -7,10 +7,10 @@ import useUser from "../hooks/useUser";
 
 type Props = {
   pageOwner: IUser;
-  subscribers: IUser[];
+  followers: IUser[];
 };
 
-const ProfileHeader = ({ pageOwner, subscribers }: Props) => {
+const ProfileHeader = ({ pageOwner, followers }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
   const router = useRouter();
   const { posts, error } = usePosts(pageOwner.username, "posts");
@@ -70,15 +70,15 @@ const ProfileHeader = ({ pageOwner, subscribers }: Props) => {
             </div>
             <div className="flex flex-wrap gap-1.5">
               <span className="font-semibold">
-                {formatter.format(subscribers.length)}
+                {formatter.format(followers.length)}
               </span>
-              <span>subscribers</span>
+              <span>followers</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               <span className="font-semibold">
                 {formatter.format(pageOwner.follows.length)}
               </span>
-              <span>subscriptions</span>
+              <span>following</span>
             </div>
           </div>
           {pageOwner?.publicName && (
@@ -116,15 +116,15 @@ const ProfileHeader = ({ pageOwner, subscribers }: Props) => {
         </div>
         <div className="flex flex-col items-center justify-center">
           <span className="font-semibold">
-            {formatter.format(subscribers.length)}
+            {formatter.format(followers.length)}
           </span>
-          <span className="text-neutral-500">subscribers</span>
+          <span className="text-neutral-500">followers</span>
         </div>
         <div className="flex flex-col items-center justify-center">
           <span className="font-semibold">
             {formatter.format(pageOwner?.follows.length)}
           </span>
-          <span className="text-neutral-500">subscriptions</span>
+          <span className="text-neutral-500">following</span>
         </div>
       </div>
 

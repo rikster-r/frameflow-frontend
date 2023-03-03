@@ -8,7 +8,7 @@ import { useSWRConfig } from "swr";
 type Props = {
   author: IUser;
   text: string;
-  timestamp: string;
+  createdAt: string;
   likedBy?: string[];
   userId?: string;
   postId?: string;
@@ -18,7 +18,7 @@ type Props = {
 const Comment = ({
   author,
   text,
-  timestamp,
+  createdAt,
   likedBy,
   userId,
   postId,
@@ -70,7 +70,7 @@ const Comment = ({
           {author.username} <span className="font-normal">{text}</span>
         </p>
         <div className="font-semibold text-neutral-400">
-          <span className="mr-3">{getCurrentTimeDifference(timestamp)}</span>
+          <span className="mr-3">{getCurrentTimeDifference(createdAt)}</span>
           {likedBy && Boolean(likedBy.length) && (
             <span>Likes: {likedBy.length}</span>
           )}
@@ -86,9 +86,9 @@ const Comment = ({
             stroke="currentColor"
             className={`${
               userId && likedBy.includes(userId)
-                ? "fill-red-500 stroke-red-500"
-                : ""
-            } mt-1 h-5 w-5 hover:text-neutral-400`}
+                ? "fill-red-500 stroke-red-500 text-red-500"
+                : "hover:text-neutral-400"
+            } mt-1 h-5 w-5`}
           >
             <path
               strokeLinecap="round"

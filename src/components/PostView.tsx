@@ -210,7 +210,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
               <Comment
                 author={postOwner}
                 text={post.text}
-                timestamp={post.timestamp}
+                createdAt={post.createdAt}
               />
             )}
             {comments &&
@@ -223,7 +223,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
                   author={comment.author}
                   text={comment.text}
                   likedBy={comment.likedBy}
-                  timestamp={comment.timestamp}
+                  createdAt={comment.createdAt}
                 />
               ))}
           </>
@@ -301,7 +301,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           {post.likedBy.length} like{post.likedBy.length !== 1 && "s"}
         </p>
         <p className="capt mt-1 pl-1 text-sm text-neutral-400">
-          {formatTimestamp(post.timestamp)}
+          {formatTimestamp(post.createdAt)}
         </p>
       </div>
       {user && (
