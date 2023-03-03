@@ -1,4 +1,3 @@
-import { Dialog } from "@headlessui/react";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import * as Avatar from "@radix-ui/react-avatar";
@@ -8,9 +7,9 @@ import {
   EmojiStyle,
   type EmojiClickData,
 } from "emoji-picker-react";
-import { Comment } from "./";
+import { Comment, LikesList } from "./";
 import { formatTimestamp } from "../lib/luxon";
-import { Popover, Transition } from "@headlessui/react";
+import { Popover, Transition, Dialog } from "@headlessui/react";
 import dynamic from "next/dynamic";
 import { parseCookies } from "nookies";
 import axios from "axios";
@@ -34,6 +33,7 @@ type Props = {
 };
 
 const PostView = ({ user, post, postOwner, comments, path }: Props) => {
+  const [likesCountOpen, setLikesCountOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
   const commentTextAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -71,7 +71,6 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   };
 
   const updateLikesCount = () => {
-    // todo add dialog to show those who liked
     if (!user) return;
 
     const newLikesField = post.likedBy.includes(user._id)
@@ -86,6 +85,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
         await mutate(
           `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
         );
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`);
       })
       .catch((err) => {
         console.error(err);
@@ -228,14 +228,14 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
               ))}
           </>
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-2">
+          <div className="hidden h-full flex-col items-center justify-center gap-2 md:flex">
             <p className="text-2xl font-bold">No comments.</p>
             <p>Start discourse</p>
           </div>
         )}
       </div>
       <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
-        <div className="flex gap-4">
+        <div className="relative flex gap-4">
           <button onClick={updateLikesCount}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -297,9 +297,23 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
             </svg>
           </button>
         </div>
-        <p className="mt-3 pl-1 font-semibold">
-          {post.likedBy.length} like{post.likedBy.length !== 1 && "s"}
-        </p>
+        <div className="relative">
+          <button
+            className={`${
+              post.likedBy.length ? "" : "hover:cursor-default"
+            } mt-3 pl-1 font-semibold`}
+            onClick={() => setLikesCountOpen(true)}
+          >
+            {post.likedBy.length} like{post.likedBy.length !== 1 && "s"}
+          </button>
+          {Boolean(post.likedBy.length) && (
+            <LikesList
+              open={likesCountOpen}
+              setOpen={setLikesCountOpen}
+              path={`/posts/${post._id}/likes`}
+            />
+          )}
+        </div>
         <p className="capt mt-1 pl-1 text-sm text-neutral-400">
           {formatTimestamp(post.createdAt)}
         </p>

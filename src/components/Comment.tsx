@@ -1,9 +1,11 @@
 import * as Avatar from "@radix-ui/react-avatar";
+import { useState } from "react";
 import Image from "next/image";
 import { getCurrentTimeDifference } from "../lib/luxon";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { useSWRConfig } from "swr";
+import { LikesList } from "./";
 
 type Props = {
   author: IUser;
@@ -24,6 +26,7 @@ const Comment = ({
   postId,
   commentId,
 }: Props) => {
+  const [likesCountOpen, setLikesCountOpen] = useState(false);
   const { mutate } = useSWRConfig();
 
   const updateLikesCount = () => {
@@ -39,6 +42,7 @@ const Comment = ({
       })
       .then(async () => {
         await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`);
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}/likes`);
       })
       .catch((err) => {
         console.error(err);
@@ -69,10 +73,19 @@ const Comment = ({
         <p className="font-semibold">
           {author.username} <span className="font-normal">{text}</span>
         </p>
-        <div className="font-semibold text-neutral-400">
+        <div className="relative font-semibold text-neutral-400">
           <span className="mr-3">{getCurrentTimeDifference(createdAt)}</span>
           {likedBy && Boolean(likedBy.length) && (
-            <span>Likes: {likedBy.length}</span>
+            <button onClick={() => setLikesCountOpen(true)}>
+              Likes: {likedBy.length}
+            </button>
+          )}
+          {commentId && likedBy && (
+            <LikesList
+              open={likesCountOpen}
+              setOpen={setLikesCountOpen}
+              path={`/comments/${commentId}/likes`}
+            />
           )}
         </div>
       </div>

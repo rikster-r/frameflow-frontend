@@ -8,6 +8,7 @@ import PostView from "./PostView";
 import Comment from "./Comment";
 import PostImage from "./PostImage";
 import PostImagesGrid from "./PostImagesGrid";
+import LikesList from "./LikesList";
 
 export {
   Header,
@@ -20,4 +21,5 @@ export {
   Comment,
   PostImage,
   PostImagesGrid,
+  LikesList,
 };
