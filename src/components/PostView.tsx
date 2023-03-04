@@ -6,7 +6,7 @@ import {
   EmojiStyle,
   type EmojiClickData,
 } from "emoji-picker-react";
-import { Comment, LikesList, Avatar } from "./";
+import { Comment, LikesList, Avatar, PostSettingsModal } from "./";
 import { formatTimestamp } from "../lib/luxon";
 import { Popover, Transition, Dialog } from "@headlessui/react";
 import dynamic from "next/dynamic";
@@ -32,6 +32,7 @@ type Props = {
 };
 
 const PostView = ({ user, post, postOwner, comments, path }: Props) => {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
@@ -181,12 +182,37 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           user={postOwner}
         />
         <p className="font-semibold dark:text-white">{postOwner.username} </p>
-        {user && user.username !== postOwner.username && (
-          <>
-            <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
-            <button className="font-semibold text-blue-500">Follow</button>
-          </>
-        )}
+        {user &&
+          user.username !== postOwner.username &&
+          !user.follows.includes(postOwner._id) && (
+            <>
+              <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
+              <button className="font-semibold text-blue-500">Follow</button>
+            </>
+          )}
+        <button className="ml-auto" onClick={() => setSettingsOpen(true)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+            />
+          </svg>
+        </button>
+        <PostSettingsModal
+          open={settingsOpen}
+          setOpen={setSettingsOpen}
+          post={post}
+          postOwner={postOwner}
+          path={path}
+        />
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
         {post.text || comments?.length ? (

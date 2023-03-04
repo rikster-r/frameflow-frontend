@@ -11,7 +11,7 @@ type Props = {
   path: "saved" | "posts";
 };
 
-const PostImages = ({ post, user, postOwner, path }: Props) => {
+const PostImage = ({ post, user, postOwner, path }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
   const { comments } = useComments(post._id);
   const [open, setOpen] = useState(false);
@@ -120,4 +120,4 @@ const PostImages = ({ post, user, postOwner, path }: Props) => {
   );
 };
 
-export default PostImages;
+export default PostImage;

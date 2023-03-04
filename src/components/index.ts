@@ -11,6 +11,7 @@ import PostImagesGrid from "./PostImagesGrid";
 import LikesList from "./LikesList";
 import Avatar from "./Avatar";
 import CreatePost from "./CreatePost";
+import PostSettingsModal from "./PostSettingsModal";
 
 export {
   Header,
@@ -26,4 +27,5 @@ export {
   LikesList,
   Avatar,
   CreatePost,
+  PostSettingsModal,
 };
