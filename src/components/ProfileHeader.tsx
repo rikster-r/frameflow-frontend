@@ -2,20 +2,45 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import usePosts from "../hooks/usePosts";
 import useUser from "../hooks/useUser";
+import useFollowers from "../hooks/useFollowers";
 import { Avatar } from "./";
+import axios from "axios";
+import { env } from "../env/server.mjs";
 
 type Props = {
   pageOwner: IUser;
-  followers: IUser[];
 };
 
-const ProfileHeader = ({ pageOwner, followers }: Props) => {
+const ProfileHeader = ({ pageOwner }: Props) => {
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
   const router = useRouter();
-  const { posts, error } = usePosts(pageOwner.username, "posts");
-  const { user } = useUser();
+  const { posts, error: postsError } = usePosts(pageOwner.username, "posts");
+  const {
+    followers,
+    error: followersError,
+    mutate: mutateFollowers,
+  } = useFollowers(pageOwner.username);
+  const { user, mutate: mutateUser } = useUser();
 
-  if (error) return <></>;
+  const updateUserFollowList = () => {
+    if (!user) return;
+
+    const newFollowList = user.follows.includes(pageOwner._id)
+      ? user.follows.filter((id) => id !== pageOwner._id)
+      : [...user.follows, pageOwner._id];
+
+    axios
+      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/follows`, {
+        follows: newFollowList,
+      })
+      .then(async () => {
+        await mutateUser();
+        await mutateFollowers();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <>
@@ -31,37 +56,59 @@ const ProfileHeader = ({ pageOwner, followers }: Props) => {
         <div className="flex flex-1 flex-col sm:items-start lg:mt-6">
           <div className="flex flex-col justify-evenly gap-2 sm:flex-row sm:gap-6">
             <p className="text-xl">{pageOwner.username}</p>
-            {user ? (
-              user.username === pageOwner.username ? (
-                <Link
-                  href={`/${user.username}/edit`}
-                  className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 sm:px-6"
-                >
-                  Edit profile
-                </Link>
-              ) : (
-                <button className="h-max w-max rounded-lg bg-blue-500 px-12 py-1 font-semibold capitalize text-white hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 sm:px-10">
-                  Follow
-                </button>
-              )
-            ) : null}
+            {user && (
+              <>
+                {user.username === pageOwner.username ? (
+                  <Link
+                    href={`/${user.username}/edit`}
+                    className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-neutral-300 focus:ring-opacity-80 sm:px-6"
+                  >
+                    Edit profile
+                  </Link>
+                ) : (
+                  <>
+                    {user.follows.includes(pageOwner._id) ? (
+                      <button
+                        className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-neutral-300 focus:ring-opacity-80 sm:px-10"
+                        onClick={updateUserFollowList}
+                      >
+                        Unfollow
+                      </button>
+                    ) : (
+                      <button
+                        className="h-max w-max rounded-lg bg-blue-500 px-12 py-1 font-semibold capitalize text-white hover:bg-blue-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-blue-300 focus-visible:ring-opacity-80 sm:px-10"
+                        onClick={updateUserFollowList}
+                      >
+                        Follow
+                      </button>
+                    )}
+                  </>
+                )}
+              </>
+            )}
           </div>
           <div className="mt-6 hidden w-full max-w-[500px] justify-between sm:flex md:pr-16">
             <div className="flex flex-wrap gap-1.5">
               <span className="font-semibold">
-                {formatter.format(posts?.length || 0)}
+                {!posts || postsError
+                  ? 0
+                  : formatter.format(posts?.length || 0)}
               </span>
               <span>publications</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               <span className="font-semibold">
-                {formatter.format(followers.length)}
+                {!followers || followersError
+                  ? 0
+                  : formatter.format(followers.length)}
               </span>
               <span>followers</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               <span className="font-semibold">
-                {formatter.format(pageOwner.follows.length)}
+                {!followers || followersError
+                  ? 0
+                  : formatter.format(pageOwner.follows.length)}
               </span>
               <span>following</span>
             </div>
@@ -101,7 +148,7 @@ const ProfileHeader = ({ pageOwner, followers }: Props) => {
         </div>
         <div className="flex flex-col items-center justify-center">
           <span className="font-semibold">
-            {formatter.format(followers.length)}
+            {followers ? formatter.format(followers.length) : 0}
           </span>
           <span className="text-neutral-500">followers</span>
         </div>

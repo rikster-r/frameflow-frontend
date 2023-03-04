@@ -89,8 +89,8 @@ const SavedPage: NextPage = ({ user, followers, posts }: Props) => {
           <Layout>
             <div className="w-full flex-1 justify-center sm:flex">
               <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
-                <SWRConfig value={{ fallback: { posts } }}>
-                  <ProfileHeader pageOwner={user} followers={followers} />
+                <SWRConfig value={{ fallback: { posts, followers } }}>
+                  <ProfileHeader pageOwner={user} />
                 </SWRConfig>
 
                 <main className="grid w-full grid-cols-3 gap-1 md:gap-7">

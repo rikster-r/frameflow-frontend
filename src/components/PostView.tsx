@@ -123,6 +123,29 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
       });
   };
 
+  const updateUserFollowList = () => {
+    const { userToken } = parseCookies();
+    if (!user || !userToken) return;
+
+    const newFollowList = user.follows.includes(postOwner._id)
+      ? user.follows.filter((id) => id !== postOwner._id)
+      : [...user.follows, postOwner._id];
+
+    axios
+      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/follows`, {
+        follows: newFollowList,
+      })
+      .then(async () => {
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`);
+        await mutate(
+          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/followers`
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <Dialog.Panel className="scrollbar-hide grid h-[80vh] w-[calc(100vw-4rem)] grid-cols-1  grid-rows-[4rem_400px_auto] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden">
       <div className="relative flex flex-1 items-center justify-center md:row-span-full">
@@ -182,14 +205,31 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           user={postOwner}
         />
         <p className="font-semibold dark:text-white">{postOwner.username} </p>
-        {user &&
-          user.username !== postOwner.username &&
-          !user.follows.includes(postOwner._id) && (
-            <>
-              <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
-              <button className="font-semibold text-blue-500">Follow</button>
-            </>
-          )}
+        {user && user.username !== postOwner.username && (
+          <>
+            {user.follows.includes(postOwner._id) ? (
+              <>
+                <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
+                <button
+                  className="font-semibold dark:text-white"
+                  onClick={updateUserFollowList}
+                >
+                  Unfollow
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
+                <button
+                  className="font-semibold text-blue-500"
+                  onClick={updateUserFollowList}
+                >
+                  Follow
+                </button>
+              </>
+            )}
+          </>
+        )}
         <button className="ml-auto" onClick={() => setSettingsOpen(true)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

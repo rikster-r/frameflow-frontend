@@ -18,9 +18,14 @@ const getUser: Fetcher<IUser, string> = (url: string) => {
 
 const useUser = () => {
   const url = `${env.NEXT_PUBLIC_API_HOST}/users/profile`;
-  const { data: user, error, isLoading } = useSWR<IUser, Error>(url, getUser);
+  const {
+    data: user,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<IUser, Error>(url, getUser);
 
-  return { user, error, isLoading };
+  return { user, error, isLoading, mutate };
 };
 
 export default useUser;
