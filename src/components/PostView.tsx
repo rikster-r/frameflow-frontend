@@ -5,7 +5,7 @@ import {
   Comment,
   UsersListModal,
   Avatar,
-  PostSettingsModal,
+  ControlsModal,
   CommentInput,
 } from ".";
 import { formatTimestamp } from "../lib/luxon";
@@ -13,6 +13,9 @@ import { Dialog } from "@headlessui/react";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import { useSWRConfig } from "swr";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 type Props = {
   user?: IUser;
@@ -28,6 +31,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const commentTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const { mutate } = useSWRConfig();
+  const router = useRouter();
 
   const updateLikesCount = () => {
     if (!user) return;
@@ -102,6 +106,19 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
       })
       .catch((err) => {
         console.error(err);
+      });
+  };
+
+  const deletePost = () => {
+    axios
+      .delete(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`)
+      .then(async () => {
+        await mutate(
+          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
+        );
+      })
+      .catch(() => {
+        toast.error("Error occured while deleting post");
       });
   };
 
@@ -205,13 +222,19 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
             />
           </svg>
         </button>
-        <PostSettingsModal
-          open={settingsOpen}
-          setOpen={setSettingsOpen}
-          post={post}
-          postOwner={postOwner}
-          path={path}
-        />
+        <ControlsModal open={settingsOpen} setOpen={setSettingsOpen}>
+          <button
+            className="w-full py-4 font-semibold text-red-500"
+            onClick={deletePost}
+          >
+            Delete
+          </button>
+          {!router.pathname.includes("/posts") && (
+            <Link href={`/posts/${post._id}`} className="block py-4">
+              Go to post
+            </Link>
+          )}
+        </ControlsModal>
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
         {post.text || comments?.length ? (

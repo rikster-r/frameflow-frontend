@@ -3,7 +3,8 @@ import { getCurrentTimeDifference } from "../lib/luxon";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { useSWRConfig } from "swr";
-import { UsersListModal, Avatar } from "./";
+import { UsersListModal, Avatar, ControlsModal } from "./";
+import { toast } from "react-toastify";
 
 type Props = {
   author: IUser;
@@ -24,6 +25,7 @@ const Comment = ({
   postId,
   commentId,
 }: Props) => {
+  const [controlsOpen, setControlsOpen] = useState(false);
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const { mutate } = useSWRConfig();
 
@@ -47,8 +49,21 @@ const Comment = ({
       });
   };
 
+  const deleteComment = () => {
+    if (!postId || !userId || !commentId) return;
+
+    axios
+      .delete(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}`)
+      .then(async () => {
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`);
+      })
+      .catch(() => {
+        toast.error("Error occured while deleting comment");
+      });
+  };
+
   return (
-    <div className="flex h-max w-full items-start px-4 py-3 dark:text-white">
+    <div className="group flex h-max w-full items-start px-4 py-3 dark:text-white">
       <Avatar
         className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
         user={author}
@@ -57,21 +72,48 @@ const Comment = ({
         <p className="font-semibold">
           {author.username} <span className="font-normal">{text}</span>
         </p>
-        <div className="relative font-semibold text-neutral-400">
-          <span className="mr-3">{getCurrentTimeDifference(createdAt)}</span>
+        <div className="relative flex items-center gap-3 font-semibold text-neutral-400">
+          <span>{getCurrentTimeDifference(createdAt)}</span>
           {likedBy && Boolean(likedBy.length) && (
             <button onClick={() => setLikesCountOpen(true)}>
               Likes: {likedBy.length}
             </button>
           )}
-          {commentId && likedBy && (
-            <UsersListModal
-              title="likes"
-              open={likesCountOpen}
-              setOpen={setLikesCountOpen}
-              path={`/comments/${commentId}/likes`}
-            />
+          <UsersListModal
+            title="likes"
+            open={likesCountOpen}
+            setOpen={setLikesCountOpen}
+            path={`/comments/${commentId as string}/likes`}
+          />
+          {commentId && userId === author._id && (
+            <button
+              className="invisible group-hover:visible"
+              onClick={() => setControlsOpen(true)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                />
+              </svg>
+            </button>
           )}
+          <ControlsModal open={controlsOpen} setOpen={setControlsOpen}>
+            <button
+              className="w-full py-4 font-semibold text-red-500"
+              onClick={deleteComment}
+            >
+              Delete
+            </button>
+          </ControlsModal>
         </div>
       </div>
       {likedBy && userId && (

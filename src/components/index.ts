@@ -11,7 +11,7 @@ import PostImagesGrid from "./PostImagesGrid";
 import UsersListModal from "./Modals/UsersListModal";
 import Avatar from "./Avatar";
 import CreatePost from "./CreatePost";
-import PostSettingsModal from "./Modals/PostSettingsModal";
+import ControlsModal from "./Modals/ControlsModal";
 import CommentInput from "./CommentInput";
 
 export {
@@ -28,6 +28,6 @@ export {
   UsersListModal,
   Avatar,
   CreatePost,
-  PostSettingsModal,
+  ControlsModal,
   CommentInput,
 };

@@ -1,38 +1,18 @@
-import { Fragment, type SetStateAction, type Dispatch } from "react";
+import {
+  Fragment,
+  type SetStateAction,
+  type Dispatch,
+  type ReactNode,
+} from "react";
 import { Transition, Dialog } from "@headlessui/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { env } from "../../env/server.mjs";
-import { useSWRConfig } from "swr";
-import { toast } from "react-toastify";
 
 type Props = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  post: IPost;
-  postOwner: IUser;
-  path: string;
+  children: ReactNode | ReactNode[];
 };
 
-const PostSettingsModal = ({ open, setOpen, post, postOwner, path }: Props) => {
-  const router = useRouter();
-  const showPostLink = router.pathname.includes("/posts");
-  const { mutate } = useSWRConfig();
-
-  const deletePost = () => {
-    axios
-      .delete(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`)
-      .then(async () => {
-        await mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
-        );
-      })
-      .catch(() => {
-        toast.error("Error occured while deleting post");
-      });
-  };
-
+const ControlsModal = ({ open, setOpen, children }: Props) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
@@ -59,17 +39,7 @@ const PostSettingsModal = ({ open, setOpen, post, postOwner, path }: Props) => {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-110"
             >
               <Dialog.Panel className="w-[300px] divide-y divide-neutral-300 rounded-lg bg-white text-center shadow-xl dark:divide-neutral-700 dark:bg-neutral-800 dark:text-white sm:w-[350px]">
-                <button
-                  className="w-full py-4 font-semibold text-red-500"
-                  onClick={deletePost}
-                >
-                  Delete
-                </button>
-                {!showPostLink && (
-                  <Link href={`/posts/${post._id}`} className="block py-4">
-                    Go to post
-                  </Link>
-                )}
+                {children}
                 <button className="w-full py-4" onClick={() => setOpen(false)}>
                   Cancel
                 </button>
@@ -82,4 +52,4 @@ const PostSettingsModal = ({ open, setOpen, post, postOwner, path }: Props) => {
   );
 };
 
-export default PostSettingsModal;
+export default ControlsModal;
