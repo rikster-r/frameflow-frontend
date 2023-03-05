@@ -8,7 +8,7 @@ import PostView from "./PostView";
 import Comment from "./Comment";
 import PostImage from "./PostImage";
 import PostImagesGrid from "./PostImagesGrid";
-import LikesList from "./LikesList";
+import UsersListModal from "./UsersListModal";
 import Avatar from "./Avatar";
 import CreatePost from "./CreatePost";
 import PostSettingsModal from "./PostSettingsModal";
@@ -24,7 +24,7 @@ export {
   Comment,
   PostImage,
   PostImagesGrid,
-  LikesList,
+  UsersListModal,
   Avatar,
   CreatePost,
   PostSettingsModal,

@@ -3,9 +3,10 @@ import { useRouter } from "next/router";
 import usePosts from "../hooks/usePosts";
 import useUser from "../hooks/useUser";
 import useFollowers from "../hooks/useFollowers";
-import { Avatar } from "./";
+import { Avatar, UsersListModal } from "./";
 import axios from "axios";
 import { env } from "../env/server.mjs";
+import { useState } from "react";
 
 type Props = {
   pageOwner: IUser;
@@ -21,6 +22,8 @@ const ProfileHeader = ({ pageOwner }: Props) => {
     mutate: mutateFollowers,
   } = useFollowers(pageOwner.username);
   const { user, mutate: mutateUser } = useUser();
+  const [followersOpen, setFollowersOpen] = useState(false);
+  const [followingOpen, setFollowingOpen] = useState(false);
 
   const updateUserFollowList = () => {
     if (!user) return;
@@ -96,22 +99,28 @@ const ProfileHeader = ({ pageOwner }: Props) => {
               </span>
               <span>publications</span>
             </div>
-            <div className="flex flex-wrap gap-1.5">
+            <button
+              className="flex flex-wrap gap-1.5"
+              onClick={() => setFollowersOpen(true)}
+            >
               <span className="font-semibold">
                 {!followers || followersError
                   ? 0
                   : formatter.format(followers.length)}
               </span>
               <span>followers</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
+            </button>
+            <button
+              className="flex flex-wrap gap-1.5"
+              onClick={() => setFollowingOpen(true)}
+            >
               <span className="font-semibold">
                 {!followers || followersError
                   ? 0
                   : formatter.format(pageOwner.follows.length)}
               </span>
               <span>following</span>
-            </div>
+            </button>
           </div>
           {pageOwner?.publicName && (
             <div className="mt-6 hidden w-full max-w-[500px] justify-between pr-16 sm:flex">
@@ -214,7 +223,18 @@ const ProfileHeader = ({ pageOwner }: Props) => {
           </>
         )}
       </div>
-      <div></div>
+      <UsersListModal
+        title="Followers"
+        open={followersOpen}
+        setOpen={setFollowersOpen}
+        path={`/users/${pageOwner.username}/followers`}
+      />
+      <UsersListModal
+        title="Following"
+        open={followingOpen}
+        setOpen={setFollowingOpen}
+        path={`/users/${pageOwner.username}/following`}
+      />
     </>
   );
 };

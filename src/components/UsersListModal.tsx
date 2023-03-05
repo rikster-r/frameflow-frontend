@@ -3,24 +3,25 @@ import { Fragment, type Dispatch, type SetStateAction } from "react";
 import useSWR from "swr";
 import { env } from "../env/server.mjs";
 import axios from "axios";
-import { Avatar } from "./";
+import { Avatar } from ".";
 
 type Props = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  title: string;
   path: string;
 };
 
-const getLikes = (url: string) =>
+const getUsers = (url: string) =>
   axios.get(url).then((res) => res.data as IUser[]);
 
-const LikesList = ({ open, setOpen, path }: Props) => {
-  const { data: likers, isLoading } = useSWR<IUser[]>(
+const UsersListModal = ({ open, setOpen, path, title }: Props) => {
+  const { data: users, isLoading } = useSWR<IUser[]>(
     `${env.NEXT_PUBLIC_API_HOST}${path}`,
-    getLikes
+    getUsers
   );
 
-  if (!likers) setOpen(false);
+  if (!users) setOpen(false);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -66,7 +67,7 @@ const LikesList = ({ open, setOpen, path }: Props) => {
                     </svg>
                   </div>
                   <Dialog.Title className="flex-1 py-3 text-center font-semibold">
-                    Likes
+                    {title}
                   </Dialog.Title>
                   <button className="mr-4" onClick={() => setOpen(false)}>
                     <svg
@@ -85,23 +86,23 @@ const LikesList = ({ open, setOpen, path }: Props) => {
                     </svg>
                   </button>
                 </div>
-                {!isLoading && likers && (
+                {!isLoading && users && (
                   <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300 dark:border-neutral-700">
-                    {likers.map((liker) => (
+                    {users.map((user) => (
                       <div
                         className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left"
-                        key={liker._id}
+                        key={user._id}
                       >
                         <Avatar
                           className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
-                          user={liker}
+                          user={user}
                         />
                         <div>
                           <p className="text-sm font-semibold">
-                            {liker.username}
+                            {user.username}
                           </p>
                           <p className="text-sm text-neutral-400">
-                            {liker.publicName}
+                            {user.publicName}
                           </p>
                         </div>
                       </div>
@@ -117,4 +118,4 @@ const LikesList = ({ open, setOpen, path }: Props) => {
   );
 };
 
-export default LikesList;
+export default UsersListModal;

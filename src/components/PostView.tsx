@@ -6,7 +6,7 @@ import {
   EmojiStyle,
   type EmojiClickData,
 } from "emoji-picker-react";
-import { Comment, LikesList, Avatar, PostSettingsModal } from "./";
+import { Comment, UsersListModal, Avatar, PostSettingsModal } from "./";
 import { formatTimestamp } from "../lib/luxon";
 import { Popover, Transition, Dialog } from "@headlessui/react";
 import dynamic from "next/dynamic";
@@ -358,7 +358,8 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
             {post.likedBy.length} like{post.likedBy.length !== 1 && "s"}
           </button>
           {Boolean(post.likedBy.length) && (
-            <LikesList
+            <UsersListModal
+              title="Likes"
               open={likesCountOpen}
               setOpen={setLikesCountOpen}
               path={`/posts/${post._id}/likes`}
