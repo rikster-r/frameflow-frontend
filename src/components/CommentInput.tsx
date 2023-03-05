@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useState, forwardRef, type Ref } from "react";
 import {
   type Theme,
   EmojiStyle,
@@ -23,10 +23,12 @@ const EmojiPicker = dynamic(
 type Props = {
   postId: string;
   comments?: IComment[];
-  ref: RefObject<HTMLTextAreaElement>;
 };
 
-const CommentInput = ({ comments, postId, ref }: Props) => {
+const CommentInput = (
+  { postId, comments }: Props,
+  ref: Ref<HTMLTextAreaElement>
+) => {
   const [commentText, setCommentText] = useState("");
   const { mutate } = useSWRConfig();
 
@@ -122,4 +124,4 @@ const CommentInput = ({ comments, postId, ref }: Props) => {
   );
 };
 
-export default CommentInput;
+export default forwardRef(CommentInput);
