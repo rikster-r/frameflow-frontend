@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { useContext, Fragment } from "react";
 import Link from "next/link";
-import { ThemeContext } from "../pages/_app";
+import { ThemeContext } from "../../pages/_app";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../Buttons/LogoutButton";
 
 type Props = {
   username: string;

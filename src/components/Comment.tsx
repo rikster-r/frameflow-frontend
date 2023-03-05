@@ -3,7 +3,7 @@ import { getCurrentTimeDifference } from "../lib/luxon";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { useSWRConfig } from "swr";
-import { LikesList, Avatar } from "./";
+import { UsersListModal, Avatar } from "./";
 
 type Props = {
   author: IUser;
@@ -65,7 +65,8 @@ const Comment = ({
             </button>
           )}
           {commentId && likedBy && (
-            <LikesList
+            <UsersListModal
+              title="likes"
               open={likesCountOpen}
               setOpen={setLikesCountOpen}
               path={`/comments/${commentId}/likes`}

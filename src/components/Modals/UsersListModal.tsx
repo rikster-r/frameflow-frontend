@@ -1,9 +1,9 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { Fragment, type Dispatch, type SetStateAction } from "react";
 import useSWR from "swr";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import axios from "axios";
-import { Avatar } from ".";
+import { Avatar } from "..";
 
 type Props = {
   open: boolean;

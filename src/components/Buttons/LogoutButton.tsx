@@ -2,7 +2,7 @@ import { destroyCookie } from "nookies";
 import { type MouseEventHandler, useContext } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { ThemeContext } from "../pages/_app";
+import { ThemeContext } from "../../pages/_app";
 
 const LogoutButton = () => {
   const router = useRouter();
@@ -13,7 +13,7 @@ const LogoutButton = () => {
     setIsDark(false);
     router
       .push("/")
-      .catch((err) => toast.error("Couldn't log out. Please try again"));
+      .catch(() => toast.error("Couldn't log out. Please try again"));
   };
 
   return (

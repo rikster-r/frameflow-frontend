@@ -3,7 +3,7 @@ import { Transition, Dialog } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import { useSWRConfig } from "swr";
 import { toast } from "react-toastify";
 

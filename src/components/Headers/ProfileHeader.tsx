@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import usePosts from "../hooks/usePosts";
-import useUser from "../hooks/useUser";
-import useFollowers from "../hooks/useFollowers";
-import { Avatar, UsersListModal } from "./";
+import usePosts from "../../hooks/usePosts";
+import useUser from "../../hooks/useUser";
+import useFollowers from "../../hooks/useFollowers";
+import { Avatar, UsersListModal } from "..";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import { useState } from "react";
 
 type Props = {

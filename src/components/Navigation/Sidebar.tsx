@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
-import { Avatar, CreatePost } from "./";
+import { Avatar, CreatePost } from "..";
 
 type Props = {
   user: IUser;
