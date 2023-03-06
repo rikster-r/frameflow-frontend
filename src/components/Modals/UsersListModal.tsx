@@ -22,8 +22,6 @@ const UsersListModal = ({ open, setOpen, path, title }: Props) => {
     isLoading,
   } = useSWR<IUser[], Error>(`${env.NEXT_PUBLIC_API_HOST}${path}`, getUsers);
 
-  if (!users || error) setOpen(false);
-
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
@@ -87,7 +85,7 @@ const UsersListModal = ({ open, setOpen, path, title }: Props) => {
                     </svg>
                   </button>
                 </div>
-                {!isLoading && users && (
+                {!isLoading && users && !error && (
                   <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300 dark:border-neutral-700">
                     {users.map((user) => (
                       <div

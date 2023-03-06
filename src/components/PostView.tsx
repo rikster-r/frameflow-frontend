@@ -14,8 +14,6 @@ import { parseCookies } from "nookies";
 import axios from "axios";
 import { useSWRConfig } from "swr";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
@@ -33,7 +31,6 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const commentTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const { mutate } = useSWRConfig();
-  const router = useRouter();
 
   const updateLikesCount = (withAnimation?: boolean) => {
     if (!user) return;
@@ -263,11 +260,6 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           >
             Delete
           </button>
-          {!router.pathname.includes("/posts") && (
-            <Link href={`/posts/${post._id}`} className="block py-4">
-              Go to post
-            </Link>
-          )}
         </ControlsModal>
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
