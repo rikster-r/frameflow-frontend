@@ -16,12 +16,13 @@ const getUsers = (url: string) =>
   axios.get(url).then((res) => res.data as IUser[]);
 
 const UsersListModal = ({ open, setOpen, path, title }: Props) => {
-  const { data: users, isLoading } = useSWR<IUser[]>(
-    `${env.NEXT_PUBLIC_API_HOST}${path}`,
-    getUsers
-  );
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useSWR<IUser[], Error>(`${env.NEXT_PUBLIC_API_HOST}${path}`, getUsers);
 
-  if (!users) setOpen(false);
+  if (!users || error) setOpen(false);
 
   return (
     <Transition.Root show={open} as={Fragment}>

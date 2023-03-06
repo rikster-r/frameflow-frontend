@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, type RefObject } from "react";
 import { getCurrentTimeDifference } from "../lib/luxon";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { useSWRConfig } from "swr";
 import { UsersListModal, Avatar, ControlsModal } from "./";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 type Props = {
   author: IUser;
@@ -14,6 +15,7 @@ type Props = {
   userId?: string;
   postId?: string;
   commentId?: string;
+  commentInputRef?: RefObject<HTMLTextAreaElement>;
 };
 
 const Comment = ({
@@ -24,6 +26,7 @@ const Comment = ({
   userId,
   postId,
   commentId,
+  commentInputRef,
 }: Props) => {
   const [controlsOpen, setControlsOpen] = useState(false);
   const [likesCountOpen, setLikesCountOpen] = useState(false);
@@ -62,29 +65,57 @@ const Comment = ({
       });
   };
 
+  const addAuthorNameToInput = () => {
+    if (
+      commentInputRef === undefined ||
+      commentInputRef.current === null ||
+      commentInputRef.current.value.length > 0
+    ) {
+      return;
+    }
+
+    commentInputRef.current.value = `@${author.username}`;
+  };
+
   return (
-    <div className="group flex h-max w-full items-start px-4 py-3 dark:text-white">
+    <div
+      className="group flex h-max w-full items-start px-4 py-3 dark:text-white"
+      onDoubleClick={updateLikesCount}
+    >
       <Avatar
         className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
         user={author}
       />
       <div className="flex w-full flex-col gap-1 text-left text-sm">
         <p className="font-semibold">
-          {author.username} <span className="font-normal">{text}</span>
+          <Link
+            href={`/${author.username}`}
+            className="mr-2 hover:text-gray-400"
+          >
+            {author.username}
+          </Link>
+          <span className="font-normal">{text}</span>
         </p>
-        <div className="relative flex items-center gap-3 font-semibold text-neutral-400">
-          <span>{getCurrentTimeDifference(createdAt)}</span>
+        <div className="relative flex items-center gap-3 font-semibold text-neutral-500 dark:text-neutral-400">
+          <span className="font-normal">
+            {getCurrentTimeDifference(createdAt)}
+          </span>
           {likedBy && Boolean(likedBy.length) && (
             <button onClick={() => setLikesCountOpen(true)}>
               Likes: {likedBy.length}
             </button>
           )}
-          <UsersListModal
-            title="likes"
-            open={likesCountOpen}
-            setOpen={setLikesCountOpen}
-            path={`/comments/${commentId as string}/likes`}
-          />
+          {commentId && (
+            <UsersListModal
+              title="likes"
+              open={likesCountOpen}
+              setOpen={setLikesCountOpen}
+              path={`/comments/${commentId}/likes`}
+            />
+          )}
+          {userId && commentInputRef && userId !== author._id && (
+            <button onClick={addAuthorNameToInput}>Reply</button>
+          )}
           {commentId && userId === author._id && (
             <button
               className="invisible group-hover:visible"

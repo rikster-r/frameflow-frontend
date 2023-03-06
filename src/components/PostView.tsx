@@ -16,6 +16,7 @@ import { useSWRConfig } from "swr";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   user?: IUser;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 const PostView = ({ user, post, postOwner, comments, path }: Props) => {
+  const [likeVisible, setLikeVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -33,7 +35,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
-  const updateLikesCount = () => {
+  const updateLikesCount = (withAnimation?: boolean) => {
     if (!user) return;
 
     const newLikesField = post.likedBy.includes(user._id)
@@ -45,10 +47,18 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
         likedBy: newLikesField,
       })
       .then(async () => {
-        await mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
-        );
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`);
+        if (withAnimation && newLikesField.length > post.likedBy.length) {
+          setLikeVisible(true);
+
+          setTimeout(() => setLikeVisible(false), 1000);
+        }
+
+        await Promise.all([
+          mutate(
+            `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
+          ),
+          mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`),
+        ]);
       })
       .catch((err) => {
         console.error(err);
@@ -124,7 +134,10 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
 
   return (
     <Dialog.Panel className="scrollbar-hide grid h-[80vh] w-[calc(100vw-4rem)] grid-cols-1  grid-rows-[4rem_400px_auto] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden">
-      <div className="relative flex flex-1 items-center justify-center md:row-span-full">
+      <div
+        className="relative flex flex-1 items-center justify-center md:row-span-full"
+        onDoubleClick={() => updateLikesCount(true)}
+      >
         <Image
           src={post.images.at(currentImageIndex) as string}
           alt=""
@@ -132,6 +145,25 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           height={400}
           className="absolute h-full w-full bg-black object-contain"
         />
+        <AnimatePresence mode="wait">
+          {likeVisible && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1.5 }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{ type: "spring", bounce: 0.5, duration: 0.6 }}
+              className="fixed"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="h-16 w-16 fill-white"
+              >
+                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+              </svg>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {currentImageIndex > 0 && (
           <button
             className="absolute left-2 flex items-center justify-center rounded-full bg-neutral-900 bg-opacity-70 p-2 text-white transition hover:bg-opacity-60 focus:outline-none"
@@ -259,6 +291,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
                   text={comment.text}
                   likedBy={comment.likedBy}
                   createdAt={comment.createdAt}
+                  commentInputRef={commentTextAreaRef}
                 />
               ))}
           </>
@@ -271,7 +304,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
       </div>
       <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
         <div className="relative flex gap-4">
-          <button onClick={updateLikesCount}>
+          <button onClick={() => updateLikesCount()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
