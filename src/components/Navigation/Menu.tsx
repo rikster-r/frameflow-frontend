@@ -66,7 +66,7 @@ const Menu = ({ username, searchToggled }: Props) => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <HeadlessMenu.Items className="absolute bottom-16 w-[250px] origin-bottom rounded-md bg-white shadow-md dark:bg-neutral-800">
+          <HeadlessMenu.Items className="absolute bottom-16 z-20 w-[250px] origin-bottom rounded-md bg-white shadow-md dark:bg-neutral-800">
             <HeadlessMenu.Item>
               <Link
                 href={`/${username}/edit`}
