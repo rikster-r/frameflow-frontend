@@ -4,6 +4,7 @@ import axios from "axios";
 import { env } from "../env/server.mjs";
 import nookies from "nookies";
 import { Layout } from "../components";
+import { SWRConfig } from "swr";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -53,12 +54,14 @@ const Home: NextPage = ({ user }: Props) => {
         <meta name="description" content="Photos from all over the world" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout user={user}>
-        <main className="flex-1 sm:flex sm:flex-grow-0">
-          {/* main scroll */}
-        </main>
-        <div className="hidden lg:flex">{/* latest users */}</div>
-      </Layout>
+      <SWRConfig value={{ fallback: { user } }}>
+        <Layout>
+          <main className="flex-1 sm:flex sm:flex-grow-0">
+            {/* main scroll */}
+          </main>
+          <div className="hidden lg:flex">{/* latest users */}</div>
+        </Layout>
+      </SWRConfig>
     </>
   );
 };

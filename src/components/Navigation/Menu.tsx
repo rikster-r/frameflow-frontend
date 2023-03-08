@@ -4,13 +4,26 @@ import Link from "next/link";
 import { ThemeContext } from "../../pages/_app";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 import LogoutButton from "../Buttons/LogoutButton";
+import useWindowWidth from "../../hooks/useWindowWidth";
 
 type Props = {
   username: string;
+  searchToggled: boolean;
 };
 
-const Menu = ({ username }: Props) => {
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    transitionEnd: {
+      display: "none",
+    },
+  },
+  visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
+};
+
+const Menu = ({ username, searchToggled }: Props) => {
   const { isDark, setIsDark } = useContext(ThemeContext);
+  const windowWidth = useWindowWidth();
 
   return (
     <div className="relative mt-auto w-full">
@@ -33,7 +46,15 @@ const Menu = ({ username }: Props) => {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </motion.svg>
-            <p className="hidden text-lg xl:block">More</p>
+            <motion.p
+              className="absolute left-12 hidden text-lg xl:block"
+              variants={textVariants}
+              animate={
+                windowWidth < 1280 || searchToggled ? "hidden" : "visible"
+              }
+            >
+              More
+            </motion.p>
           </HeadlessMenu.Button>
         </div>
         <Transition

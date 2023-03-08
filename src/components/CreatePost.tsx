@@ -18,12 +18,25 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import { parseCookies } from "nookies";
+import useWindowWidth from "../hooks/useWindowWidth";
 
 type Props = {
   user: IUser;
+  searchToggled: boolean;
 };
 
-const CreatePost = ({ user }: Props) => {
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    transitionEnd: {
+      display: "none",
+    },
+  },
+  visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
+};
+
+const CreatePost = ({ user, searchToggled }: Props) => {
+  const windowWidth = useWindowWidth();
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [step, setStep] = useState(1);
@@ -157,7 +170,13 @@ const CreatePost = ({ user }: Props) => {
             d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </motion.svg>
-        <p className="hidden text-lg xl:block">Create</p>
+        <motion.p
+          className="absolute left-12 hidden text-lg xl:block"
+          variants={textVariants}
+          animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+        >
+          Create
+        </motion.p>
       </button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
