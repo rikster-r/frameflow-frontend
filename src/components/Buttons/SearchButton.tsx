@@ -16,6 +16,7 @@ import { Avatar } from "../";
 type Props = {
   searchToggled: boolean;
   setSearchToggled: Dispatch<SetStateAction<boolean>>;
+  user: IUser;
 };
 
 const slideVariants = {
@@ -56,12 +57,21 @@ const textVariants = {
 const getSearchResults = (url: string) =>
   axios.get(url).then((res) => res.data as IUser[]);
 
-const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
+const getVisited = (url: string) =>
+  axios.get(url).then((res) => res.data as IUser[]);
+
+const SearchButton = ({ searchToggled, setSearchToggled, user }: Props) => {
   const [query, setQuery] = useState("");
   const url = `${env.NEXT_PUBLIC_API_HOST}/users/search?username=${query}`;
   const { data: results, isLoading } = useSWR<IUser[]>(
     query ? url : null,
     getSearchResults
+  );
+
+  const visitedUrl = `${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/visited`;
+  const { data: visited, mutate: mutateVisited } = useSWR<IUser[]>(
+    visitedUrl,
+    getVisited
   );
   const windowWidth = useWindowWidth();
   const slideInRef = useRef<HTMLDivElement>(null);
@@ -88,6 +98,29 @@ const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setSearchToggled, slideInRef]);
+
+  const removeFromVisitedList = (removeAll: boolean, id?: string) => {
+    if (!visited) return;
+
+    let newVisitedList: string[];
+
+    if (removeAll) {
+      newVisitedList = [];
+    } else {
+      newVisitedList = user.visited.concat().filter((userId) => userId !== id);
+    }
+
+    axios
+      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/visited`, {
+        visited: newVisitedList,
+      })
+      .then(async () => {
+        await mutateVisited();
+      })
+      .catch(() => {
+        console.error("Error deleting user from visited list");
+      });
+  };
 
   return (
     <>
@@ -135,9 +168,25 @@ const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
           <div className="border-b border-neutral-200 py-7 px-6 dark:border-neutral-700">
             <h2 className="mb-6 text-2xl font-semibold">Search query</h2>
             <div className="relative">
+              <div className="absolute left-3 top-2.5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-5 w-5 text-neutral-500 dark:text-neutral-400"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+              </div>
               <input
                 type="text"
-                className="w-full rounded-md  bg-neutral-200 px-4 py-2 placeholder-neutral-500 focus:outline-none dark:bg-neutral-800 dark:placeholder-neutral-400"
+                className="w-full rounded-md  bg-neutral-200 px-10 py-2 placeholder-neutral-500 focus:outline-none dark:bg-neutral-800 dark:placeholder-neutral-400"
                 placeholder="Search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -188,9 +237,14 @@ const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
             <div className="w-full px-6 py-4 ">
               <div className="flex justify-between">
                 <h3 className="font-semibold">Recent</h3>
-                <button className="font-semibold text-blue-500 hover:text-blue-900 dark:hover:text-blue-200">
-                  Clear all
-                </button>
+                {visited && visited.length > 0 && (
+                  <button
+                    className="font-semibold text-blue-500 hover:text-blue-900 dark:hover:text-blue-200"
+                    onClick={() => removeFromVisitedList(true)}
+                  >
+                    Clear all
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -216,6 +270,44 @@ const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
               </div>
             </div>
           )}
+          {!results &&
+            !isLoading &&
+            visited &&
+            visited.map((user) => (
+              <Link
+                href={`/${user.username}`}
+                className="flex w-full items-center gap-0.5 truncate px-6 py-3 hover:bg-gray-100"
+                key={user._id}
+              >
+                <Avatar
+                  className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+                  user={user}
+                />
+                <div>
+                  <p className="text-sm font-semibold">{user.username}</p>
+                  <p className="text-sm text-neutral-400">{user.publicName}</p>
+                </div>
+                <button
+                  onClick={() => removeFromVisitedList(false, user._id)}
+                  className="ml-auto"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-7 w-7"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </Link>
+            ))}
           {results &&
             results.map((user) => (
               <Link

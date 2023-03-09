@@ -100,6 +100,7 @@ const Sidebar = ({ user }: Props) => {
           </motion.p>
         </Link>
         <SearchButton
+          user={user}
           searchToggled={searchToggled}
           setSearchToggled={setSearchToggled}
         />

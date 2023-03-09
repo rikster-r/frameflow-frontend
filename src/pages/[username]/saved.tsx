@@ -69,7 +69,7 @@ type Props = {
 };
 
 const SavedPage: NextPage = ({ user, followers, posts }: Props) => {
-  if (!user || !followers || !posts) return <></>;
+  if (!user || !followers || !posts) return <></>
 
   return (
     <>

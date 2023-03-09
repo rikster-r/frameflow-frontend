@@ -5,6 +5,7 @@ import { env } from "../../env/server.mjs";
 import nookies from "nookies";
 import { Layout, ProfileHeader, PostImagesGrid } from "../../components";
 import { SWRConfig } from "swr";
+import { useEffect } from "react";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -60,6 +61,22 @@ type Props = {
 };
 
 const UserPage: NextPage = ({ user, pageOwner, followers, posts }: Props) => {
+  useEffect(() => {
+    if (!user || !pageOwner || user.visited.includes(pageOwner._id)) return;
+
+    const newVisitedList = user.visited.concat();
+    newVisitedList.push(pageOwner._id);
+    console.log(newVisitedList);
+
+    axios
+      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/visited`, {
+        visited: newVisitedList,
+      })
+      .catch((err) => {
+        console.error("Error updating visited list");
+      });
+  }, []);
+
   if (!pageOwner || !followers) return <></>;
 
   return (
