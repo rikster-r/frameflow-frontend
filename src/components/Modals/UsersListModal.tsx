@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { env } from "../../env/server.mjs";
 import axios from "axios";
 import { Avatar } from "..";
+import Link from "next/link";
 
 type Props = {
   open: boolean;
@@ -86,10 +87,12 @@ const UsersListModal = ({ open, setOpen, path, title }: Props) => {
                   </button>
                 </div>
                 {!isLoading && users && !error && (
-                  <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300 dark:border-neutral-700">
+                  <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300  dark:border-neutral-700">
                     {users.map((user) => (
-                      <div
-                        className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left"
+                      <Link
+                        onClick={() => setOpen(false)}
+                        href={`/${user.username}`}
+                        className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left hover:bg-gray-100"
                         key={user._id}
                       >
                         <Avatar
@@ -104,7 +107,7 @@ const UsersListModal = ({ open, setOpen, path, title }: Props) => {
                             {user.publicName}
                           </p>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 )}

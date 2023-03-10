@@ -118,7 +118,7 @@ const Comment = ({
           )}
           {commentId && userId === author._id && (
             <button
-              className="invisible group-hover:visible"
+              className="invisible group-hover:visible group-focus:visible"
               onClick={() => setControlsOpen(true)}
             >
               <svg

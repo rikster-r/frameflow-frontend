@@ -6,7 +6,7 @@ const useImageEditorHeight = () => {
   useEffect(() => {
     const getHeight = () => {
       if (window.innerWidth < 640) {
-        setHeight(window.innerHeight * 0.55 - 49);
+        setHeight(window.innerHeight * 0.55 - 20);
       } else {
         setHeight(Math.min(window.innerHeight * 0.7, 900) - 49);
       }

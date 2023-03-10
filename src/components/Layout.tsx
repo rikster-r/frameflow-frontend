@@ -13,7 +13,7 @@ const Layout = ({ children }: Props) => {
     <div
       className={`${
         user ? "sm:flex-row" : ""
-      } flex min-h-screen w-full flex-col dark:bg-black dark:text-neutral-100`}
+      } flex min-h-[100dvh] w-full flex-col dark:bg-black dark:text-neutral-100`}
     >
       {/* Header and BottomNav only for mobile, except if not loggen in, Sidebar only for bigger than mobile */}
       <Header user={user} />

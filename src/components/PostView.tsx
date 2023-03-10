@@ -130,7 +130,9 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
   };
 
   return (
-    <Dialog.Panel className="scrollbar-hide grid h-[80vh] w-[calc(100vw-4rem)] grid-cols-1  grid-rows-[4rem_400px_auto] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden">
+    <Dialog.Panel
+      className={`scrollbar-hide grid h-[100dvh] w-screen grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden`}
+    >
       <div
         className="relative flex flex-1 items-center justify-center md:row-span-full"
         onDoubleClick={() => updateLikesCount(true)}
@@ -149,7 +151,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
               animate={{ opacity: 1, scale: 1.5 }}
               exit={{ opacity: 0, scale: 0 }}
               transition={{ type: "spring", bounce: 0.5, duration: 0.6 }}
-              className="fixed"
+              className="absolute"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +238,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           </>
         )}
         {user && user.username === postOwner.username && (
-          <button className="ml-auto" onClick={() => setSettingsOpen(true)}>
+          <button className="ml-auto mr-10 sm:mr-0" onClick={() => setSettingsOpen(true)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

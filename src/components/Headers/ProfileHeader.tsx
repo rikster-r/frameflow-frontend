@@ -155,18 +155,18 @@ const ProfileHeader = ({ pageOwner }: Props) => {
           </span>
           <span className="text-neutral-500">publications</span>
         </div>
-        <div className="flex flex-col items-center justify-center">
+        <button className="flex flex-col items-center justify-center" onClick={() => setFollowersOpen(true)}>
           <span className="font-semibold">
             {followers ? formatter.format(followers.length) : 0}
           </span>
           <span className="text-neutral-500">followers</span>
-        </div>
-        <div className="flex flex-col items-center justify-center">
+        </button>
+        <button className="flex flex-col items-center justify-center" onClick={() => setFollowingOpen(true)}>
           <span className="font-semibold">
             {formatter.format(pageOwner?.follows.length)}
           </span>
           <span className="text-neutral-500">following</span>
-        </div>
+        </button>
       </div>
 
       <div className="mb-4 flex w-full items-center justify-evenly border-t border-neutral-300 px-2 text-sm dark:border-neutral-700 md:mb-7">
