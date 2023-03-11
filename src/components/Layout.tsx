@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Header, BottomNav, Sidebar } from "./index";
 import useUser from "../hooks/useUser";
+import { useRouter } from "next/router";
 
 type Props = {
   children: ReactNode | ReactNode[];
@@ -8,6 +9,7 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const { user } = useUser();
+  const router = useRouter();
 
   return (
     <div
@@ -16,7 +18,7 @@ const Layout = ({ children }: Props) => {
       } flex min-h-[100dvh] w-full flex-col dark:bg-black dark:text-neutral-100`}
     >
       {/* Header and BottomNav only for mobile, except if not loggen in, Sidebar only for bigger than mobile */}
-      <Header user={user} />
+      {router.pathname !== "/search" && <Header user={user} />}
       {user && <Sidebar user={user} />}
       {children}
       {user && <BottomNav username={user.username} />}
