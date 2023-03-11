@@ -96,7 +96,10 @@ const SearchPage: NextPage = ({ user }: Props) => {
                     </svg>
                   </button>
                 )}
-                <div className="relative w-full">
+                <div
+                  className="relative w-full"
+                  onClick={() => setSearchToggled(true)}
+                >
                   <div className="absolute left-3 top-2.5">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -119,7 +122,6 @@ const SearchPage: NextPage = ({ user }: Props) => {
                     placeholder="Search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    onClick={() => setSearchToggled(true)}
                   />
                   {isLoading && (
                     <div className="absolute right-3 top-2.5">
