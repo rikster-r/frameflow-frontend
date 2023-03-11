@@ -21,7 +21,7 @@ type Props = {
   post: IPost;
   postOwner: IUser;
   comments?: IComment[];
-  path: "saved" | "posts";
+  path: string;
 };
 
 const PostView = ({ user, post, postOwner, comments, path }: Props) => {
@@ -51,9 +51,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
         }
 
         await Promise.all([
-          mutate(
-            `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
-          ),
+          mutate(`${env.NEXT_PUBLIC_API_HOST}${path}`),
           mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`),
         ]);
       })
@@ -120,9 +118,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
     axios
       .delete(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`)
       .then(async () => {
-        await mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/${path}`
-        );
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}${path}`);
       })
       .catch(() => {
         toast.error("Error occured while deleting post");
@@ -238,7 +234,10 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           </>
         )}
         {user && user.username === postOwner.username && (
-          <button className="ml-auto mr-10 sm:mr-0" onClick={() => setSettingsOpen(true)}>
+          <button
+            className="ml-auto mr-10 sm:mr-0"
+            onClick={() => setSettingsOpen(true)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -281,7 +280,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
                   userId={user?._id}
                   postId={post._id}
                   commentId={comment._id}
-                  author={comment.author}
+                  author={comment.author as IUser}
                   text={comment.text}
                   likedBy={comment.likedBy}
                   createdAt={comment.createdAt}

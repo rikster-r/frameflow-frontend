@@ -69,7 +69,7 @@ type Props = {
 };
 
 const SavedPage: NextPage = ({ user, followers, posts }: Props) => {
-  if (!user || !followers || !posts) return <></>
+  if (!user || !followers || !posts) return <></>;
 
   return (
     <>
@@ -80,29 +80,24 @@ const SavedPage: NextPage = ({ user, followers, posts }: Props) => {
           content={`View saved posts of ${user.username}`}
         />
       </Head>
-      <div
-        className={`flex min-h-screen flex-col dark:bg-black dark:text-neutral-100 ${
-          user ? " sm:flex-row" : ""
-        }`}
-      >
-        <SWRConfig value={{ fallback: { user } }}>
-          <Layout>
-            <div className="w-full flex-1 justify-center sm:flex">
-              <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
-                <SWRConfig value={{ fallback: { posts, followers } }}>
-                  <ProfileHeader pageOwner={user} />
-                </SWRConfig>
 
-                <main className="grid w-full grid-cols-3 gap-1 md:gap-7">
-                  <SWRConfig value={{ fallback: { posts } }}>
-                    <PostImagesGrid pageOwner={user} path="saved" />
-                  </SWRConfig>
-                </main>
-              </div>
+      <SWRConfig value={{ fallback: { user } }}>
+        <Layout>
+          <div className="w-full flex-1 justify-center sm:flex">
+            <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
+              <SWRConfig value={{ fallback: { posts, followers } }}>
+                <ProfileHeader pageOwner={user} />
+              </SWRConfig>
+
+              <main>
+                <SWRConfig value={{ fallback: { posts } }}>
+                  <PostImagesGrid path={`/users/${user.username}/saved`} />
+                </SWRConfig>
+              </main>
             </div>
-          </Layout>
-        </SWRConfig>
-      </div>
+          </div>
+        </Layout>
+      </SWRConfig>
     </>
   );
 };

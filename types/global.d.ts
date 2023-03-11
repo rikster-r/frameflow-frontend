@@ -14,7 +14,7 @@ interface IUser {
 interface IPost {
   _id: string;
   __v: number;
-  author: string;
+  author: string | IUser;
   images: string[];
   text: string;
   likedBy: string[];
@@ -24,8 +24,8 @@ interface IPost {
 interface IComment {
   _id: string;
   __v: number;
-  author: IUser;
-  post: string;
+  author: string | IUser;
+  post: string | IPost;
   text: string;
   likedBy: string[];
   createdAt: string;

@@ -1,32 +1,59 @@
-import usePosts from "../hooks/usePosts";
 import { PostImage } from "./";
 import useUser from "../hooks/useUser";
+import useSWRInfinite from "swr/infinite";
+import axios from "axios";
+import { env } from "../env/server.mjs";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 type Props = {
-  pageOwner: IUser;
-  path: "saved" | "posts";
+  path: string;
 };
 
-const PostImagesGrid = ({ pageOwner, path }: Props) => {
+const getPosts = (url: string) =>
+  axios.get(url).then((res) => res?.data as IPost[]);
+
+const PostImagesGrid = ({ path }: Props) => {
+  const [hasMore, setHasMore] = useState(true);
   const { user } = useUser();
-  const { posts, error } = usePosts(pageOwner.username, path);
+  const {
+    data: posts,
+    error,
+    size,
+    setSize,
+  } = useSWRInfinite<IPost[], Error>((index, data: IPost[]) => {
+    if (data && !data.length) {
+      setHasMore(false);
+      return null;
+    }
+    return `${env.NEXT_PUBLIC_API_HOST}${path}?page=${index}&perPage=20`;
+  }, getPosts);
+  const router = useRouter();
+  const loadCondition = router.pathname === "/explore";
 
   if (error || !posts) return <></>;
 
   return (
-    <>
-      {posts.map((post) => {
-        return (
+    <InfiniteScroll
+      dataLength={posts.length}
+      next={() => setSize(size + 1)}
+      hasMore={loadCondition && hasMore}
+      loader={loadCondition ? <h4>Loading...</h4> : null}
+      className="grid w-full grid-cols-3 place-items-center gap-1 overflow-hidden md:gap-7"
+    >
+      {posts.map((postsArr) =>
+        postsArr.map((post) => (
           <PostImage
             post={post}
             key={post._id}
             user={user}
-            postOwner={pageOwner}
+            postOwner={post.author as IUser}
             path={path}
           />
-        );
-      })}
-    </>
+        ))
+      )}
+    </InfiniteScroll>
   );
 };
 

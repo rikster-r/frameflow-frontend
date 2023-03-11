@@ -66,7 +66,6 @@ const UserPage: NextPage = ({ user, pageOwner, followers, posts }: Props) => {
 
     const newVisitedList = user.visited.concat();
     newVisitedList.push(pageOwner._id);
-    console.log(newVisitedList);
 
     axios
       .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/visited`, {
@@ -88,29 +87,23 @@ const UserPage: NextPage = ({ user, pageOwner, followers, posts }: Props) => {
           content={`View photos of ${pageOwner.publicName}`}
         />
       </Head>
-      <div
-        className={`flex min-h-screen flex-col dark:bg-black dark:text-neutral-100 ${
-          user ? " sm:flex-row" : ""
-        }`}
-      >
-        <SWRConfig value={{ fallback: { user } }}>
-          <Layout>
-            <div className="w-full flex-1 justify-center sm:flex">
-              <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
-                <SWRConfig value={{ fallback: { posts, followers } }}>
-                  <ProfileHeader pageOwner={pageOwner} />
-                </SWRConfig>
+      <SWRConfig value={{ fallback: { user } }}>
+        <Layout>
+          <div className="w-full flex-1 justify-center sm:flex">
+            <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
+              <SWRConfig value={{ fallback: { posts, followers } }}>
+                <ProfileHeader pageOwner={pageOwner} />
+              </SWRConfig>
 
-                <main className="grid w-full grid-cols-3 gap-1 md:gap-7">
-                  <SWRConfig value={{ fallback: { posts } }}>
-                    <PostImagesGrid pageOwner={pageOwner} path="posts" />
-                  </SWRConfig>
-                </main>
-              </div>
+              <main>
+                <SWRConfig value={{ fallback: { posts } }}>
+                  <PostImagesGrid path={`/users/${pageOwner.username}/posts`} />
+                </SWRConfig>
+              </main>
             </div>
-          </Layout>
-        </SWRConfig>
-      </div>
+          </div>
+        </Layout>
+      </SWRConfig>
     </>
   );
 };

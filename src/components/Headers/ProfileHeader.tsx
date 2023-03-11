@@ -1,29 +1,40 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import usePosts from "../../hooks/usePosts";
 import useUser from "../../hooks/useUser";
-import useFollowers from "../../hooks/useFollowers";
 import { Avatar, UsersListModal } from "..";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
 import { useState } from "react";
+import useSWR from "swr";
 
 type Props = {
   pageOwner: IUser;
 };
 
+const getPosts = (url: string) =>
+  axios.get(url).then((res) => res?.data as IPost[]);
+
+const getFollowers = (url: string) =>
+  axios.get(url).then((res) => res?.data as IUser[]);
+
 const ProfileHeader = ({ pageOwner }: Props) => {
-  const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
-  const router = useRouter();
-  const { posts, error: postsError } = usePosts(pageOwner.username, "posts");
+  const { data: posts, error: postsError } = useSWR<IPost[], Error>(
+    `${env.NEXT_PUBLIC_API_HOST}/users/${pageOwner.username}/posts`,
+    getPosts
+  );
   const {
-    followers,
+    data: followers,
     error: followersError,
     mutate: mutateFollowers,
-  } = useFollowers(pageOwner.username);
+  } = useSWR<IUser[], Error>(
+    `${env.NEXT_PUBLIC_API_HOST}/users/${pageOwner.username}/followers`,
+    getFollowers
+  );
   const { user, mutate: mutateUser } = useUser();
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
+  const router = useRouter();
+  const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
 
   const updateUserFollowList = () => {
     if (!user) return;
@@ -155,13 +166,19 @@ const ProfileHeader = ({ pageOwner }: Props) => {
           </span>
           <span className="text-neutral-500">publications</span>
         </div>
-        <button className="flex flex-col items-center justify-center" onClick={() => setFollowersOpen(true)}>
+        <button
+          className="flex flex-col items-center justify-center"
+          onClick={() => setFollowersOpen(true)}
+        >
           <span className="font-semibold">
             {followers ? formatter.format(followers.length) : 0}
           </span>
           <span className="text-neutral-500">followers</span>
         </button>
-        <button className="flex flex-col items-center justify-center" onClick={() => setFollowingOpen(true)}>
+        <button
+          className="flex flex-col items-center justify-center"
+          onClick={() => setFollowingOpen(true)}
+        >
           <span className="font-semibold">
             {formatter.format(pageOwner?.follows.length)}
           </span>

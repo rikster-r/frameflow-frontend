@@ -1,20 +1,28 @@
 import Image from "next/image";
-import useComments from "../hooks/useComments";
 import { Transition, Dialog } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { PostView } from "./";
+import axios from "axios";
+import { env } from "../env/server.mjs";
+import useSWR from "swr";
 
 type Props = {
   post: IPost;
   user?: IUser;
   postOwner: IUser;
-  path: "saved" | "posts";
+  path: string;
 };
 
+const getComments = (url: string) =>
+  axios.get(url).then((res) => res?.data as IComment[]);
+
 const PostImage = ({ post, user, postOwner, path }: Props) => {
-  const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
-  const { comments } = useComments(post._id);
+  const { data: comments } = useSWR<IComment[]>(
+    `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/comments`,
+    getComments
+  );
   const [open, setOpen] = useState(false);
+  const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
 
   return (
     <>
@@ -94,7 +102,7 @@ const PostImage = ({ post, user, postOwner, path }: Props) => {
                   path={path}
                 />
               </Transition.Child>
-              <div className="fixed right-3 sm:right-10 top-5 text-white">
+              <div className="fixed right-3 top-5 text-white sm:right-10">
                 <button onClick={() => setOpen(false)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
