@@ -62,7 +62,13 @@ type Props = {
 
 const UserPage: NextPage = ({ user, pageOwner, followers, posts }: Props) => {
   useEffect(() => {
-    if (!user || !pageOwner || user.visited.includes(pageOwner._id)) return;
+    if (
+      !user ||
+      !pageOwner ||
+      user._id === pageOwner._id ||
+      user.visited.includes(pageOwner._id)
+    )
+      return;
 
     const newVisitedList = user.visited.concat();
     newVisitedList.push(pageOwner._id);
