@@ -1,14 +1,14 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import {
   Comment,
   UsersListModal,
   Avatar,
   ControlsModal,
   CommentInput,
-} from ".";
-import { formatTimestamp } from "../lib/luxon";
+} from "..";
+import { formatTimestamp } from "../../lib/luxon";
 import { Dialog } from "@headlessui/react";
 import { parseCookies } from "nookies";
 import axios from "axios";

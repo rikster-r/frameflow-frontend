@@ -1,9 +1,9 @@
 import { useState, type RefObject } from "react";
-import { getCurrentTimeDifference } from "../lib/luxon";
+import { getCurrentTimeDifference } from "../../lib/luxon";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import { useSWRConfig } from "swr";
-import { UsersListModal, Avatar, ControlsModal } from "./";
+import { UsersListModal, Avatar, ControlsModal } from "..";
 import { toast } from "react-toastify";
 import Link from "next/link";
 

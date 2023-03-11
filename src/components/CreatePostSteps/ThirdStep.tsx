@@ -11,7 +11,7 @@ import {
 } from "emoji-picker-react";
 import useImageEditorWidth from "../../hooks/useImageEditorWidth";
 import useImageEditorHeight from "../../hooks/useImageEditorHeight";
-import { Avatar } from "../";
+import { Avatar } from "..";
 
 import dynamic from "next/dynamic";
 

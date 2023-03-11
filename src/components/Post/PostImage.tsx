@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Transition, Dialog } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { PostView } from "./";
+import { PostView } from "..";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import useSWR from "swr";
 
 type Props = {

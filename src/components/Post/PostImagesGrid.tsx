@@ -1,8 +1,8 @@
-import { PostImage } from "./";
-import useUser from "../hooks/useUser";
+import { PostImage } from "..";
+import useUser from "../../hooks/useUser";
 import useSWRInfinite from "swr/infinite";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { useState } from "react";

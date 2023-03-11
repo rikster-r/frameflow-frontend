@@ -12,13 +12,13 @@ import UsersListModal from "./Modals/UsersListModal";
 import SearchUsersSection from "./Search/UsersSection";
 
 import Layout from "./Layout";
-import PostView from "./PostView";
+import PostView from "./Post/PostView";
 import Comment from "./Comment";
-import PostImage from "./PostImage";
-import PostImagesGrid from "./PostImagesGrid";
+import PostImage from "./Post/PostImage";
+import PostImagesGrid from "./Post/PostImagesGrid";
 import Avatar from "./Avatar";
-import CreatePost from "./CreatePost";
-import CommentInput from "./CommentInput";
+import CreatePost from "./Post/CreatePost";
+import CommentInput from "./Comment/CommentInput";
 import Loader from "./Loader";
 
 export {

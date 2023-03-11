@@ -13,16 +13,16 @@ import {
   SecondStep,
   ThirdStep,
   FourthStep,
-} from "./CreatePostSteps";
+} from "../CreatePostSteps";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import { parseCookies } from "nookies";
-import useWindowWidth from "../hooks/useWindowWidth";
+import useWindowWidth from "../../hooks/useWindowWidth";
 
 type Props = {
   user: IUser;
-  searchToggled: boolean;
+  searchToggled?: boolean;
 };
 
 const textVariants = {
@@ -62,7 +62,7 @@ const CreatePost = ({ user, searchToggled }: Props) => {
       .then(() => {
         setTimeout(() => setStatus("success"), 1000);
       })
-      .catch((err) => {
+      .catch(() => {
         setTimeout(() => setStatus("error"), 1000);
       });
   }, [step]);

@@ -4,7 +4,7 @@ import {
   EmojiStyle,
   type EmojiClickData,
 } from "emoji-picker-react";
-import { env } from "../env/server.mjs";
+import { env } from "../../env/server.mjs";
 import axios from "axios";
 import { useSWRConfig } from "swr";
 import { toast } from "react-toastify";
