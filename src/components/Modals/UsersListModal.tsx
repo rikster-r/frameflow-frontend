@@ -92,7 +92,7 @@ const UsersListModal = ({ open, setOpen, path, title }: Props) => {
                       <Link
                         onClick={() => setOpen(false)}
                         href={`/${user.username}`}
-                        className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left hover:bg-gray-100"
+                        className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700"
                         key={user._id}
                       >
                         <Avatar
