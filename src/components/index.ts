@@ -18,6 +18,7 @@ import PostImagesGrid from "./PostImagesGrid";
 import Avatar from "./Avatar";
 import CreatePost from "./CreatePost";
 import CommentInput from "./CommentInput";
+import Loader from "./Loader";
 
 export {
   Header,
@@ -36,4 +37,5 @@ export {
   ControlsModal,
   CommentInput,
   SearchButton,
+  Loader
 };
