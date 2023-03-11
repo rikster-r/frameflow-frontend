@@ -5,10 +5,11 @@ import Header from "./Headers/Header";
 import ProfileHeader from "./Headers/ProfileHeader";
 
 import LogoutButton from "./Buttons/LogoutButton";
-import SearchButton from "./Buttons/SearchButton";
+import SearchButton from "./Search";
 
 import ControlsModal from "./Modals/ControlsModal";
 import UsersListModal from "./Modals/UsersListModal";
+import SearchUsersSection from "./Search/UsersSection";
 
 import Layout from "./Layout";
 import PostView from "./PostView";
@@ -37,5 +38,6 @@ export {
   ControlsModal,
   CommentInput,
   SearchButton,
-  Loader
+  Loader,
+  SearchUsersSection,
 };
