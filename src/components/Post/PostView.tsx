@@ -129,10 +129,12 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
   };
 
   const deletePost = () => {
+    if (!user) return;
+
     axios
       .delete(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`)
       .then(async () => {
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`);
+        await router.push(`/${user.username}`);
       })
       .catch(() => {
         toast.error("Error occured while deleting post");
