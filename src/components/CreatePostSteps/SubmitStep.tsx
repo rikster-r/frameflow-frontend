@@ -5,8 +5,7 @@ type Props = {
   status: string;
 };
 
-// submitting step
-const FourthStep = ({ status }: Props) => {
+const SubmitStep = ({ status }: Props) => {
   return (
     <>
       <div className="flex items-center justify-between ">
@@ -72,4 +71,4 @@ const FourthStep = ({ status }: Props) => {
   );
 };
 
-export default FourthStep;
+export default SubmitStep;

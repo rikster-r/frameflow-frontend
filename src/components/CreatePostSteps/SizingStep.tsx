@@ -21,7 +21,7 @@ type Props = {
 };
 
 // Image sizing step
-const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
+const SizingStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
   const editorWidth = useImageEditorWidth();
   const editorHeight = useImageEditorHeight();
   const editorRef = useRef<AvatarEditor>(null);
@@ -379,4 +379,4 @@ const SecondStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
   );
 };
 
-export default SecondStep;
+export default SizingStep;

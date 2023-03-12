@@ -4,10 +4,7 @@ import Menu from "./Menu";
 import { Avatar, CreatePost, SearchButton } from "..";
 import { useState } from "react";
 import useWindowWidth from "../../hooks/useWindowWidth";
-
-type Props = {
-  user: IUser;
-};
+import useUser from "../../hooks/useUser";
 
 const logoVariants = {
   hidden: {
@@ -34,9 +31,12 @@ const sidebarVariants = {
   full: { width: 270, transition: { delay: 0.3 } },
 };
 
-const Sidebar = ({ user }: Props) => {
+const Sidebar = () => {
+  const { user } = useUser();
   const [searchToggled, setSearchToggled] = useState(false);
   const windowWidth = useWindowWidth();
+
+  if (!user) return <></>;
 
   return (
     <div className="sticky top-0 z-10 hidden h-screen w-[80px] flex-col sm:flex xl:w-[270px]">
@@ -151,7 +151,7 @@ const Sidebar = ({ user }: Props) => {
             Notifications
           </motion.p>
         </button>
-        <CreatePost user={user} searchToggled={searchToggled} />
+        <CreatePost searchToggled={searchToggled} />
         <Link
           href={`/${user.username}`}
           className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
@@ -170,7 +170,7 @@ const Sidebar = ({ user }: Props) => {
             Profile
           </motion.p>
         </Link>
-        <Menu username={user.username} searchToggled={searchToggled} />
+        <Menu searchToggled={searchToggled} />
       </motion.div>
     </div>
   );

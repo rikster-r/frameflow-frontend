@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import CreatePost from "../Post/CreatePost";
+import useUser from "../../hooks/useUser";
 
-type Props = {
-  user?: IUser;
-};
+const Header = () => {
+  const { user } = useUser();
 
-const Header = ({ user }: Props) => {
   return (
     <header
       className={`flex w-full items-center justify-center border-b border-neutral-300 px-4 py-3 dark:border-neutral-700 ${
@@ -19,7 +18,7 @@ const Header = ({ user }: Props) => {
         </Link>
         {user ? (
           <div className="flex items-center justify-center">
-            <CreatePost user={user} />
+            <CreatePost />
             <Link href="/notifications">
               <motion.svg
                 xmlns="http://www.w3.org/2000/svg"

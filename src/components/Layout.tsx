@@ -18,10 +18,10 @@ const Layout = ({ children }: Props) => {
       } flex min-h-[100dvh] w-full flex-col dark:bg-black dark:text-neutral-100`}
     >
       {/* Header and BottomNav only for mobile, except if not loggen in, Sidebar only for bigger than mobile */}
-      {router.pathname !== "/search" && <Header user={user} />}
-      {user && <Sidebar user={user} />}
+      {router.pathname !== "/search" && <Header />}
+      {user && <Sidebar />}
       {children}
-      {user && <BottomNav username={user.username} />}
+      {user && <BottomNav />}
     </div>
   );
 };

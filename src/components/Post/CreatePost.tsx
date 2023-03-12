@@ -9,10 +9,10 @@ import {
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
-  FirstStep,
-  SecondStep,
-  ThirdStep,
-  FourthStep,
+  InputStep,
+  SizingStep,
+  CaptionStep,
+  SubmitStep,
 } from "../CreatePostSteps";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -21,7 +21,6 @@ import { parseCookies } from "nookies";
 import useWindowWidth from "../../hooks/useWindowWidth";
 
 type Props = {
-  user: IUser;
   searchToggled?: boolean;
 };
 
@@ -35,7 +34,7 @@ const textVariants = {
   visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
 };
 
-const CreatePost = ({ user, searchToggled }: Props) => {
+const CreatePost = ({ searchToggled }: Props) => {
   const windowWidth = useWindowWidth();
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
@@ -122,10 +121,10 @@ const CreatePost = ({ user, searchToggled }: Props) => {
   const getCurrentStep = () => {
     switch (step) {
       case 1:
-        return <FirstStep handleSelectClick={handleSelectClick} />;
+        return <InputStep handleSelectClick={handleSelectClick} />;
       case 2:
         return (
-          <SecondStep
+          <SizingStep
             files={files}
             setFiles={setFiles}
             setStep={setStep}
@@ -134,15 +133,14 @@ const CreatePost = ({ user, searchToggled }: Props) => {
         );
       case 3:
         return (
-          <ThirdStep
-            user={user}
+          <CaptionStep
             text={text}
             setText={setText}
             setStep={setStep}
           />
         );
       case 4:
-        return <FourthStep status={status} />;
+        return <SubmitStep status={status} />;
     }
   };
 

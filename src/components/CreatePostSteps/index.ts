@@ -1,6 +1,6 @@
-import FirstStep from "./FirstStep";
-import SecondStep from "./SecondStep";
-import ThirdStep from "./ThirdStep";
-import FourthStep from "./FourthStep";
+import InputStep from "./InputStep";
+import SizingStep from "./SizingStep";
+import CaptionStep from "./CaptionStep";
+import SubmitStep from "./SubmitStep";
 
-export { FirstStep, SecondStep, ThirdStep, FourthStep };
+export { InputStep, SizingStep, CaptionStep, SubmitStep };

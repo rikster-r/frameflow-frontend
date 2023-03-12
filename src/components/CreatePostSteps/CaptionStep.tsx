@@ -12,6 +12,7 @@ import {
 import useImageEditorWidth from "../../hooks/useImageEditorWidth";
 import useImageEditorHeight from "../../hooks/useImageEditorHeight";
 import { Avatar } from "..";
+import useUser from "../../hooks/useUser";
 
 import dynamic from "next/dynamic";
 
@@ -24,14 +25,14 @@ const EmojiPicker = dynamic(
 );
 
 type Props = {
-  user: IUser;
   text: string;
   setText: Dispatch<SetStateAction<string>>;
   setStep: Dispatch<SetStateAction<number>>;
 };
 
 // Caption input step
-const ThirdStep = ({ text, setText, user, setStep }: Props) => {
+const CaptionStep = ({ text, setText, setStep }: Props) => {
+  const { user } = useUser();
   const width = useImageEditorWidth();
   const height = useImageEditorHeight();
 
@@ -64,7 +65,7 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
             className="inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
             user={user}
           />
-          <p className="font-semibold ">{user.username}</p>
+          <p className="font-semibold ">{user?.username}</p>
         </div>
         <div className="h-full">
           <textarea
@@ -147,4 +148,4 @@ const ThirdStep = ({ text, setText, user, setStep }: Props) => {
   );
 };
 
-export default ThirdStep;
+export default CaptionStep;

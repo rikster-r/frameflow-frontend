@@ -5,8 +5,7 @@ type Props = {
   handleSelectClick: MouseEventHandler<HTMLButtonElement>;
 };
 
-// First input step
-const FirstStep = ({ handleSelectClick }: Props) => {
+const InputStep = ({ handleSelectClick }: Props) => {
   return (
     <>
       <Dialog.Title className="py-3 text-center font-semibold">
@@ -44,4 +43,4 @@ const FirstStep = ({ handleSelectClick }: Props) => {
   );
 };
 
-export default FirstStep;
+export default InputStep;

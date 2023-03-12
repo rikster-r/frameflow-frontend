@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
+import useUser from "../../hooks/useUser";
 
-type Props = {
-  username: string;
-};
+const BottomNav = () => {
+  const { user } = useUser();
 
-const BottomNav = ({ username }: Props) => {
+  if (!user) return <></>;
+
   //home, search, profile
   return (
     <nav className="flex items-center justify-evenly border-t border-neutral-300 p-3 dark:border-neutral-700 sm:hidden">
@@ -45,7 +46,7 @@ const BottomNav = ({ username }: Props) => {
           />
         </motion.svg>
       </Link>
-      <Link href={`/${username}`}>
+      <Link href={`/${user.username}`}>
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

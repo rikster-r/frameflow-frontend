@@ -5,9 +5,9 @@ import { ThemeContext } from "../../pages/_app";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 import LogoutButton from "../Buttons/LogoutButton";
 import useWindowWidth from "../../hooks/useWindowWidth";
+import useUser from "../../hooks/useUser";
 
 type Props = {
-  username: string;
   searchToggled: boolean;
 };
 
@@ -21,9 +21,12 @@ const textVariants = {
   visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
 };
 
-const Menu = ({ username, searchToggled }: Props) => {
+const Menu = ({ searchToggled }: Props) => {
+  const { user } = useUser();
   const { isDark, setIsDark } = useContext(ThemeContext);
   const windowWidth = useWindowWidth();
+
+  if (!user) return <></>;
 
   return (
     <div className="relative mt-auto w-full">
@@ -69,7 +72,7 @@ const Menu = ({ username, searchToggled }: Props) => {
           <HeadlessMenu.Items className="absolute bottom-16 z-20 w-[250px] origin-bottom rounded-md bg-white shadow-md dark:bg-neutral-800">
             <HeadlessMenu.Item>
               <Link
-                href={`/${username}/edit`}
+                href={`/${user.username}/edit`}
                 className="flex items-center border-b border-neutral-300 px-4 py-3 hover:bg-neutral-100 dark:border-0 dark:hover:bg-neutral-900"
               >
                 <p className="mr-auto text-lg">Settings</p>
@@ -96,7 +99,7 @@ const Menu = ({ username, searchToggled }: Props) => {
             </HeadlessMenu.Item>
             <HeadlessMenu.Item>
               <Link
-                href={`/${username}/saved`}
+                href={`/${user.username}/saved`}
                 className="flex items-center border-b border-neutral-300 px-4 py-3 hover:bg-neutral-100  dark:border-0 dark:hover:bg-neutral-900 "
               >
                 <p className="mr-auto text-lg">Saved</p>
