@@ -65,14 +65,24 @@ const PostPage: NextPage = ({ user, post, comments }: Props) => {
           content={`View post of ${postOwner.username}`}
         />
       </Head>
-      <SWRConfig value={{ fallback: { user } }}>
+      <SWRConfig
+        value={{
+          fallback: { [`${env.NEXT_PUBLIC_API_HOST}/users/profile`]: user },
+        }}
+      >
         <ConditionalWrapper
           condition={windowWidth > 768}
           wrap1={(children) => <Layout>{children}</Layout>}
           wrap2={(children) => <>{children}</>}
         >
           <main className="w-full flex-1 items-center justify-center sm:flex">
-            <SWRConfig value={{ fallback: { post } }}>
+            <SWRConfig
+              value={{
+                fallback: {
+                  [`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`]: post,
+                },
+              }}
+            >
               <PostView
                 postId={post._id}
                 postOwner={postOwner}

@@ -51,7 +51,11 @@ const ExplorePage: NextPage = ({ user, posts }: Props) => {
         <title>Explore &bull; Frameflow</title>
         <meta name="description" content="Explore latest posts on Frameflow" />
       </Head>
-      <SWRConfig value={{ fallback: { user } }}>
+      <SWRConfig
+        value={{
+          fallback: { [`${env.NEXT_PUBLIC_API_HOST}/users/profile`]: user },
+        }}
+      >
         <Layout>
           <div className="w-full flex-1 justify-center sm:flex">
             <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">

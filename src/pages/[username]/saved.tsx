@@ -81,16 +81,36 @@ const SavedPage: NextPage = ({ user, followers, posts }: Props) => {
         />
       </Head>
 
-      <SWRConfig value={{ fallback: { user } }}>
+      <SWRConfig
+        value={{
+          fallback: { [`${env.NEXT_PUBLIC_API_HOST}/users/profile`]: user },
+        }}
+      >
         <Layout>
           <div className="w-full flex-1 justify-center sm:flex">
             <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
-              <SWRConfig value={{ fallback: { posts, followers } }}>
+              <SWRConfig
+                value={{
+                  fallback: {
+                    [`${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/posts`]:
+                      posts,
+                    [`${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/followers`]:
+                      followers,
+                  },
+                }}
+              >
                 <ProfileHeader pageOwner={user} />
               </SWRConfig>
 
               <main>
-                <SWRConfig value={{ fallback: { posts } }}>
+                <SWRConfig
+                  value={{
+                    fallback: {
+                      [`${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/saved`]:
+                        posts,
+                    },
+                  }}
+                >
                   <PostImagesGrid path={`/users/${user.username}/saved`} />
                 </SWRConfig>
               </main>
