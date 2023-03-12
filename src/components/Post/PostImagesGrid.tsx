@@ -1,5 +1,4 @@
 import { PostImage } from "..";
-import useUser from "../../hooks/useUser";
 import useSWRInfinite from "swr/infinite";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
@@ -16,7 +15,6 @@ const getPosts = (url: string) =>
 
 const PostImagesGrid = ({ path }: Props) => {
   const [hasMore, setHasMore] = useState(true);
-  const { user } = useUser();
   const {
     data: posts,
     error,
@@ -47,9 +45,7 @@ const PostImagesGrid = ({ path }: Props) => {
           <PostImage
             post={post}
             key={post._id}
-            user={user}
             postOwner={post.author as IUser}
-            path={path}
           />
         ))
       )}

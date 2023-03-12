@@ -5,30 +5,41 @@ import { PostView } from "..";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
 import useSWR from "swr";
+import useWindowWidth from "../../hooks/useWindowWidth";
+import { useRouter } from "next/router";
+import { SWRConfig } from "swr";
 
 type Props = {
   post: IPost;
-  user?: IUser;
   postOwner: IUser;
-  path: string;
 };
 
 const getComments = (url: string) =>
   axios.get(url).then((res) => res?.data as IComment[]);
 
-const PostImage = ({ post, user, postOwner, path }: Props) => {
+const PostImage = ({ post, postOwner }: Props) => {
   const { data: comments } = useSWR<IComment[]>(
     `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/comments`,
     getComments
   );
   const [open, setOpen] = useState(false);
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
+  const windowWidth = useWindowWidth();
+  const router = useRouter();
+
+  const handleImageClick = () => {
+    if (windowWidth > 768) {
+      setOpen(true);
+    } else {
+      void router.push(`/posts/${post._id}`);
+    }
+  };
 
   return (
     <>
       <button
         className="group relative block filter hover:bg-gray-700"
-        onClick={() => setOpen(true)}
+        onClick={handleImageClick}
       >
         <Image
           src={post.images.at(0) as string}
@@ -94,13 +105,19 @@ const PostImage = ({ post, user, postOwner, path }: Props) => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-110"
               >
-                <PostView
-                  user={user as IUser}
-                  post={post}
-                  postOwner={postOwner}
-                  comments={comments}
-                  path={path}
-                />
+                <SWRConfig
+                  value={{
+                    fallback: {
+                      [`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`]: post,
+                    },
+                  }}
+                >
+                  <PostView
+                    postId={post._id}
+                    postOwner={postOwner}
+                    comments={comments}
+                  />
+                </SWRConfig>
               </Transition.Child>
               <div className="fixed right-3 top-5 text-white sm:right-10">
                 <button onClick={() => setOpen(false)}>

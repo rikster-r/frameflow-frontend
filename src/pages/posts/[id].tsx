@@ -1,0 +1,89 @@
+import { type NextPage, type GetServerSideProps } from "next";
+import Head from "next/head";
+import axios from "axios";
+import nookies from "nookies";
+import { env } from "../../env/server.mjs";
+import { Layout, PostView, ConditionalWrapper } from "../../components";
+import { SWRConfig } from "swr";
+import useWindowWidth from "../../hooks/useWindowWidth";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  try {
+    const { userToken } = nookies.get(ctx);
+    const postId = ctx.params?.id as string;
+
+    const promises = [
+      axios.get(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`),
+      axios.get(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`),
+    ];
+
+    if (userToken) {
+      promises.push(
+        axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        })
+      );
+    }
+
+    const [postRes, commentsRes, userRes] = await Promise.all(promises);
+
+    return {
+      props: {
+        user: userRes ? (userRes?.data as IUser) : null,
+        post: postRes?.data as IPost,
+        comments: commentsRes?.data as IComment[],
+      },
+    };
+  } catch (err) {
+    return {
+      props: {},
+    };
+  }
+};
+
+type Props = {
+  user?: IUser;
+  post?: IPost;
+  comments?: IComment[];
+};
+
+const PostPage: NextPage = ({ user, post, comments }: Props) => {
+  const windowWidth = useWindowWidth();
+  if (!post || !comments) return <></>;
+
+  const postOwner = post.author as IUser;
+  // const {post} = useSWR(`${post}`)
+
+  return (
+    <>
+      <Head>
+        <title>{`${post.text || postOwner.username} \u2022 Frameflow`}</title>
+        <meta
+          name="description"
+          content={`View post of ${postOwner.username}`}
+        />
+      </Head>
+      <SWRConfig value={{ fallback: { user } }}>
+        <ConditionalWrapper
+          condition={windowWidth > 768}
+          wrap1={(children) => <Layout>{children}</Layout>}
+          wrap2={(children) => <>{children}</>}
+        >
+          <main className="w-full flex-1 items-center justify-center sm:flex">
+            <SWRConfig value={{ fallback: { post } }}>
+              <PostView
+                postId={post._id}
+                postOwner={postOwner}
+                comments={comments}
+              />
+            </SWRConfig>
+          </main>
+        </ConditionalWrapper>
+      </SWRConfig>
+    </>
+  );
+};
+
+export default PostPage;

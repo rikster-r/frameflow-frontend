@@ -1,36 +1,50 @@
-import Image from "next/image";
-import { useState, useRef } from "react";
-import { env } from "../../env/server.mjs";
+import { Dialog } from "@headlessui/react";
+import { useRouter } from "next/router";
 import {
   Comment,
   UsersListModal,
   Avatar,
   ControlsModal,
   CommentInput,
+  ConditionalWrapper,
 } from "..";
+import Image from "next/image";
 import { formatTimestamp } from "../../lib/luxon";
-import { Dialog } from "@headlessui/react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import { useSWRConfig } from "swr";
 import { toast } from "react-toastify";
-import { motion, AnimatePresence } from "framer-motion";
+import useUser from "../../hooks/useUser";
+import { useState, useRef } from "react";
+import { env } from "../../env/server.mjs";
+import useSWR from "swr";
 
 type Props = {
-  user?: IUser;
-  post: IPost;
+  postId: string;
   postOwner: IUser;
   comments?: IComment[];
-  path: string;
 };
 
-const PostView = ({ user, post, postOwner, comments, path }: Props) => {
+const fetcher = (url: string) =>
+  axios.get(url).then((res) => res?.data as IPost);
+
+const PostView = ({ postId, postOwner, comments }: Props) => {
+  const { data: post } = useSWR<IPost>(
+    `${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`,
+    fetcher
+  );
   const [likeVisible, setLikeVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const commentTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const { mutate } = useSWRConfig();
+  const router = useRouter();
+  const { user } = useUser();
+
+  if (!post) return <></>;
 
   const updateLikesCount = (withAnimation?: boolean) => {
     if (!user) return;
@@ -51,7 +65,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
         }
 
         await Promise.all([
-          mutate(`${env.NEXT_PUBLIC_API_HOST}${path}`),
+          mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`),
           mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`),
         ]);
       })
@@ -118,17 +132,15 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
     axios
       .delete(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`)
       .then(async () => {
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}${path}`);
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`);
       })
       .catch(() => {
         toast.error("Error occured while deleting post");
       });
   };
 
-  return (
-    <Dialog.Panel
-      className={`scrollbar-hide grid h-[100dvh] w-screen grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden`}
-    >
+  const children = (
+    <>
       <div
         className="relative flex flex-1 items-center justify-center md:row-span-full"
         onDoubleClick={() => updateLikesCount(true)}
@@ -235,7 +247,7 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
         )}
         {user && user.username === postOwner.username && (
           <button
-            className="ml-auto mr-10 sm:mr-0"
+            className="ml-auto mr-3 sm:mr-0"
             onClick={() => setSettingsOpen(true)}
           >
             <svg
@@ -261,6 +273,11 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           >
             Delete
           </button>
+          {!router.pathname.includes("/posts") && (
+            <Link href={`/posts/${post._id}`} className="block w-full py-4">
+              Go to post
+            </Link>
+          )}
         </ControlsModal>
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
@@ -387,7 +404,29 @@ const PostView = ({ user, post, postOwner, comments, path }: Props) => {
           ref={commentTextAreaRef}
         />
       )}
-    </Dialog.Panel>
+    </>
+  );
+
+  return (
+    <ConditionalWrapper
+      condition={router.pathname.includes("/posts")}
+      wrap1={(children) => (
+        <div
+          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll bg-white shadow-xl dark:bg-black dark:text-white sm:static sm:w-[65vw]  md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden md:rounded-lg`}
+        >
+          {children}
+        </div>
+      )}
+      wrap2={(children) => (
+        <Dialog.Panel
+          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden`}
+        >
+          {children}
+        </Dialog.Panel>
+      )}
+    >
+      {children}
+    </ConditionalWrapper>
   );
 };
 
