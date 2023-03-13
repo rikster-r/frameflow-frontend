@@ -143,16 +143,15 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
 
   const children = (
     <>
-      <div
-        className="relative flex flex-1 items-center justify-center md:row-span-full"
-        onDoubleClick={() => updateLikesCount(true)}
-      >
+      <div className="relative flex flex-1 items-center justify-center md:row-span-full">
         <Image
           src={post.images.at(currentImageIndex) as string}
           alt=""
           width={400}
           height={400}
           className="absolute h-full w-full bg-black object-contain"
+          onDoubleClick={() => updateLikesCount(true)}
+          priority
         />
         <AnimatePresence mode="wait">
           {likeVisible && (
@@ -414,14 +413,14 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
       condition={router.pathname.includes("/posts")}
       wrap1={(children) => (
         <div
-          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll bg-white shadow-xl dark:bg-black dark:text-white sm:static sm:w-[65vw]  md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden md:rounded-lg`}
+          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll bg-white shadow-xl dark:bg-black dark:text-white sm:static sm:w-[65vw]  md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden md:rounded-r-lg`}
         >
           {children}
         </div>
       )}
       wrap2={(children) => (
         <Dialog.Panel
-          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll rounded-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden`}
+          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll rounded-r-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden`}
         >
           {children}
         </Dialog.Panel>
