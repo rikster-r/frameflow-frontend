@@ -21,6 +21,7 @@ import CreatePost from "./Post/CreatePost";
 import CommentInput from "./Comment/CommentInput";
 import Loader from "./Loader";
 import ConditionalWrapper from "./ConditionalWrapper";
+import Settings from "./Settings";
 
 export {
   Header,
@@ -42,4 +43,5 @@ export {
   Loader,
   SearchUsersSection,
   ConditionalWrapper,
+  Settings,
 };
