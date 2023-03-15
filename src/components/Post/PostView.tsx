@@ -149,7 +149,7 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
           alt=""
           width={400}
           height={400}
-          className="absolute h-full w-full bg-black object-contain"
+          className="h-full w-full bg-black object-contain"
           onDoubleClick={() => updateLikesCount(true)}
           priority
         />
@@ -220,7 +220,12 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
           className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
           user={postOwner}
         />
-        <p className="font-semibold dark:text-white">{postOwner.username} </p>
+        <Link
+          href={`/${postOwner.username}`}
+          className="font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700"
+        >
+          {postOwner.username}{" "}
+        </Link>
         {user && user.username !== postOwner.username && (
           <>
             {user.follows.includes(postOwner._id) ? (
@@ -246,7 +251,7 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
             )}
           </>
         )}
-        {user && user.username === postOwner.username && (
+        {!router.pathname.includes("/posts") && (
           <button
             className="ml-auto mr-3 sm:mr-0"
             onClick={() => setSettingsOpen(true)}
@@ -268,12 +273,14 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
           </button>
         )}
         <ControlsModal open={settingsOpen} setOpen={setSettingsOpen}>
-          <button
-            className="w-full py-4 font-semibold text-red-500"
-            onClick={deletePost}
-          >
-            Delete
-          </button>
+          {user && user.username === postOwner.username && (
+            <button
+              className="w-full py-4 font-semibold text-red-500"
+              onClick={deletePost}
+            >
+              Delete
+            </button>
+          )}
           {!router.pathname.includes("/posts") && (
             <Link href={`/posts/${post._id}`} className="block w-full py-4">
               Go to post
@@ -413,14 +420,14 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
       condition={router.pathname.includes("/posts")}
       wrap1={(children) => (
         <div
-          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll bg-white shadow-xl dark:bg-black dark:text-white sm:static sm:w-[65vw]  md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden md:rounded-r-lg`}
+          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_auto_1fr] overflow-y-scroll bg-white shadow-xl dark:bg-black dark:text-white sm:static sm:w-auto sm:min-w-[60vw] sm:max-w-[65vw] md:h-[calc(100vh-70px)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden md:rounded-r-lg`}
         >
           {children}
         </div>
       )}
       wrap2={(children) => (
         <Dialog.Panel
-          className={`scrollbar-hide grid h-[100dvh] w-[100vw] grid-cols-1 grid-rows-[4rem_480px] overflow-y-scroll rounded-r-lg bg-white shadow-xl dark:bg-black dark:text-white sm:w-[65vw] md:h-[calc(100vh-4rem)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto] md:overflow-hidden`}
+          className={`scrollbar-hide grid w-full min-w-[60vw] max-w-[65vw] grid-cols-1 grid-rows-[4rem_480px] overflow-hidden overflow-y-scroll rounded-r-lg bg-white shadow-xl dark:bg-black dark:text-white md:h-[calc(100vh-70px)] md:grid-cols-2 md:grid-rows-[4rem_1fr_auto_auto]`}
         >
           {children}
         </Dialog.Panel>

@@ -1,9 +1,5 @@
 import { useState, forwardRef, type Ref } from "react";
-import {
-  type Theme,
-  EmojiStyle,
-  type EmojiClickData,
-} from "emoji-picker-react";
+import { Theme, EmojiStyle, type EmojiClickData } from "emoji-picker-react";
 import { env } from "../../env/server.mjs";
 import axios from "axios";
 import { useSWRConfig } from "swr";
@@ -91,16 +87,18 @@ const CommentInput = (
           leaveTo="transform scale-95 opacity-0"
         >
           <Popover.Panel className="absolute -left-2 bottom-10 origin-bottom-left rounded-md p-3 dark:bg-neutral-900">
-            <EmojiPicker
-              theme={localStorage.getItem("theme") as Theme}
-              height={300}
-              // most performant
-              emojiStyle={EmojiStyle.NATIVE}
-              onEmojiClick={addEmoji}
-              skinTonesDisabled
-              searchDisabled
-              previewConfig={{ showPreview: false }}
-            />
+            {typeof window !== "undefined" && (
+              <EmojiPicker
+                theme={localStorage.getItem("theme") as Theme}
+                height={300}
+                // most performant
+                emojiStyle={EmojiStyle.NATIVE}
+                onEmojiClick={addEmoji}
+                skinTonesDisabled
+                searchDisabled
+                previewConfig={{ showPreview: false }}
+              />
+            )}
           </Popover.Panel>
         </Transition>
       </Popover>

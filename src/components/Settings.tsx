@@ -90,7 +90,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="flex-1 py-8">
+    <div className="flex-1 py-8 px-4">
       <div className="mb-8 mr-6 grid grid-cols-[max-content_max-content] justify-center gap-6 sm:ml-10 sm:mr-0 sm:grid-cols-[max-content_300px] sm:gap-8">
         <div className="relative flex items-center justify-center">
           <button onClick={handleAvatarChangeClick}>
@@ -134,7 +134,7 @@ const Settings = () => {
           </button>
         </ControlsModal>
       </div>
-      <form className="grid grid-cols-[max-content_max-content] place-content-center items-center gap-6 sm:grid-cols-[max-content_300px] sm:gap-8 ">
+      <form className="grid grid-cols-1 place-content-center items-center gap-6 sm:grid-cols-[max-content_300px] sm:gap-8">
         <p className="text-right font-semibold ">Name</p>
         <input
           type="text"
@@ -143,7 +143,7 @@ const Settings = () => {
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 dark:border-neutral-700"
+          className="w-full rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-700 dark:focus:border-blue-300"
         />
 
         <p className="text-right font-semibold">Username</p>
@@ -154,7 +154,7 @@ const Settings = () => {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 dark:border-neutral-700"
+          className="w-full rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-700 dark:focus:border-blue-300"
         />
         <p className="self-start text-right font-semibold">Description</p>
         <div>
@@ -164,7 +164,7 @@ const Settings = () => {
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value.slice(0, 150))}
-            className="min-h-[160px] w-full resize-y rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 dark:border-neutral-700"
+            className="min-h-[160px] w-full resize-y rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-700 dark:focus:border-blue-300"
           />
           <p className="mt-2 text-sm text-neutral-500">
             {description ? description.length : 0} / 150

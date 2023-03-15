@@ -9,7 +9,7 @@ const BottomNav = () => {
 
   //home, search, profile
   return (
-    <nav className="flex items-center justify-evenly border-t border-neutral-300 p-3 dark:border-neutral-700 sm:hidden">
+    <nav className="sticky bottom-0 flex w-full items-center justify-evenly border-t border-neutral-300 bg-white p-3 dark:border-neutral-700 dark:bg-black sm:hidden">
       <Link href="/">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"

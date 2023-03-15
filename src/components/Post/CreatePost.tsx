@@ -132,13 +132,7 @@ const CreatePost = ({ searchToggled }: Props) => {
           />
         );
       case 3:
-        return (
-          <CaptionStep
-            text={text}
-            setText={setText}
-            setStep={setStep}
-          />
-        );
+        return <CaptionStep text={text} setText={setText} setStep={setStep} />;
       case 4:
         return <SubmitStep status={status} />;
     }
@@ -207,7 +201,7 @@ const CreatePost = ({ searchToggled }: Props) => {
                   </Dialog.Panel>
                 </div>
               </Transition.Child>
-              <div className="fixed right-10 top-5 text-white">
+              <div className="fixed right-5 top-5 text-white sm:right-10">
                 <button onClick={() => setOpen(false)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
