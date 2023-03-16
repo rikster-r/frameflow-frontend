@@ -1,5 +1,5 @@
 import useUser from "../hooks/useUser";
-import { ControlsModal, Avatar, Loader } from "./";
+import { ControlsModal, Avatar, Loader } from ".";
 import {
   useState,
   useRef,
@@ -133,7 +133,7 @@ const Settings = () => {
             <Avatar
               className={`${
                 avatarUpdating ? "opacity-50" : ""
-              } inline-flex h-12 w-12 select-none items-center justify-center overflow-hidden rounded-full align-middle`}
+              } inline-flex h-11 w-11 select-none items-center justify-center overflow-hidden rounded-full align-middle`}
               user={user}
             />
           </button>
@@ -171,10 +171,10 @@ const Settings = () => {
         </ControlsModal>
       </div>
       <form
-        className="grid place-content-center items-center gap-6 sm:grid-cols-[max-content_300px] sm:gap-8"
+        className="grid grid-cols-1 place-content-center items-center gap-3 sm:grid-cols-[max-content_300px] sm:gap-6"
         onSubmit={handleInfoSubmit}
       >
-        <p className="text-right font-semibold ">Name</p>
+        <p className="font-semibold sm:text-right ">Name</p>
         <input
           type="text"
           name="name"
@@ -185,7 +185,7 @@ const Settings = () => {
           className="w-full rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-700 dark:focus:border-blue-300"
         />
 
-        <p className="text-right font-semibold">Username</p>
+        <p className="mt-4 font-semibold sm:mt-0 sm:text-right">Username</p>
         <input
           type="text"
           name="username"
@@ -195,7 +195,9 @@ const Settings = () => {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full rounded-md border border-neutral-200 bg-[inherit] px-3 py-1.5 placeholder-neutral-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-700 dark:focus:border-blue-300"
         />
-        <p className="self-start text-right font-semibold">Description</p>
+        <p className="mt-4 self-start font-semibold sm:mt-0 sm:text-right">
+          Description
+        </p>
         <div>
           <textarea
             name="description"
@@ -216,7 +218,7 @@ const Settings = () => {
               name === user.publicName &&
               description === user.description)
           }
-          className="col-start-2 w-max justify-self-end rounded-lg bg-blue-500 px-5 py-2 font-semibold capitalize tracking-wide text-white hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 disabled:opacity-70 disabled:hover:bg-blue-500"
+          className="w-max justify-self-end rounded-lg bg-blue-500 px-5 py-2 font-semibold capitalize tracking-wide text-white hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 disabled:opacity-70 disabled:hover:bg-blue-500 sm:col-start-2"
         >
           Submit
         </button>

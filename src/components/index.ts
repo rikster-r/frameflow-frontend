@@ -11,17 +11,20 @@ import ControlsModal from "./Modals/ControlsModal";
 import UsersListModal from "./Modals/UsersListModal";
 import SearchUsersSection from "./Search/UsersSection";
 
-import Layout from "./Layout";
-import PostView from "./Post/PostView";
-import Comment from "./Comment";
+import Settings from "./Settings";
+
 import PostImage from "./Post/PostImage";
 import PostImagesGrid from "./Post/PostImagesGrid";
-import Avatar from "./Avatar";
 import CreatePost from "./Post/CreatePost";
+import PostView from "./Post/PostView";
+
+import Comment from "./Comment";
 import CommentInput from "./Comment/CommentInput";
+
+import Layout from "./Layout";
+import Avatar from "./Avatar";
 import Loader from "./Loader";
 import ConditionalWrapper from "./ConditionalWrapper";
-import Settings from "./Settings";
 
 export {
   Header,
