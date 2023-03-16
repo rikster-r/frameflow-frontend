@@ -5,19 +5,21 @@ import {
   useRef,
   type MouseEventHandler,
   type ChangeEventHandler,
+  type FormEventHandler,
 } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { env } from "../env/server.mjs";
 import { toast } from "react-toastify";
 import { parseCookies } from "nookies";
+import { type ZodError } from "zod";
 
 const Settings = () => {
   const { user, mutate: mutateUser } = useUser();
   const [avatarControlsOpen, setAvatarControlsOpen] = useState(false);
   const [avatarUpdating, setAvatarUpdating] = useState(false);
-  const [name, setName] = useState(user?.publicName);
-  const [username, setUsername] = useState(user?.username);
-  const [description, setDescription] = useState(user?.description);
+  const [name, setName] = useState(user?.publicName || "");
+  const [username, setUsername] = useState(user?.username || "");
+  const [description, setDescription] = useState(user?.description || "");
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
   if (!user) return <></>;
@@ -69,7 +71,7 @@ const Settings = () => {
       });
   };
 
-  const deleteAvatar = () => {
+  const deleteAvatar: MouseEventHandler<HTMLButtonElement> = () => {
     const { userToken } = parseCookies();
     if (!userToken) return;
     setAvatarControlsOpen(false);
@@ -77,7 +79,6 @@ const Settings = () => {
     axios
       .delete(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/avatar`, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${userToken}`,
         },
       })
@@ -86,6 +87,41 @@ const Settings = () => {
       })
       .catch(() => {
         toast.error("Had some trouble updating profile picture");
+      });
+  };
+
+  const handleInfoSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (!username) return;
+
+    const { userToken } = parseCookies();
+    if (!userToken) return;
+
+    axios
+      .put(
+        `${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/info`,
+        {
+          name,
+          username,
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      )
+      .then(async () => {
+        await mutateUser();
+        toast.success("Succesfully updated info");
+      })
+      .catch((err) => {
+        if (isAxiosError(err) && err.response?.data) {
+          const data = err.response.data as ZodError;
+          toast.error(data.issues.at(0)?.message);
+        } else {
+          toast.error("Had trouble updating your info");
+        }
       });
   };
 
@@ -134,7 +170,10 @@ const Settings = () => {
           </button>
         </ControlsModal>
       </div>
-      <form className="grid grid-cols-1 place-content-center items-center gap-6 sm:grid-cols-[max-content_300px] sm:gap-8">
+      <form
+        className="grid place-content-center items-center gap-6 sm:grid-cols-[max-content_300px] sm:gap-8"
+        onSubmit={handleInfoSubmit}
+      >
         <p className="text-right font-semibold ">Name</p>
         <input
           type="text"
@@ -171,7 +210,12 @@ const Settings = () => {
           </p>
         </div>
         <button
-          disabled={username?.trim() === ""}
+          disabled={
+            username?.trim() === "" ||
+            (username === user.username &&
+              name === user.publicName &&
+              description === user.description)
+          }
           className="col-start-2 w-max justify-self-end rounded-lg bg-blue-500 px-5 py-2 font-semibold capitalize tracking-wide text-white hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 disabled:opacity-70 disabled:hover:bg-blue-500"
         >
           Submit
