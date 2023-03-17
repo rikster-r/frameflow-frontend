@@ -141,8 +141,8 @@ const ProfileHeader = ({ pageOwner }: Props) => {
             </div>
           )}
           {pageOwner?.description && (
-            <div className="mt-4 hidden w-full max-w-[500px] justify-between pr-16 sm:flex">
-              <p className="w-[300px] text-sm">{pageOwner?.description}</p>
+            <div className="mt-4 hidden w-full max-w-full justify-between pr-16 sm:flex">
+              <p className="w-full text-sm">{pageOwner?.description}</p>
             </div>
           )}
         </div>
@@ -156,7 +156,7 @@ const ProfileHeader = ({ pageOwner }: Props) => {
       )}
       {pageOwner?.description && (
         <div className="mt-1 w-full pl-6 sm:hidden">
-          <p className="w-[300px] text-sm">{pageOwner?.description}</p>
+          <p className="w-4/5 text-sm">{pageOwner?.description}</p>
         </div>
       )}
       <div className="mt-4 flex w-full items-center justify-evenly border-t border-neutral-300 py-3 px-2 text-sm dark:border-neutral-700 sm:hidden">
