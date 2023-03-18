@@ -7,6 +7,7 @@ import {
   useState,
   useEffect,
   useRef,
+  useMemo,
 } from "react";
 import AvatarEditor from "react-avatar-editor";
 import useImageEditorWidth from "../../hooks/useImageEditorWidth";
@@ -22,13 +23,14 @@ type Props = {
 
 // Image sizing step
 const SizingStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
-  const editorWidth = useImageEditorWidth();
-  const editorHeight = useImageEditorHeight();
   const editorRef = useRef<AvatarEditor>(null);
   // !should not be used directly. instead use switchImage function
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   // filled with 9 by default in case any new images are added
   const [scales, setScales] = useState<number[]>(Array(9).fill(1));
+
+  const editorWidth = useImageEditorWidth();
+  const editorHeight = useImageEditorHeight();
   const [aspectRatio, setAspectRatio] = useState(1 / 1);
 
   let canvasWidth: number | undefined;
@@ -52,30 +54,32 @@ const SizingStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
       break;
   }
 
-  // for images menu
-  const [uneditedImages, setUneditedImages] = useState<File[]>(files);
-  const [imageUrls, setImageUrls] = useState<string[]>();
+  const uneditedImagesRef = useRef<File[]>([]);
 
-  useEffect(() => {
-    setImageUrls(files.map((file) => URL.createObjectURL(file)));
-
-    // add new images
-    setUneditedImages(
-      files.map((file, i) => {
-        if (i < uneditedImages.length) return uneditedImages[i] as File;
-        return file;
-      })
-    );
-
-    return () => {
-      if (imageUrls) {
-        imageUrls.forEach((url) => URL.revokeObjectURL(url));
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const uneditedImages = useMemo(() => {
+    // get only the new files
+    const newFiles = files.slice(uneditedImagesRef.current.length);
+    return [...uneditedImagesRef.current, ...newFiles];
   }, [files]);
 
+  useEffect(() => {
+    uneditedImagesRef.current = uneditedImages;
+  }, [uneditedImages]);
+
+  const imageUrls = useMemo(
+    () => files.map((file) => URL.createObjectURL(file)),
+    [files]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (imageUrls.length <= 1) return;
+      imageUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [imageUrls]);
+
   const nextStep = () => {
+    imageUrls.forEach((url) => URL.revokeObjectURL(url));
     saveFileChanges();
     setStep(3);
   };
@@ -96,17 +100,17 @@ const SizingStep = ({ files, setFiles, setStep, handleSelectClick }: Props) => {
   };
 
   const switchImage = (index: number) => {
+    if (index === currentFileIndex) return;
     saveFileChanges();
     setCurrentFileIndex(index);
   };
 
   const scaleImage = (value: number) => {
-    setScales(
-      scales.map((scale, i) => {
-        if (i === currentFileIndex) return value;
-        return scale;
-      })
-    );
+    setScales([
+      ...scales.slice(0, currentFileIndex),
+      value,
+      ...scales.slice(currentFileIndex + 1),
+    ]);
   };
 
   return (
