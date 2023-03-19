@@ -4,12 +4,12 @@ import { Fragment, useState } from "react";
 import { PostView } from "..";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
-import useSWR from "swr";
+import useSWR, { type KeyedMutator, SWRConfig } from "swr";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import { useRouter } from "next/router";
-import { SWRConfig } from "swr";
 
 type Props = {
+  mutatePosts: KeyedMutator<IPost[][]>;
   post: IPost;
   postOwner: IUser;
 };
@@ -17,7 +17,7 @@ type Props = {
 const getComments = (url: string) =>
   axios.get(url).then((res) => res?.data as IComment[]);
 
-const PostImage = ({ post, postOwner }: Props) => {
+const PostImage = ({ post, postOwner, mutatePosts }: Props) => {
   const { data: comments } = useSWR<IComment[]>(
     `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/comments`,
     getComments
@@ -113,6 +113,7 @@ const PostImage = ({ post, postOwner }: Props) => {
                   }}
                 >
                   <PostView
+                    mutatePosts={mutatePosts}
                     postId={post._id}
                     postOwner={postOwner}
                     comments={comments}

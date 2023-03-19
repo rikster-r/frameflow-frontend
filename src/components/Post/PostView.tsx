@@ -19,9 +19,10 @@ import { toast } from "react-toastify";
 import useUser from "../../hooks/useUser";
 import { useState, useRef } from "react";
 import { env } from "../../env/server.mjs";
-import useSWR from "swr";
+import useSWR, { type KeyedMutator } from "swr";
 
 type Props = {
+  mutatePosts?: KeyedMutator<IPost[][]>;
   postId: string;
   postOwner: IUser;
   comments?: IComment[];
@@ -30,8 +31,8 @@ type Props = {
 const fetcher = (url: string) =>
   axios.get(url).then((res) => res?.data as IPost);
 
-const PostView = ({ postId, postOwner, comments }: Props) => {
-  const { data: post } = useSWR<IPost>(
+const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
+  const { data: post, mutate: mutatePost } = useSWR<IPost>(
     `${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`,
     fetcher
   );
@@ -49,8 +50,8 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
   const updateLikesCount = (withAnimation?: boolean) => {
     if (!user) return;
 
-    const newLikesField = post.likedBy.includes(user._id)
-      ? post.likedBy.filter((id) => id !== user._id)
+    const newLikesField = post.likedBy.some((liker) => liker._id === user._id)
+      ? post.likedBy.filter((liker) => liker._id !== user._id)
       : [...post.likedBy, user._id];
 
     axios
@@ -60,14 +61,10 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
       .then(async () => {
         if (withAnimation && newLikesField.length > post.likedBy.length) {
           setLikeVisible(true);
-
           setTimeout(() => setLikeVisible(false), 1000);
         }
 
-        await Promise.all([
-          mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`),
-          mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`),
-        ]);
+        await Promise.all([mutatePost(), mutatePosts && mutatePosts()]);
       })
       .catch((err) => {
         console.error(err);
@@ -95,10 +92,12 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
         }
       )
       .then(async () => {
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`);
-        await mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/saved`
-        );
+        await Promise.all([
+          mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
+          mutate(
+            `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/saved`
+          ),
+        ]);
       })
       .catch((err) => {
         console.error(err);
@@ -118,10 +117,12 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
         follows: newFollowList,
       })
       .then(async () => {
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`);
-        await mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/followers`
-        );
+        await Promise.all([
+          mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
+          mutate(
+            `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/followers`
+          ),
+        ]);
       })
       .catch((err) => {
         console.error(err);
@@ -330,7 +331,7 @@ const PostView = ({ postId, postOwner, comments }: Props) => {
               strokeWidth={1.5}
               stroke="currentColor"
               className={`${
-                user && post.likedBy.includes(user._id)
+                user && post.likedBy.some((liker) => liker._id === user._id)
                   ? "fill-red-500 stroke-red-500 text-red-500"
                   : "hover:text-neutral-400"
               } h-7 w-7`}

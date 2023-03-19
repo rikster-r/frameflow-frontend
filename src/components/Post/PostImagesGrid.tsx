@@ -18,6 +18,7 @@ const PostImagesGrid = ({ path }: Props) => {
   const {
     data: posts,
     error,
+    mutate,
     size,
     setSize,
   } = useSWRInfinite<IPost[], Error>((index, data: IPost[]) => {
@@ -43,6 +44,7 @@ const PostImagesGrid = ({ path }: Props) => {
       {posts.map((postsArr) =>
         postsArr.map((post) => (
           <PostImage
+            mutatePosts={mutate}
             post={post}
             key={post._id}
             postOwner={post.author as IUser}

@@ -44,8 +44,10 @@ const Comment = ({
         likedBy: newLikesField,
       })
       .then(async () => {
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`);
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}/likes`);
+        await Promise.all([
+          mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`),
+          mutate(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}/likes`),
+        ]);
       })
       .catch((err) => {
         console.error(err);

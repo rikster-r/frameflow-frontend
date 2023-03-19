@@ -48,8 +48,7 @@ const ProfileHeader = ({ pageOwner }: Props) => {
         follows: newFollowList,
       })
       .then(async () => {
-        await mutateUser();
-        await mutateFollowers();
+        await Promise.all([mutateUser(), mutateFollowers()]);
       })
       .catch((err) => {
         console.error(err);
