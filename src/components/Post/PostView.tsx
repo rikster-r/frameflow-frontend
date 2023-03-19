@@ -321,8 +321,8 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
           </div>
         )}
       </div>
-      <div className="sticky bottom-0 border-t border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
-        <div className="relative flex gap-4">
+      <div className="sticky bottom-0 border-y border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
+        <div className="flex gap-4">
           <button onClick={() => updateLikesCount()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -389,7 +389,9 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
             className={`${
               post.likedBy.length ? "" : "hover:cursor-default"
             } mt-3 pl-1 font-semibold`}
-            onClick={() => setLikesCountOpen(true)}
+            onClick={() => {
+              if (post.likedBy.length) setLikesCountOpen(true);
+            }}
           >
             {post.likedBy.length} like{post.likedBy.length !== 1 && "s"}
           </button>
@@ -406,13 +408,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
           {formatTimestamp(post.createdAt)}
         </p>
       </div>
-      {user && (
-        <CommentInput
-          postId={post._id}
-          comments={comments}
-          ref={commentTextAreaRef}
-        />
-      )}
+      {user && <CommentInput postId={post._id} ref={commentTextAreaRef} />}
     </>
   );
 

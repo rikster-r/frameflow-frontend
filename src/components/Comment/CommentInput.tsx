@@ -1,5 +1,9 @@
 import { useState, forwardRef, type Ref } from "react";
-import { Theme, EmojiStyle, type EmojiClickData } from "emoji-picker-react";
+import {
+  type Theme,
+  EmojiStyle,
+  type EmojiClickData,
+} from "emoji-picker-react";
 import { env } from "../../env/server.mjs";
 import axios from "axios";
 import { useSWRConfig } from "swr";
@@ -18,13 +22,9 @@ const EmojiPicker = dynamic(
 
 type Props = {
   postId: string;
-  comments?: IComment[];
 };
 
-const CommentInput = (
-  { postId, comments }: Props,
-  ref: Ref<HTMLTextAreaElement>
-) => {
+const CommentInput = ({ postId }: Props, ref: Ref<HTMLTextAreaElement>) => {
   const [commentText, setCommentText] = useState("");
   const { mutate } = useSWRConfig();
 
@@ -35,7 +35,7 @@ const CommentInput = (
   const postComment = () => {
     if (!commentText.trim()) return;
     const { userToken } = parseCookies();
-    if (!userToken || !comments) return;
+    if (!userToken) return;
 
     axios
       .post(
@@ -47,12 +47,9 @@ const CommentInput = (
           },
         }
       )
-      .then(async (res) => {
+      .then(async () => {
         setCommentText("");
-        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`, [
-          res.data,
-          ...comments,
-        ]);
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`);
       })
       .catch(() => {
         toast.error("Something went wrong. Please try again");
@@ -60,7 +57,7 @@ const CommentInput = (
   };
 
   return (
-    <div className="sticky bottom-0 flex items-center gap-3 border-t border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-black">
+    <div className="sticky bottom-0 flex items-center gap-3 bg-white p-4 dark:bg-black">
       <Popover className="relative h-full">
         <Popover.Button className="h-full text-sm text-neutral-900 hover:cursor-pointer dark:text-neutral-100 ">
           <svg

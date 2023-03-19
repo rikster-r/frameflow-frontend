@@ -4,7 +4,7 @@ import axios from "axios";
 import nookies from "nookies";
 import { env } from "../../env/server.mjs";
 import { Layout, PostView, ConditionalWrapper } from "../../components";
-import { SWRConfig } from "swr";
+import useSWR, { SWRConfig } from "swr";
 import useWindowWidth from "../../hooks/useWindowWidth";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -12,10 +12,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const { userToken } = nookies.get(ctx);
     const postId = ctx.params?.id as string;
 
-    const promises = [
-      axios.get(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`),
-      axios.get(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`),
-    ];
+    const promises = [axios.get(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`)];
 
     if (userToken) {
       promises.push(
@@ -27,13 +24,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       );
     }
 
-    const [postRes, commentsRes, userRes] = await Promise.all(promises);
+    const [postRes, userRes] = await Promise.all(promises);
 
     return {
       props: {
         user: userRes ? (userRes?.data as IUser) : null,
         post: postRes?.data as IPost,
-        comments: commentsRes?.data as IComment[],
       },
     };
   } catch (err) {
@@ -49,12 +45,19 @@ type Props = {
   comments?: IComment[];
 };
 
-const PostPage: NextPage = ({ user, post, comments }: Props) => {
+const getComments = (url: string) =>
+  axios.get(url).then((res) => res?.data as IComment[]);
+
+const PostPage: NextPage = ({ user, post }: Props) => {
   const windowWidth = useWindowWidth();
-  if (!post || !comments) return <></>;
+  const { data: comments } = useSWR<IComment[]>(
+    post ? `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/comments` : null,
+    getComments
+  );
+
+  if (!post) return <></>;
 
   const postOwner = post.author as IUser;
-  // const {post} = useSWR(`${post}`)
 
   return (
     <>

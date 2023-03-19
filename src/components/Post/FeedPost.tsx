@@ -1,4 +1,11 @@
-import { Avatar, ControlsModal, PostModal, PostView, UsersListModal } from "..";
+import {
+  Avatar,
+  ControlsModal,
+  PostModal,
+  PostView,
+  UsersListModal,
+  CommentInput,
+} from "..";
 import Link from "next/link";
 import useUser from "../../hooks/useUser";
 import { useState } from "react";
@@ -378,6 +385,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             See all comments ({comments.length})
           </button>
         )}
+        <CommentInput postId={postId} />
       </div>
 
       <PostModal post={post} open={postOpen} setOpen={setPostOpen}>
