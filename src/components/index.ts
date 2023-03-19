@@ -9,14 +9,16 @@ import SearchButton from "./Search";
 
 import ControlsModal from "./Modals/ControlsModal";
 import UsersListModal from "./Modals/UsersListModal";
-import SearchUsersSection from "./Search/UsersSection";
+import PostModal from "./Modals/PostModal";
 
 import Settings from "./Settings";
 
-import PostImage from "./Post/PostImage";
+import PostGridImage from "./Post/PostGridImage";
 import PostImagesGrid from "./Post/PostImagesGrid";
 import CreatePost from "./Post/CreatePost";
 import PostView from "./Post/PostView";
+import Feed from "./Post/Feed";
+import FeedPost from "./Post/FeedPost";
 
 import Comment from "./Comment";
 import CommentInput from "./Comment/CommentInput";
@@ -25,6 +27,7 @@ import Layout from "./Layout";
 import Avatar from "./Avatar";
 import Loader from "./Loader";
 import ConditionalWrapper from "./ConditionalWrapper";
+import SearchUsersSection from "./Search/UsersSection";
 
 export {
   Header,
@@ -35,7 +38,7 @@ export {
   Layout,
   PostView,
   Comment,
-  PostImage,
+  PostGridImage,
   PostImagesGrid,
   UsersListModal,
   Avatar,
@@ -47,4 +50,7 @@ export {
   SearchUsersSection,
   ConditionalWrapper,
   Settings,
+  Feed,
+  FeedPost,
+  PostModal,
 };

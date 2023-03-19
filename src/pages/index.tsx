@@ -3,7 +3,7 @@ import Head from "next/head";
 import axios from "axios";
 import { env } from "../env/server.mjs";
 import nookies from "nookies";
-import { Layout } from "../components";
+import { Layout, Feed } from "../components";
 import { SWRConfig } from "swr";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -60,10 +60,10 @@ const Home: NextPage = ({ user }: Props) => {
         }}
       >
         <Layout>
-          <main className="flex-1 sm:flex sm:flex-grow-0">
-            {/* main scroll */}
+          <main className="flex flex-1 items-center justify-center py-4">
+            <Feed />
           </main>
-          <div className="hidden lg:flex">{/* latest users */}</div>
+          <div className="hidden lg:flex">{/* users who follow you */}</div>
         </Layout>
       </SWRConfig>
     </>

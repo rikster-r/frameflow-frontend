@@ -1,4 +1,4 @@
-import { PostImage } from "..";
+import { PostGridImage } from "..";
 import useSWRInfinite from "swr/infinite";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
@@ -43,7 +43,7 @@ const PostImagesGrid = ({ path }: Props) => {
     >
       {posts.map((postsArr) =>
         postsArr.map((post) => (
-          <PostImage
+          <PostGridImage
             mutatePosts={mutate}
             post={post}
             key={post._id}

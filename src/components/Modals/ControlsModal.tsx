@@ -38,7 +38,10 @@ const ControlsModal = ({ open, setOpen, children }: Props) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-110"
             >
-              <Dialog.Panel className="w-[300px] divide-y divide-neutral-300 rounded-lg bg-white text-center shadow-xl dark:divide-neutral-700 dark:bg-neutral-800 dark:text-white sm:w-[350px]">
+              <Dialog.Panel
+                className="w-[300px] divide-y divide-neutral-300 rounded-lg bg-white text-center shadow-xl dark:divide-neutral-700 dark:bg-neutral-800 dark:text-white sm:w-[350px]"
+                onClick={() => setOpen(false)}
+              >
                 {children}
                 <button className="w-full py-4" onClick={() => setOpen(false)}>
                   Cancel
