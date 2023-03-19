@@ -243,13 +243,13 @@ const ProfileHeader = ({ pageOwner }: Props) => {
         title="Followers"
         open={followersOpen}
         setOpen={setFollowersOpen}
-        path={`/users/${pageOwner.username}/followers`}
+        users={followers as IUser[]}
       />
       <UsersListModal
         title="Following"
         open={followingOpen}
         setOpen={setFollowingOpen}
-        path={`/users/${pageOwner.username}/following`}
+        users={pageOwner.follows as IUser[]}
       />
     </>
   );

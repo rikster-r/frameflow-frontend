@@ -1,8 +1,5 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { Fragment, type Dispatch, type SetStateAction } from "react";
-import useSWR from "swr";
-import { env } from "../../env/server.mjs";
-import axios from "axios";
 import { Avatar } from "..";
 import Link from "next/link";
 
@@ -10,19 +7,10 @@ type Props = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   title: string;
-  path: string;
+  users: IUser[];
 };
 
-const getUsers = (url: string) =>
-  axios.get(url).then((res) => res.data as IUser[]);
-
-const UsersListModal = ({ open, setOpen, path, title }: Props) => {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useSWR<IUser[], Error>(`${env.NEXT_PUBLIC_API_HOST}${path}`, getUsers);
-
+const UsersListModal = ({ open, setOpen, users, title }: Props) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
@@ -86,31 +74,27 @@ const UsersListModal = ({ open, setOpen, path, title }: Props) => {
                     </svg>
                   </button>
                 </div>
-                {!isLoading && users && !error && (
-                  <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300  dark:border-neutral-700">
-                    {users.map((user) => (
-                      <Link
-                        onClick={() => setOpen(false)}
-                        href={`/${user.username}`}
-                        className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        key={user._id}
-                      >
-                        <Avatar
-                          className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
-                          user={user}
-                        />
-                        <div>
-                          <p className="text-sm font-semibold">
-                            {user.username}
-                          </p>
-                          <p className="text-sm text-neutral-400">
-                            {user.publicName}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300  dark:border-neutral-700">
+                  {users.map((user) => (
+                    <Link
+                      onClick={() => setOpen(false)}
+                      href={`/${user.username}`}
+                      className="flex w-full items-center gap-0.5 truncate py-3 px-3 text-left hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                      key={user._id}
+                    >
+                      <Avatar
+                        className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+                        user={user}
+                      />
+                      <div>
+                        <p className="text-sm font-semibold">{user.username}</p>
+                        <p className="text-sm text-neutral-400">
+                          {user.publicName}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

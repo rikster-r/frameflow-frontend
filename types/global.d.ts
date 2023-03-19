@@ -6,7 +6,7 @@ interface IUser {
   password: string;
   avatar?: string;
   description?: string;
-  follows: string[];
+  follows: (string | IUser)[];
   visited: string[];
   savedPosts: string[];
 }
@@ -27,6 +27,6 @@ interface IComment {
   author: string | IUser;
   post: string | IPost;
   text: string;
-  likedBy: string[];
+  likedBy: IUser[];
   createdAt: string;
 }

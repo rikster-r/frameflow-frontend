@@ -11,7 +11,7 @@ type Props = {
   author: IUser;
   text: string;
   createdAt: string;
-  likedBy?: string[];
+  likedBy?: IUser[];
   userId?: string;
   postId?: string;
   commentId?: string;
@@ -35,8 +35,8 @@ const Comment = ({
   const updateLikesCount = () => {
     if (!likedBy || !userId || !postId || !commentId) return;
 
-    const newLikesField = likedBy.includes(userId)
-      ? likedBy.filter((id) => id !== userId)
+    const newLikesField = likedBy.some((liker) => liker._id === userId)
+      ? likedBy.filter((liker) => liker._id !== userId)
       : [...likedBy, userId];
 
     axios
@@ -107,12 +107,12 @@ const Comment = ({
               Likes: {likedBy.length}
             </button>
           )}
-          {commentId && (
+          {commentId && likedBy && (
             <UsersListModal
               title="likes"
               open={likesCountOpen}
               setOpen={setLikesCountOpen}
-              path={`/comments/${commentId}/likes`}
+              users={likedBy}
             />
           )}
           {userId && commentInputRef && userId !== author._id && (
@@ -158,7 +158,7 @@ const Comment = ({
             strokeWidth={1.5}
             stroke="currentColor"
             className={`${
-              userId && likedBy.includes(userId)
+              userId && likedBy.some((liker) => liker._id === userId)
                 ? "fill-red-500 stroke-red-500 text-red-500"
                 : "hover:text-neutral-400"
             } mt-1 h-5 w-5`}

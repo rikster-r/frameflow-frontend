@@ -400,7 +400,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
               title="Likes"
               open={likesCountOpen}
               setOpen={setLikesCountOpen}
-              path={`/posts/${post._id}/likes`}
+              users={post.likedBy}
             />
           )}
         </div>
