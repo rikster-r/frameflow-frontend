@@ -10,24 +10,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const { userToken } = nookies.get(ctx);
 
-    const promises = [axios.get(`${env.NEXT_PUBLIC_API_HOST}/posts/latest`)];
-
-    if (userToken) {
-      promises.push(
-        axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/profile`, {
+    const userRes = userToken
+      ? await axios.get(`${env.NEXT_PUBLIC_API_HOST}/users/profile`, {
           headers: {
             Authorization: `Bearer ${userToken}`,
           },
         })
-      );
-    }
-
-    const [postsRes, userRes] = await Promise.all(promises);
+      : null;
 
     return {
       props: {
         user: userRes ? (userRes?.data as IUser) : null,
-        posts: postsRes?.data as IPost[],
       },
     };
   } catch (err) {
@@ -39,12 +32,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 type Props = {
   user?: IUser;
-  posts?: IPost[];
 };
 
-const ExplorePage: NextPage = ({ user, posts }: Props) => {
-  if (!posts) return <></>;
-
+const ExplorePage: NextPage = ({ user }: Props) => {
   return (
     <>
       <Head>

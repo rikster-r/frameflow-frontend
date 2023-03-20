@@ -28,6 +28,7 @@ import Avatar from "./Avatar";
 import Loader from "./Loader";
 import ConditionalWrapper from "./ConditionalWrapper";
 import SearchUsersSection from "./Search/UsersSection";
+import UserSuggestions from "./UserSuggestions";
 
 export {
   Header,
@@ -53,4 +54,5 @@ export {
   Feed,
   FeedPost,
   PostModal,
+  UserSuggestions,
 };

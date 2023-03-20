@@ -28,7 +28,16 @@ const Feed = () => {
     return `${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/feed?page=${index}&perPage=20`;
   }, getPosts);
 
-  if (isLoading) return <Loader />;
+  if (isLoading)
+    return (
+      <div className="flex h-[700px] w-full animate-pulse select-none flex-col sm:w-[470px]">
+        <div className="flex h-max w-full gap-3 py-4">
+          <div className="h-8 w-8 rounded-full bg-neutral-800" />
+          <div className="flex-1 rounded-full bg-neutral-700"></div>
+        </div>
+        <div className="mb-4 h-full w-full bg-neutral-400"></div>
+      </div>
+    );
 
   if (error || !posts)
     return (
@@ -54,7 +63,7 @@ const Feed = () => {
           <Loader />
         </div>
       }
-      className="scrollbar-hide flex w-full max-w-[470px] flex-col items-center gap-8 divide-y divide-neutral-200 dark:divide-neutral-800"
+      className="scrollbar-hide flex w-full max-w-[470px] flex-col gap-8 divide-y divide-neutral-200 dark:divide-neutral-800"
     >
       {posts.map((postsArr) =>
         postsArr.map((post) => (

@@ -218,7 +218,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             alt=""
             width={465}
             height={400}
-            className="h-auto w-auto bg-black object-contain hover:cursor-pointer"
+            className="h-auto w-full bg-black object-contain hover:cursor-pointer"
             onDoubleClick={() => updateLikesCount(true)}
             priority
           />
