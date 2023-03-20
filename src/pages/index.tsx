@@ -60,7 +60,7 @@ const Home: NextPage = ({ user }: Props) => {
         }}
       >
         <Layout>
-          <main className="flex flex-1 items-center justify-center py-4">
+          <main className="flex flex-1 items-center justify-center">
             <Feed />
           </main>
           <div className="hidden lg:flex">{/* users who follow you */}</div>

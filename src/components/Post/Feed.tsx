@@ -31,7 +31,18 @@ const Feed = () => {
   if (isLoading) return <Loader />;
 
   if (error || !posts)
-    return <div className="text-xl font-semibold">No posts in your feed</div>;
+    return (
+      <div className="self-start text-lg">
+        Some error happened while trying to retrieve posts
+      </div>
+    );
+
+  if (posts.at(0)?.length === 0)
+    return (
+      <div className="self-start text-lg">
+        You&apos;re not currently following anyone with active posts.
+      </div>
+    );
 
   return (
     <InfiniteScroll

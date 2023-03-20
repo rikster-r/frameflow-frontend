@@ -1,4 +1,4 @@
-import { PostGridImage } from "..";
+import { PostGridImage, Loader } from "..";
 import useSWRInfinite from "swr/infinite";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
@@ -38,8 +38,8 @@ const PostImagesGrid = ({ path }: Props) => {
       dataLength={posts.length}
       next={() => setSize(size + 1)}
       hasMore={loadCondition && hasMore}
-      loader={loadCondition ? <h4>Loading...</h4> : null}
-      className="grid w-full grid-cols-3 place-items-center gap-1 overflow-hidden md:gap-7"
+      loader={loadCondition ? <Loader /> : null}
+      className="scrollbar-hide grid w-full grid-cols-3 place-items-center gap-1 overflow-hidden md:gap-7"
     >
       {posts.map((postsArr) =>
         postsArr.map((post) => (

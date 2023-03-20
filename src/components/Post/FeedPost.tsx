@@ -343,7 +343,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             </svg>
           </button>
         </div>
-        <div className="px-2 pb-1">
+        <div className="px-3 pb-1 sm:px-2 text-sm sm:text-base">
           <button
             className={`${
               post.likedBy.length ? "" : "hover:cursor-default"
@@ -364,7 +364,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
           )}
         </div>
         {post.text && (
-          <div className="px-2 pb-1">
+          <div className="px-3 pb-1 text-sm sm:px-2 sm:text-base">
             <span className="mr-2 font-semibold">{postOwner.username}</span>
             <span>{showFullText ? post.text : post.text.slice(0, 125)}</span>
             {!showFullText && post.text.length > 125 && (
@@ -379,7 +379,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
         )}
         {comments && comments.length > 0 && (
           <button
-            className="px-2 text-neutral-500 dark:text-neutral-300"
+            className="px-3 sm:px-2 text-sm sm:text-base text-neutral-500 dark:text-neutral-300"
             onClick={handlePostOpen}
           >
             See all comments ({comments.length})

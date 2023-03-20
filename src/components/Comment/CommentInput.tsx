@@ -57,7 +57,7 @@ const CommentInput = ({ postId }: Props, ref: Ref<HTMLTextAreaElement>) => {
   };
 
   return (
-    <div className="sticky bottom-0 flex items-center gap-3 bg-white p-4 dark:bg-black">
+    <div className="sticky bottom-0 flex items-center gap-3 bg-white px-2 py-4 dark:bg-black">
       <Popover className="relative h-full">
         <Popover.Button className="h-full text-sm text-neutral-900 hover:cursor-pointer dark:text-neutral-100 ">
           <svg
