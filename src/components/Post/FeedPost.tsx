@@ -218,8 +218,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             alt=""
             width={465}
             height={400}
-            className="bg-black object-contain hover:cursor-pointer"
-            onClick={handlePostOpen}
+            className="h-auto w-auto bg-black object-contain hover:cursor-pointer"
             onDoubleClick={() => updateLikesCount(true)}
             priority
           />
@@ -343,7 +342,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             </svg>
           </button>
         </div>
-        <div className="px-3 pb-1 sm:px-2 text-sm sm:text-base">
+        <div className="px-3 pb-1 text-sm sm:px-2 sm:text-base">
           <button
             className={`${
               post.likedBy.length ? "" : "hover:cursor-default"
@@ -379,7 +378,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
         )}
         {comments && comments.length > 0 && (
           <button
-            className="px-3 sm:px-2 text-sm sm:text-base text-neutral-500 dark:text-neutral-300"
+            className="px-3 text-sm text-neutral-500 dark:text-neutral-300 sm:px-2 sm:text-base"
             onClick={handlePostOpen}
           >
             See all comments ({comments.length})

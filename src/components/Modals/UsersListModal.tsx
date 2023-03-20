@@ -11,6 +11,8 @@ type Props = {
 };
 
 const UsersListModal = ({ open, setOpen, users, title }: Props) => {
+  if (typeof users.at(0) === "string") return <></>;
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>

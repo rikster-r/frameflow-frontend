@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <header
-      className={`flex w-full items-center justify-center border-b border-neutral-300 px-4 py-3 dark:border-neutral-700 ${
+      className={`flex w-full sticky top-0 bg-white dark:bg-black z-10 items-center justify-center border-b border-neutral-300 px-4 py-3 dark:border-neutral-700 ${
         user ? "sm:hidden" : ""
       } `}
     >
