@@ -10,7 +10,6 @@ import Link from "next/link";
 import useUser from "../../hooks/useUser";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { parseCookies } from "nookies";
 import { env } from "../../env/server.mjs";
 import axios from "axios";
 import { getCurrentTimeDifference } from "../../lib/luxon";
@@ -19,6 +18,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import useSWR, { type KeyedMutator } from "swr";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import { useRouter } from "next/router";
+import {
+  updateUserFollowList,
+  updateUserSavedList,
+  updatePostLikesCount,
+} from "../../lib/controllers";
 
 type Props = {
   postId: string;
@@ -32,8 +36,8 @@ const getComments = (url: string) =>
   axios.get(url).then((res) => res?.data as IComment[]);
 
 const FeedPost = ({ postId, mutatePosts }: Props) => {
-  const { user, mutate: mutateUser } = useUser();
-  const { data: post, mutate: mutatePost } = useSWR<IPost>(
+  const { user } = useUser();
+  const { data: post } = useSWR<IPost>(
     `${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`,
     getPost
   );
@@ -73,78 +77,6 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
     }
   };
 
-  const updateUserFollowList = () => {
-    const { userToken } = parseCookies();
-    if (!user || !userToken) return;
-
-    const newFollowList = user.follows.includes(postOwner._id)
-      ? user.follows.filter((id) => id !== postOwner._id)
-      : [...user.follows, postOwner._id];
-
-    axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/follows`, {
-        follows: newFollowList,
-      })
-      .then(async () => {
-        await mutateUser();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const updateLikesCount = (withAnimation?: boolean) => {
-    if (!user) return;
-
-    const newLikesField = post.likedBy.some((liker) => liker._id === user._id)
-      ? post.likedBy.filter((liker) => liker._id !== user._id)
-      : [...post.likedBy, user._id];
-
-    axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`, {
-        likedBy: newLikesField,
-      })
-      .then(async () => {
-        if (withAnimation && newLikesField.length > post.likedBy.length) {
-          setLikeVisible(true);
-          setTimeout(() => setLikeVisible(false), 1000);
-        }
-
-        await Promise.all([mutatePost(), mutatePosts()]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const updateUserSavedList = () => {
-    const { userToken } = parseCookies();
-    if (!user || !userToken) return;
-
-    const newSavedList = user.savedPosts.includes(post._id)
-      ? user.savedPosts.filter((id) => id !== post._id)
-      : [...user.savedPosts, post._id];
-
-    axios
-      .put(
-        `${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/saved`,
-        {
-          savedPosts: newSavedList,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      )
-      .then(async () => {
-        await Promise.all([mutateUser()]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
   return (
     <>
       <div>
@@ -170,7 +102,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
               &bull;
               <button
                 className="ml-2 font-semibold text-blue-500 hover:text-blue-200 dark:text-blue-400"
-                onClick={updateUserFollowList}
+                onClick={() => updateUserFollowList(postOwner, user)}
               >
                 Follow
               </button>
@@ -199,7 +131,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             {user.follows.includes(postOwner._id) && (
               <button
                 className="w-full py-4 font-semibold text-red-500"
-                onClick={updateUserFollowList}
+                onClick={() => updateUserFollowList(postOwner, user)}
               >
                 Unfollow
               </button>
@@ -219,7 +151,15 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             width={465}
             height={400}
             className="h-auto w-full bg-black object-contain hover:cursor-pointer"
-            onDoubleClick={() => updateLikesCount(true)}
+            onDoubleClick={() =>
+              updatePostLikesCount(
+                post,
+                user,
+                mutatePosts,
+                true,
+                setLikeVisible
+              )
+            }
             priority
           />
           <AnimatePresence mode="wait">
@@ -285,7 +225,17 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
           )}
         </div>
         <div className="flex gap-4 py-4 px-2">
-          <button onClick={() => updateLikesCount()}>
+          <button
+            onClick={() =>
+              updatePostLikesCount(
+                post,
+                user,
+                mutatePosts,
+                false,
+                setLikeVisible
+              )
+            }
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -321,7 +271,10 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
               />
             </svg>
           </button>
-          <button className="ml-auto" onClick={updateUserSavedList}>
+          <button
+            className="ml-auto"
+            onClick={() => updateUserSavedList(post, user)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

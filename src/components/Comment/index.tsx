@@ -32,7 +32,7 @@ const Comment = ({
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const { mutate } = useSWRConfig();
 
-  const updateLikesCount = () => {
+  const updatePostLikesCount = () => {
     if (!likedBy || !userId || !postId || !commentId) return;
 
     const newLikesField = likedBy.some((liker) => liker._id === userId)
@@ -82,7 +82,7 @@ const Comment = ({
   return (
     <div
       className="group flex h-max w-full items-start px-4 py-3 dark:text-white"
-      onDoubleClick={updateLikesCount}
+      onDoubleClick={updatePostLikesCount}
     >
       <Avatar
         className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
@@ -150,7 +150,7 @@ const Comment = ({
         </div>
       </div>
       {likedBy && userId && (
-        <button onClick={updateLikesCount}>
+        <button onClick={updatePostLikesCount}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

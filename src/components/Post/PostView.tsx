@@ -12,14 +12,17 @@ import Image from "next/image";
 import { formatTimestamp } from "../../lib/luxon";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { parseCookies } from "nookies";
 import axios from "axios";
-import { useSWRConfig } from "swr";
 import { toast } from "react-toastify";
 import useUser from "../../hooks/useUser";
 import { useState, useRef } from "react";
 import { env } from "../../env/server.mjs";
 import useSWR, { type KeyedMutator } from "swr";
+import {
+  updateUserFollowList,
+  updateUserSavedList,
+  updatePostLikesCount,
+} from "../../lib/controllers";
 
 type Props = {
   mutatePosts?: KeyedMutator<IPost[][]>;
@@ -32,7 +35,7 @@ const fetcher = (url: string) =>
   axios.get(url).then((res) => res?.data as IPost);
 
 const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
-  const { data: post, mutate: mutatePost } = useSWR<IPost>(
+  const { data: post } = useSWR<IPost>(
     `${env.NEXT_PUBLIC_API_HOST}/posts/${postId}`,
     fetcher
   );
@@ -41,93 +44,10 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const commentTextAreaRef = useRef<HTMLTextAreaElement>(null);
-  const { mutate } = useSWRConfig();
   const router = useRouter();
   const { user } = useUser();
 
   if (!post) return <></>;
-
-  const updateLikesCount = (withAnimation?: boolean) => {
-    if (!user) return;
-
-    const newLikesField = post.likedBy.some((liker) => liker._id === user._id)
-      ? post.likedBy.filter((liker) => liker._id !== user._id)
-      : [...post.likedBy, user._id];
-
-    axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`, {
-        likedBy: newLikesField,
-      })
-      .then(async () => {
-        if (withAnimation && newLikesField.length > post.likedBy.length) {
-          setLikeVisible(true);
-          setTimeout(() => setLikeVisible(false), 1000);
-        }
-
-        await Promise.all([mutatePost(), mutatePosts && mutatePosts()]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const updateUserSavedList = () => {
-    const { userToken } = parseCookies();
-    if (!user || !userToken) return;
-
-    const newSavedList = user.savedPosts.includes(post._id)
-      ? user.savedPosts.filter((id) => id !== post._id)
-      : [...user.savedPosts, post._id];
-
-    axios
-      .put(
-        `${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/saved`,
-        {
-          savedPosts: newSavedList,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      )
-      .then(async () => {
-        await Promise.all([
-          mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
-          mutate(
-            `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/saved`
-          ),
-        ]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const updateUserFollowList = () => {
-    const { userToken } = parseCookies();
-    if (!user || !userToken) return;
-
-    const newFollowList = user.follows.includes(postOwner._id)
-      ? user.follows.filter((id) => id !== postOwner._id)
-      : [...user.follows, postOwner._id];
-
-    axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/follows`, {
-        follows: newFollowList,
-      })
-      .then(async () => {
-        await Promise.all([
-          mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
-          mutate(
-            `${env.NEXT_PUBLIC_API_HOST}/users/${postOwner.username}/followers`
-          ),
-        ]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
 
   const deletePost = () => {
     if (!user) return;
@@ -151,7 +71,9 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
           width={400}
           height={400}
           className="h-full w-full bg-black object-contain"
-          onDoubleClick={() => updateLikesCount(true)}
+          onDoubleClick={() =>
+            updatePostLikesCount(post, user, mutatePosts, true, setLikeVisible)
+          }
           priority
         />
         <AnimatePresence mode="wait">
@@ -234,7 +156,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
                 <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
                 <button
                   className="font-semibold dark:text-white"
-                  onClick={updateUserFollowList}
+                  onClick={() => updateUserFollowList(postOwner, user)}
                 >
                   Unfollow
                 </button>
@@ -244,7 +166,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
                 <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
                 <button
                   className="font-semibold text-blue-500"
-                  onClick={updateUserFollowList}
+                  onClick={() => updateUserFollowList(postOwner, user)}
                 >
                   Follow
                 </button>
@@ -323,7 +245,17 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
       </div>
       <div className="sticky bottom-0 border-y border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
         <div className="flex gap-4">
-          <button onClick={() => updateLikesCount()}>
+          <button
+            onClick={() =>
+              updatePostLikesCount(
+                post,
+                user,
+                mutatePosts,
+                false,
+                setLikeVisible
+              )
+            }
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -363,7 +295,10 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
               />
             </svg>
           </button>
-          <button className="ml-auto" onClick={updateUserSavedList}>
+          <button
+            className="ml-auto"
+            onClick={() => updateUserSavedList(post, user)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

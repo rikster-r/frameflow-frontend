@@ -2,17 +2,17 @@ import axios from "axios";
 import { env } from "../env/server.mjs";
 import { Avatar } from "../components";
 import Link from "next/link";
-import { parseCookies } from "nookies";
 import useSWR from "swr";
 import useUser from "../hooks/useUser";
 import { useMemo } from "react";
+import { updateUserFollowList } from "../lib/controllers";
 
 const fetcher = (url: string) =>
   axios.get(url).then((res) => res.data as IUser[]);
 
 const UserSuggestions = () => {
-  const { user, mutate: mutateUser } = useUser();
-  const { data: followers, mutate: mutateFollowers } = useSWR(
+  const { user } = useUser();
+  const { data: followers } = useSWR(
     user
       ? `${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/followers`
       : null,
@@ -27,26 +27,6 @@ const UserSuggestions = () => {
   );
 
   if (!user || !followers) return <></>;
-
-  const updateUserFollowList = (id: string) => {
-    const { userToken } = parseCookies();
-    if (!user || !userToken) return;
-
-    const newFollowList = user.follows.includes(id)
-      ? user.follows.filter((userId) => userId !== id)
-      : [...user.follows, id];
-
-    axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/follows`, {
-        follows: newFollowList,
-      })
-      .then(async () => {
-        await Promise.all([mutateFollowers(), mutateUser()]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
 
   if (!suggestions.length) return <></>;
 
@@ -74,7 +54,7 @@ const UserSuggestions = () => {
               className="ml-auto font-semibold"
               onClick={(e) => {
                 e.preventDefault();
-                updateUserFollowList(follower._id);
+                updateUserFollowList(follower, user);
               }}
             >
               Unfollow
@@ -84,7 +64,7 @@ const UserSuggestions = () => {
               className="ml-auto font-semibold text-blue-500 hover:text-blue-200 dark:text-blue-400"
               onClick={(e) => {
                 e.preventDefault();
-                updateUserFollowList(follower._id);
+                updateUserFollowList(follower, user);
               }}
             >
               Follow

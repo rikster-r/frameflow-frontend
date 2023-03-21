@@ -6,6 +6,7 @@ import axios from "axios";
 import { env } from "../../env/server.mjs";
 import { useState } from "react";
 import useSWR from "swr";
+import { updateUserFollowList } from "../../lib/controllers";
 
 type Props = {
   pageOwner: IUser;
@@ -22,38 +23,15 @@ const ProfileHeader = ({ pageOwner }: Props) => {
     `${env.NEXT_PUBLIC_API_HOST}/users/${pageOwner.username}/posts`,
     getPosts
   );
-  const {
-    data: followers,
-    error: followersError,
-    mutate: mutateFollowers,
-  } = useSWR<IUser[], Error>(
+  const { data: followers, error: followersError } = useSWR<IUser[], Error>(
     `${env.NEXT_PUBLIC_API_HOST}/users/${pageOwner.username}/followers`,
     getFollowers
   );
-  const { user, mutate: mutateUser } = useUser();
+  const { user } = useUser();
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
   const router = useRouter();
   const formatter = Intl.NumberFormat("en-US", { notation: "compact" });
-
-  const updateUserFollowList = () => {
-    if (!user) return;
-
-    const newFollowList = user.follows.includes(pageOwner._id)
-      ? user.follows.filter((id) => id !== pageOwner._id)
-      : [...user.follows, pageOwner._id];
-
-    axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/users/${user._id}/follows`, {
-        follows: newFollowList,
-      })
-      .then(async () => {
-        await Promise.all([mutateUser(), mutateFollowers()]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
 
   return (
     <>
@@ -83,14 +61,14 @@ const ProfileHeader = ({ pageOwner }: Props) => {
                     {user.follows.includes(pageOwner._id) ? (
                       <button
                         className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-neutral-300 focus:ring-opacity-80 sm:px-10"
-                        onClick={updateUserFollowList}
+                        onClick={() => updateUserFollowList(pageOwner, user)}
                       >
                         Unfollow
                       </button>
                     ) : (
                       <button
                         className="h-max w-max rounded-lg bg-blue-500 px-12 py-1 font-semibold capitalize text-white hover:bg-blue-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-blue-300 focus-visible:ring-opacity-80 sm:px-10"
-                        onClick={updateUserFollowList}
+                        onClick={() => updateUserFollowList(pageOwner, user)}
                       >
                         Follow
                       </button>

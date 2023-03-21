@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { PostView, PostModal } from "..";
 import axios from "axios";
 import { env } from "../../env/server.mjs";
