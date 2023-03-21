@@ -88,7 +88,7 @@ const Comment = ({
         className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
         user={author}
       />
-      <div className="flex w-full flex-col gap-1 text-left text-sm">
+      <div className="flex flex-1 flex-col gap-1 text-left text-sm">
         <p className="font-semibold">
           <Link
             href={`/${author.username}`}
