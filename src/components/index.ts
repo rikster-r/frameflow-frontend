@@ -19,6 +19,7 @@ import CreatePost from "./Post/CreatePost";
 import PostView from "./Post/PostView";
 import Feed from "./Post/Feed";
 import FeedPost from "./Post/FeedPost";
+import PostImagesCarousel from "./Post/PostImagesCarousel";
 
 import Comment from "./Comment";
 import CommentInput from "./Comment/CommentInput";
@@ -55,4 +56,5 @@ export {
   FeedPost,
   PostModal,
   UserSuggestions,
+  PostImagesCarousel,
 };
