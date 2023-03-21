@@ -267,7 +267,11 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
           {formatTimestamp(post.createdAt)}
         </p>
       </div>
-      {user && <CommentInput postId={post._id} ref={commentTextAreaRef} />}
+      {user && (
+        <div className="px-2">
+          <CommentInput postId={post._id} ref={commentTextAreaRef} />
+        </div>
+      )}
     </>
   );
 
