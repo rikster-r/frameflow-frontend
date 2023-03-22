@@ -21,7 +21,7 @@ import { parseCookies } from "nookies";
 import useWindowWidth from "../../hooks/useWindowWidth";
 
 type Props = {
-  searchToggled?: boolean;
+  panelToggled?: boolean;
 };
 
 const textVariants = {
@@ -34,7 +34,7 @@ const textVariants = {
   visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
 };
 
-const CreatePost = ({ searchToggled }: Props) => {
+const CreatePost = ({ panelToggled }: Props) => {
   const windowWidth = useWindowWidth();
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
@@ -165,7 +165,7 @@ const CreatePost = ({ searchToggled }: Props) => {
         <motion.p
           className="absolute left-12 hidden text-lg xl:block"
           variants={textVariants}
-          animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+          animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
         >
           Create
         </motion.p>

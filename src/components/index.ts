@@ -5,7 +5,6 @@ import Header from "./Headers/Header";
 import ProfileHeader from "./Headers/ProfileHeader";
 
 import LogoutButton from "./Buttons/LogoutButton";
-import SearchButton from "./Search";
 
 import ControlsModal from "./Modals/ControlsModal";
 import UsersListModal from "./Modals/UsersListModal";
@@ -24,11 +23,16 @@ import PostImagesCarousel from "./Post/PostImagesCarousel";
 import Comment from "./Comment";
 import CommentInput from "./Comment/CommentInput";
 
+import SearchPanel from "./Search";
+import SearchUsersSection from "./Search/UsersSection";
+
+import NotificationsPanel from "./Notifications";
+import NotificationsUsersSection from "./Notifications/UsersSection";
+
 import Layout from "./Layout";
 import Avatar from "./Avatar";
 import Loader from "./Loader";
 import ConditionalWrapper from "./ConditionalWrapper";
-import SearchUsersSection from "./Search/UsersSection";
 import UserSuggestions from "./UserSuggestions";
 
 export {
@@ -47,8 +51,8 @@ export {
   CreatePost,
   ControlsModal,
   CommentInput,
-  SearchButton,
   Loader,
+  SearchPanel,
   SearchUsersSection,
   ConditionalWrapper,
   Settings,
@@ -57,4 +61,6 @@ export {
   PostModal,
   UserSuggestions,
   PostImagesCarousel,
+  NotificationsPanel,
+  NotificationsUsersSection,
 };

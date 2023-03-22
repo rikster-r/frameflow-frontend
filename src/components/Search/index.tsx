@@ -2,8 +2,8 @@ import {
   type Dispatch,
   type SetStateAction,
   useState,
-  useEffect,
-  useRef,
+  type Ref,
+  forwardRef,
 } from "react";
 import { motion } from "framer-motion";
 import useWindowWidth from "../../hooks/useWindowWidth";
@@ -12,11 +12,6 @@ import { env } from "../../env/server.mjs";
 import useSWR from "swr";
 import { Loader } from "..";
 import { SearchUsersSection } from "../";
-
-type Props = {
-  searchToggled: boolean;
-  setSearchToggled: Dispatch<SetStateAction<boolean>>;
-};
 
 const slideVariants = {
   collapsed: {
@@ -53,49 +48,32 @@ const textVariants = {
   visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
 };
 
+type Props = {
+  toggled: boolean;
+  otherPanelsToggled: boolean;
+  setToggled: Dispatch<SetStateAction<boolean>>;
+};
+
 const fetcher = (url: string) =>
   axios.get(url).then((res) => res.data as IUser[]);
 
-const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
+const SearchPanel = (
+  { toggled, setToggled, otherPanelsToggled }: Props,
+  ref: Ref<HTMLDivElement>
+) => {
   const [query, setQuery] = useState("");
   const windowWidth = useWindowWidth();
-  const slideInRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const { data: results, isLoading } = useSWR<IUser[]>(
     query ? `${env.NEXT_PUBLIC_API_HOST}/users/search?username=${query}` : null,
     fetcher
   );
 
-  useEffect(() => {
-    const handleEscapeClick = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSearchToggled(false);
-    };
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        e.target instanceof HTMLElement &&
-        !slideInRef.current?.contains(e.target) &&
-        !buttonRef.current?.contains(e.target)
-      ) {
-        setSearchToggled(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleEscapeClick);
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscapeClick);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setSearchToggled, slideInRef]);
-
   return (
-    <>
+    <div ref={ref}>
       <motion.button
         className="flex w-full items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
-        onClick={() => setSearchToggled((current) => !current)}
-        ref={buttonRef}
+        onClick={() => setToggled((current) => !current)}
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
@@ -116,23 +94,26 @@ const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
         <motion.p
           className="absolute left-16 hidden text-lg xl:block"
           variants={textVariants}
-          animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+          animate={
+            windowWidth < 1280 || toggled || otherPanelsToggled
+              ? "hidden"
+              : "visible"
+          }
         >
           Search
         </motion.p>
       </motion.button>
       <motion.div
-        className="fixed top-0 left-[80px] z-10 flex h-screen w-[400px] flex-col gap-2 border-r border-neutral-300 bg-white dark:border-neutral-700 dark:bg-black sm:flex"
+        className="fixed top-0 left-[80px] z-20 flex h-screen w-[400px] flex-col gap-2 border-r border-neutral-300 bg-white dark:border-neutral-700 dark:bg-black sm:flex"
         variants={slideVariants}
         initial="collapsed"
-        animate={searchToggled ? "full" : "collapsed"}
+        animate={toggled ? "full" : "collapsed"}
         transition={{ type: "tween", duration: 0.3 }}
-        ref={slideInRef}
       >
         <motion.div
           className="flex h-full flex-col"
           variants={slideChildrenVariants}
-          animate={searchToggled ? "visible" : "hidden"}
+          animate={toggled ? "visible" : "hidden"}
         >
           <div className="border-b border-neutral-200 py-7 px-4 dark:border-neutral-700">
             <h2 className="mb-6 text-2xl font-semibold">Search query</h2>
@@ -190,8 +171,8 @@ const SearchButton = ({ searchToggled, setSearchToggled }: Props) => {
           <SearchUsersSection results={results} isLoading={isLoading} />
         </motion.div>
       </motion.div>
-    </>
+    </div>
   );
 };
 
-export default SearchButton;
+export default forwardRef(SearchPanel);

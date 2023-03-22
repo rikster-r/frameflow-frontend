@@ -8,7 +8,7 @@ import useWindowWidth from "../../hooks/useWindowWidth";
 import useUser from "../../hooks/useUser";
 
 type Props = {
-  searchToggled: boolean;
+  panelToggled: boolean;
 };
 
 const textVariants = {
@@ -21,7 +21,7 @@ const textVariants = {
   visible: { display: "flex", opacity: 1, transition: { delay: 0.3 } },
 };
 
-const Menu = ({ searchToggled }: Props) => {
+const Menu = ({ panelToggled }: Props) => {
   const { user } = useUser();
   const { isDark, setIsDark } = useContext(ThemeContext);
   const windowWidth = useWindowWidth();
@@ -53,7 +53,7 @@ const Menu = ({ searchToggled }: Props) => {
               className="absolute left-12 hidden text-lg xl:block"
               variants={textVariants}
               animate={
-                windowWidth < 1280 || searchToggled ? "hidden" : "visible"
+                windowWidth < 1280 || panelToggled ? "hidden" : "visible"
               }
             >
               More

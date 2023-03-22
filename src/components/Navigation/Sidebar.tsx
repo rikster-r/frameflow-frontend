@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
-import { Avatar, CreatePost, SearchButton } from "..";
+import { Avatar, CreatePost, SearchPanel, NotificationsPanel } from "..";
 import { useState } from "react";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import useUser from "../../hooks/useUser";
+import usePanelToggled from "../../hooks/usePanelToggled";
 
 const logoVariants = {
   hidden: {
@@ -33,8 +34,19 @@ const sidebarVariants = {
 
 const Sidebar = () => {
   const { user } = useUser();
-  const [searchToggled, setSearchToggled] = useState(false);
   const windowWidth = useWindowWidth();
+  const {
+    ref: searchPanelRef,
+    isToggled: searchToggled,
+    setIsToggled: setSearchToggled,
+  } = usePanelToggled();
+  const {
+    ref: notificationsPanelRef,
+    isToggled: notificationsToggled,
+    setIsToggled: setNotificationsToggled,
+  } = usePanelToggled();
+  const panelToggled = searchToggled || notificationsToggled;
+  console.log(panelToggled);
 
   if (!user) return <></>;
 
@@ -43,7 +55,7 @@ const Sidebar = () => {
       <motion.div
         className="flex h-full flex-col gap-2 border-r border-neutral-300 py-8 px-4 dark:border-neutral-700"
         variants={sidebarVariants}
-        animate={windowWidth < 1280 || searchToggled ? "collapsed" : "full"}
+        animate={windowWidth < 1280 || panelToggled ? "collapsed" : "full"}
         transition={{ type: "tween", duration: 0.3 }}
       >
         <Link href="/" className="mb-8 h-7 pl-3">
@@ -56,7 +68,7 @@ const Sidebar = () => {
             whileTap={{ scale: 0.95 }}
             variants={logoVariants}
             initial="hidden"
-            animate={windowWidth < 1280 || searchToggled ? "visible" : "hidden"}
+            animate={windowWidth < 1280 || panelToggled ? "visible" : "hidden"}
           >
             <g>
               <path d="m49.9 10.6c-2.1-4.1-7.4-11.7-17.2-7.2-6.1 2.8-9.5 4.4-9.5 4.4l-8.8 3.8c-2.5 1.2-7.9-0.5-11-1.6-0.9-0.3-1.7 0.6-1.3 1.5 2.1 4.1 7.4 11.7 17.2 7.2 6.1-2.8 18.3-8.1 18.3-8.1 2.5-1.2 7.9 0.5 11 1.6 0.9 0.2 1.7-0.7 1.3-1.6z m-21.1 12.8c-1.1 0.6-5.5 2.6-5.5 2.6l-4.4 1.9c-2.2 1.2-6.9-0.4-9.7-1.5-0.8-0.4-1.5 0.6-1.1 1.4 1.8 4 6.5 11.2 15.1 6.8 5.4-2.7 9.9-4.5 9.9-4.5 2.2-1.2 6.9 0.4 9.7 1.5 0.8 0.3 1.5-0.6 1.1-1.5-1.8-3.9-6.5-11.1-15.1-6.7z m-3.2 17.7c-0.9 0.5-2.4 1.4-2.4 1.4-1.7 1.1-5.2-0.3-7.3-1.3-0.6-0.3-1.1 0.6-0.8 1.4 1.3 3.6 4.8 10.1 11.3 6.1 2.4-1.5 2.4-1.4 2.4-1.4 1.8-0.9 5.2 0.3 7.3 1.3 0.6 0.3 1.1-0.6 0.8-1.4-1.3-3.6-4.6-9.8-11.3-6.1z"></path>
@@ -66,7 +78,7 @@ const Sidebar = () => {
           <motion.p
             className="invisible font-logo text-4xl xl:visible"
             variants={textVariants}
-            animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+            animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >
             Frameflow
           </motion.p>
@@ -94,14 +106,16 @@ const Sidebar = () => {
           <motion.p
             className="absolute left-16 hidden text-lg xl:block"
             variants={textVariants}
-            animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+            animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >
             Home
           </motion.p>
         </Link>
-        <SearchButton
-          searchToggled={searchToggled}
-          setSearchToggled={setSearchToggled}
+        <SearchPanel
+          ref={searchPanelRef}
+          toggled={searchToggled}
+          otherPanelsToggled={notificationsToggled}
+          setToggled={setSearchToggled}
         />
         <Link
           href="/explore"
@@ -121,37 +135,18 @@ const Sidebar = () => {
           <motion.p
             className="absolute left-16 hidden text-lg xl:block"
             variants={textVariants}
-            animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+            animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >
             Explore
           </motion.p>
         </Link>
-        <button className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900">
-          <motion.svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-7 w-7"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-            />
-          </motion.svg>
-          <motion.p
-            className="absolute left-16 hidden text-lg xl:block"
-            variants={textVariants}
-            animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
-          >
-            Notifications
-          </motion.p>
-        </button>
-        <CreatePost searchToggled={searchToggled} />
+        <NotificationsPanel
+          ref={notificationsPanelRef}
+          toggled={notificationsToggled}
+          otherPanelsToggled={searchToggled}
+          setToggled={setNotificationsToggled}
+        />
+        <CreatePost panelToggled={panelToggled} />
         <Link
           href={`/${user.username}`}
           className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
@@ -165,12 +160,12 @@ const Sidebar = () => {
           <motion.p
             className="absolute left-16 hidden text-lg xl:block"
             variants={textVariants}
-            animate={windowWidth < 1280 || searchToggled ? "hidden" : "visible"}
+            animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >
             Profile
           </motion.p>
         </Link>
-        <Menu searchToggled={searchToggled} />
+        <Menu panelToggled={panelToggled} />
       </motion.div>
     </div>
   );
