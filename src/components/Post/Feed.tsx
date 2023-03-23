@@ -31,7 +31,7 @@ const Feed = () => {
   if (isLoading)
     return (
       <div className="flex h-[700px] w-full animate-pulse select-none flex-col sm:w-[470px]">
-        <div className="flex h-max w-full gap-3 p-4">
+        <div className="flex h-max w-full gap-3 p-4 sm:px-0">
           <div className="h-8 w-8 rounded-full bg-neutral-800" />
           <div className="flex-1 rounded-full bg-neutral-700"></div>
         </div>

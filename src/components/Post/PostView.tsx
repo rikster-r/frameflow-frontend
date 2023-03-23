@@ -70,45 +70,61 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
         height={400}
         sizeClasses="h-full w-full"
       />
-      <div className="-order-1 flex h-max w-full items-center border-b border-neutral-200 p-4 dark:border-neutral-700">
+      <div className="-order-1 flex h-max w-full items-end border-b border-neutral-200 px-4 py-3 dark:border-neutral-700">
         <Avatar
           className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
           user={postOwner}
         />
-        <Link
-          href={`/${postOwner.username}`}
-          className="font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700"
-        >
-          {postOwner.username}{" "}
-        </Link>
-        {user && user.username !== postOwner.username && (
-          <>
-            {user.follows.includes(postOwner._id) ? (
-              <>
-                <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <Link
+              href={`/${postOwner.username}`}
+              className={`${
+                post.location ? "text-sm" : ""
+              } font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700`}
+            >
+              {postOwner.username}
+            </Link>
+            {user &&
+              user.username !== postOwner.username &&
+              !user.follows.includes(postOwner._id) && (
+                <>
+                  <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
+                  <button
+                    className={`${
+                      post.location ? "text-sm" : ""
+                    } font-semibold text-blue-500`}
+                    onClick={() => updateUserFollowList(postOwner, user)}
+                  >
+                    Follow
+                  </button>
+                </>
+              )}
+            <ControlsModal open={settingsOpen} setOpen={setSettingsOpen}>
+              {user && user.username === postOwner.username && (
                 <button
-                  className="font-semibold dark:text-white"
-                  onClick={() => updateUserFollowList(postOwner, user)}
+                  className="w-full py-4 font-semibold text-red-500"
+                  onClick={deletePost}
                 >
-                  Unfollow
+                  Delete
                 </button>
-              </>
-            ) : (
-              <>
-                <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
-                <button
-                  className="font-semibold text-blue-500"
-                  onClick={() => updateUserFollowList(postOwner, user)}
-                >
-                  Follow
-                </button>
-              </>
-            )}
-          </>
-        )}
+              )}
+              {!router.pathname.includes("/posts") && (
+                <Link href={`/posts/${post._id}`} className="block w-full py-4">
+                  Go to post
+                </Link>
+              )}
+            </ControlsModal>
+          </div>
+          {post.location && (
+            <p className="text-left text-xs text-neutral-700">
+              {post.location}
+            </p>
+          )}
+        </div>
         {!router.pathname.includes("/posts") && (
           <button
-            className="ml-auto mr-3 sm:mr-0"
+            className="ml-auto mr-3 self-center sm:mr-0"
             onClick={() => setSettingsOpen(true)}
           >
             <svg
@@ -127,21 +143,6 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
             </svg>
           </button>
         )}
-        <ControlsModal open={settingsOpen} setOpen={setSettingsOpen}>
-          {user && user.username === postOwner.username && (
-            <button
-              className="w-full py-4 font-semibold text-red-500"
-              onClick={deletePost}
-            >
-              Delete
-            </button>
-          )}
-          {!router.pathname.includes("/posts") && (
-            <Link href={`/posts/${post._id}`} className="block w-full py-4">
-              Go to post
-            </Link>
-          )}
-        </ControlsModal>
       </div>
       <div className="scrollbar-hide flex-1 md:overflow-y-scroll">
         {post.text || comments?.length ? (

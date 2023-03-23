@@ -27,11 +27,19 @@ const EmojiPicker = dynamic(
 type Props = {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
+  location: string;
+  setLocation: Dispatch<SetStateAction<string>>;
   setStep: Dispatch<SetStateAction<number>>;
 };
 
 // Caption input step
-const CaptionStep = ({ text, setText, setStep }: Props) => {
+const CaptionStep = ({
+  text,
+  setText,
+  location,
+  setLocation,
+  setStep,
+}: Props) => {
   const { user } = useUser();
   const width = useImageEditorWidth();
   const height = useImageEditorHeight();
@@ -59,15 +67,15 @@ const CaptionStep = ({ text, setText, setStep }: Props) => {
           </p>
         </button>
       </div>
-      <div className="relative flex h-full flex-1 flex-col gap-6 border-t border-neutral-300 p-6 dark:border-neutral-900">
-        <div className="flex items-center gap-2">
+      <div className="relative flex h-full flex-1 flex-col gap-6 border-t border-neutral-300 pt-6 dark:border-neutral-700">
+        <div className="flex items-center gap-2 px-6">
           <Avatar
             className="inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
             user={user}
           />
           <p className="font-semibold ">{user?.username}</p>
         </div>
-        <div className="h-full">
+        <div className="h-full px-6">
           <textarea
             className="h-full w-full resize-none bg-inherit focus:outline-none"
             name="text"
@@ -76,7 +84,7 @@ const CaptionStep = ({ text, setText, setStep }: Props) => {
             placeholder="Enter text..."
           />
         </div>
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between px-6">
           <Popover className="relative flex-1">
             <Popover.Button className="text-sm text-neutral-500 hover:cursor-pointer hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">
               <svg
@@ -142,6 +150,34 @@ const CaptionStep = ({ text, setText, setStep }: Props) => {
               </Popover.Panel>
             </Transition>
           </Popover>
+        </div>
+        <div className="flex justify-between border-t border-neutral-300 px-6 py-4 dark:border-neutral-700">
+          <input
+            type="text"
+            className="w-full bg-inherit focus:outline-none"
+            placeholder="Enter location..."
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+            />
+          </svg>
         </div>
       </div>
     </>

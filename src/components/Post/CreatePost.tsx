@@ -40,6 +40,7 @@ const CreatePost = ({ panelToggled }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const [step, setStep] = useState(1);
   const [text, setText] = useState("");
+  const [location, setLocation] = useState("");
   const [status, setStatus] = useState("pending");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +51,7 @@ const CreatePost = ({ panelToggled }: Props) => {
     const data = new FormData();
     files.forEach((file) => data.append("images", file));
     data.append("text", text);
+    data.append("location", location);
 
     axios
       .post(`${env.NEXT_PUBLIC_API_HOST}/posts`, data, {
@@ -70,6 +72,7 @@ const CreatePost = ({ panelToggled }: Props) => {
     if (inputRef.current) inputRef.current.value = "";
     setFiles([]);
     setText("");
+    setLocation("");
     setStatus("pending");
     setStep(1);
     setOpen(false);
@@ -132,7 +135,15 @@ const CreatePost = ({ panelToggled }: Props) => {
           />
         );
       case 3:
-        return <CaptionStep text={text} setText={setText} setStep={setStep} />;
+        return (
+          <CaptionStep
+            text={text}
+            setText={setText}
+            location={location}
+            setLocation={setLocation}
+            setStep={setStep}
+          />
+        );
       case 4:
         return <SubmitStep status={status} />;
     }

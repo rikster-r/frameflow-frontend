@@ -20,6 +20,7 @@ interface IPost {
   images: string[];
   text: string;
   likedBy: IUser[];
+  location: string;
   createdAt: string;
   updatedAt: string;
 }

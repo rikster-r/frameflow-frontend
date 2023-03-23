@@ -77,37 +77,46 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
   return (
     <>
       <div>
-        <div className="flex w-full items-center py-4">
+        <div className="flex w-full items-end py-4">
           <Avatar
-            className="mr-4 ml-2 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+            className="mr-4 ml-2 inline-flex h-9 w-9 select-none items-center justify-center overflow-hidden rounded-full align-middle"
             user={postOwner}
           />
-          <Link
-            href={`/${postOwner.username}`}
-            className="font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700"
-          >
-            {postOwner.username}
-          </Link>
-          <div className="ml-2 text-neutral-400">
-            &bull;
-            <span className="ml-2">
-              {getCurrentTimeDifference(post.createdAt)}
-            </span>
-          </div>
-          {!user.follows.includes(postOwner._id) && (
-            <div className="ml-2 text-neutral-400">
-              &bull;
-              <button
-                className="ml-2 font-semibold text-blue-500 hover:text-blue-200 dark:text-blue-400"
-                onClick={() => updateUserFollowList(postOwner, user)}
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <Link
+                href={`/${postOwner.username}`}
+                className="font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700"
               >
-                Follow
-              </button>
+                {postOwner.username}
+              </Link>
+              <div className="ml-2 text-neutral-400">
+                &bull;
+                <span className="ml-2">
+                  {getCurrentTimeDifference(post.createdAt)}
+                </span>
+              </div>
+              {!user.follows.includes(postOwner._id) && (
+                <div className="ml-2 text-neutral-400">
+                  &bull;
+                  <button
+                    className="ml-2 font-semibold text-blue-500 hover:text-blue-200 dark:text-blue-400"
+                    onClick={() => updateUserFollowList(postOwner, user)}
+                  >
+                    Follow
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+            {post.location && (
+              <p className="text-left text-xs text-neutral-700">
+                {post.location}
+              </p>
+            )}
+          </div>
           <button
             onClick={() => setControlsOpen(true)}
-            className="ml-auto mr-2"
+            className="ml-auto mr-2 self-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
