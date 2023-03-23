@@ -9,6 +9,8 @@ interface IUser {
   follows: (string | IUser)[];
   visited: string[];
   savedPosts: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface IPost {
@@ -19,6 +21,7 @@ interface IPost {
   text: string;
   likedBy: IUser[];
   createdAt: string;
+  updatedAt: string;
 }
 
 interface IComment {
@@ -29,4 +32,18 @@ interface IComment {
   text: string;
   likedBy: IUser[];
   createdAt: string;
+  updatedAt: string;
+}
+
+interface INotification {
+  _id: string;
+  __v: number;
+  from: IUser;
+  to: IUser;
+  action: "Like" | "Follow";
+  data?: {
+    likedPost?: IPost;
+  };
+  createdAt: string;
+  updatedAt: string;
 }

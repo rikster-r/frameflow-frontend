@@ -7,6 +7,8 @@ import {
 } from "react";
 import useWindowWidth from "../../hooks/useWindowWidth";
 
+import { NotificationsUsersSection } from "../";
+
 const slideVariants = {
   collapsed: {
     width: 0,
@@ -100,7 +102,7 @@ const NotificationsPanel = (
           variants={slideChildrenVariants}
           animate={toggled ? "visible" : "hidden"}
         >
-          {/* notifications section */}
+          <NotificationsUsersSection />
         </motion.div>
       </motion.div>
     </div>

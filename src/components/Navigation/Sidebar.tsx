@@ -46,7 +46,6 @@ const Sidebar = () => {
     setIsToggled: setNotificationsToggled,
   } = usePanelToggled();
   const panelToggled = searchToggled || notificationsToggled;
-  console.log(panelToggled);
 
   if (!user) return <></>;
 

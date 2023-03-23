@@ -16,9 +16,17 @@ export const updateUserFollowList = (
     : [...currentUser.follows, userToFollow._id];
 
   axios
-    .put(`${env.NEXT_PUBLIC_API_HOST}/users/${currentUser._id}/follows`, {
-      follows: newFollowList,
-    })
+    .put(
+      `${env.NEXT_PUBLIC_API_HOST}/users/${currentUser._id}/follows`,
+      {
+        follows: newFollowList,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    )
     .then(async () => {
       await Promise.all([
         mutate(
@@ -77,7 +85,8 @@ export const updatePostLikesCount = (
   withAnimation?: boolean,
   setLikeVisible?: Dispatch<SetStateAction<boolean>>
 ) => {
-  if (!currentUser) return;
+  const { userToken } = parseCookies();
+  if (!currentUser || !userToken) return;
 
   const newLikesField = post.likedBy.some(
     (liker) => liker._id === currentUser._id
@@ -86,9 +95,17 @@ export const updatePostLikesCount = (
     : [...post.likedBy, currentUser._id];
 
   axios
-    .put(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`, {
-      likedBy: newLikesField,
-    })
+    .put(
+      `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`,
+      {
+        likedBy: newLikesField,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    )
     .then(async () => {
       if (
         withAnimation &&
