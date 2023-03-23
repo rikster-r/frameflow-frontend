@@ -77,7 +77,11 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
   return (
     <>
       <div>
-        <div className="flex w-full items-end py-4">
+        <div
+          className={`${
+            post.location ? "items-end" : "items-center"
+          } flex w-full py-4`}
+        >
           <Avatar
             className="mr-4 ml-2 inline-flex h-9 w-9 select-none items-center justify-center overflow-hidden rounded-full align-middle"
             user={postOwner}
@@ -109,9 +113,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
               )}
             </div>
             {post.location && (
-              <p className="text-left text-xs text-neutral-700">
-                {post.location}
-              </p>
+              <p className="text-left text-xs">{post.location}</p>
             )}
           </div>
           <button

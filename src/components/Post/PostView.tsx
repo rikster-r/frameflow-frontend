@@ -70,7 +70,11 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
         height={400}
         sizeClasses="h-full w-full"
       />
-      <div className="-order-1 flex h-max w-full items-end border-b border-neutral-200 px-4 py-3 dark:border-neutral-700">
+      <div
+        className={`${
+          post.location ? "items-end" : "items-center"
+        } -order-1 flex h-max w-full  border-b border-neutral-200 px-4 py-3 dark:border-neutral-700`}
+      >
         <Avatar
           className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
           user={postOwner}
@@ -79,9 +83,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
           <div className="flex items-center">
             <Link
               href={`/${postOwner.username}`}
-              className={`${
-                post.location ? "text-sm" : ""
-              } font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700`}
+              className=" font-semibold hover:text-neutral-400 dark:text-white dark:hover:text-neutral-700"
             >
               {postOwner.username}
             </Link>
@@ -91,9 +93,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
                 <>
                   <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
                   <button
-                    className={`${
-                      post.location ? "text-sm" : ""
-                    } font-semibold text-blue-500`}
+                    className="font-semibold text-blue-500"
                     onClick={() => updateUserFollowList(postOwner, user)}
                   >
                     Follow
@@ -117,9 +117,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
             </ControlsModal>
           </div>
           {post.location && (
-            <p className="text-left text-xs text-neutral-700">
-              {post.location}
-            </p>
+            <p className="text-left text-xs">{post.location}</p>
           )}
         </div>
         {!router.pathname.includes("/posts") && (
