@@ -13,9 +13,11 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isDark, setIsDark } = useContext(ThemeContext);
 
+  if (router.asPath === "/notifications") return <></>;
+
   return (
     <header
-      className={`flex w-full sticky top-0 bg-white dark:bg-black z-10 items-center justify-center border-b border-neutral-300 px-4 py-3 dark:border-neutral-700 ${
+      className={`sticky top-0 z-10 flex w-full items-center justify-center border-b border-neutral-300 bg-white px-4 py-3 dark:border-neutral-700 dark:bg-black ${
         user ? "sm:hidden" : ""
       } `}
     >
@@ -123,7 +125,7 @@ const Header = () => {
                               <p className="text-lg">Change password</p>
                             </Link>
                             <button
-                              className="flex items-center gap-3 px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-900 w-full"
+                              className="flex w-full items-center gap-3 px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                               onClick={() => setIsDark(!isDark)}
                             >
                               <svg

@@ -38,7 +38,7 @@ const NotificationsUsersSection = () => {
       {notifications &&
         notifications.map((notification) => (
           <div
-            className="flex w-full items-center gap-0.5 truncate px-6 py-3"
+            className="flex w-full items-center gap-0.5 truncate px-6 py-3 "
             key={notification._id}
           >
             <Link href={`/${notification.from.username}`}>
@@ -66,7 +66,7 @@ const NotificationsUsersSection = () => {
               <>
                 {user.follows.includes(notification.from._id) ? (
                   <button
-                    className="ml-auto h-max w-max rounded-lg bg-neutral-100 px-8 py-1 font-semibold capitalize text-black hover:bg-neutral-200"
+                    className="ml-auto h-max w-max rounded-lg bg-neutral-100 px-6 py-1 font-semibold capitalize text-black hover:bg-neutral-200 sm:px-8"
                     onClick={(e) => {
                       e.preventDefault();
                       updateUserFollowList(notification.from, user);
@@ -76,7 +76,7 @@ const NotificationsUsersSection = () => {
                   </button>
                 ) : (
                   <button
-                    className="ml-auto h-max w-max rounded-lg bg-blue-500 px-8 py-1 font-semibold capitalize text-white hover:bg-blue-600"
+                    className="ml-auto h-max w-max rounded-lg bg-blue-500 px-6 py-1 font-semibold capitalize text-white hover:bg-blue-600 sm:px-8"
                     onClick={(e) => {
                       e.preventDefault();
                       updateUserFollowList(notification.from, user);
