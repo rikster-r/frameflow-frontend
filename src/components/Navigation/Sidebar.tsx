@@ -2,7 +2,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Menu from "./Menu";
 import { Avatar, CreatePost, SearchPanel, NotificationsPanel } from "..";
-import { useState } from "react";
+import { useRouter } from "next/router";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import useUser from "../../hooks/useUser";
 import usePanelToggled from "../../hooks/usePanelToggled";
@@ -35,6 +35,7 @@ const sidebarVariants = {
 const Sidebar = () => {
   const { user } = useUser();
   const windowWidth = useWindowWidth();
+  const { asPath } = useRouter();
   const {
     ref: searchPanelRef,
     isToggled: searchToggled,
@@ -86,24 +87,40 @@ const Sidebar = () => {
           href="/"
           className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
         >
-          <motion.svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-7 w-7"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-            />
-          </motion.svg>
+          {asPath === "/" && !panelToggled ? (
+            <motion.svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-7 w-7"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+              <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+            </motion.svg>
+          ) : (
+            <motion.svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="h-7 w-7"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+              />
+            </motion.svg>
+          )}
           <motion.p
-            className="absolute left-16 hidden text-lg xl:block"
+            className={`${
+              asPath === "/" ? "font-bold" : ""
+            } absolute left-16 hidden text-lg xl:block`}
             variants={textVariants}
             animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >
@@ -120,19 +137,35 @@ const Sidebar = () => {
           href="/explore"
           className="flex items-center gap-4 rounded-3xl py-3 px-2 xl:hover:bg-neutral-100 dark:xl:hover:bg-neutral-900"
         >
-          <motion.svg
-            className="h-7 w-7"
-            viewBox="0 0 1024 1024"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <path d="M512 896a384 384 0 1 0 0-768 384 384 0 0 0 0 768zm0 64a448 448 0 1 1 0-896 448 448 0 0 1 0 896z" />
-            <path d="M725.888 315.008C676.48 428.672 624 513.28 568.576 568.64c-55.424 55.424-139.968 107.904-253.568 157.312a12.8 12.8 0 0 1-16.896-16.832c49.536-113.728 102.016-198.272 157.312-253.632 55.36-55.296 139.904-107.776 253.632-157.312a12.8 12.8 0 0 1 16.832 16.832z" />
-          </motion.svg>
+          {asPath === "/explore" && !panelToggled ? (
+            <motion.svg
+              className="h-7 w-7"
+              viewBox="0 0 15 15"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <path d="M5.61805 9.38198L6.87269 6.87269L9.38198 5.61805L8.12734 8.12734L5.61805 9.38198Z" />
+              <path d="M0 7.5C0 3.35786 3.35786 0 7.5 0C11.6421 0 15 3.35786 15 7.5C15 11.6421 11.6421 15 7.5 15C3.35786 15 0 11.6421 0 7.5ZM10.9472 4.72362C11.0435 4.53113 11.0057 4.29864 10.8536 4.14646C10.7014 3.99428 10.4689 3.95655 10.2764 4.0528L6.27641 6.0528C6.17964 6.10118 6.10118 6.17964 6.0528 6.27641L4.0528 10.2764C3.95655 10.4689 3.99428 10.7014 4.14646 10.8536C4.29864 11.0057 4.53113 11.0435 4.72362 10.9472L8.72362 8.94723C8.82038 8.89885 8.89885 8.82038 8.94723 8.72362L10.9472 4.72362Z" />
+            </motion.svg>
+          ) : (
+            <motion.svg
+              className="h-7 w-7"
+              viewBox="-1.5 -1.5 18.00 18.00"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <path d="M4.5 10.5L4.05279 10.2764C3.95654 10.4689 3.99427 10.7014 4.14645 10.8536C4.29863 11.0057 4.53111 11.0435 4.72361 10.9472L4.5 10.5ZM6.5 6.5L6.27639 6.05279C6.17963 6.10117 6.10117 6.17963 6.05279 6.27639L6.5 6.5ZM10.5 4.5L10.9472 4.72361C11.0435 4.53111 11.0057 4.29863 10.8536 4.14645C10.7014 3.99427 10.4689 3.95654 10.2764 4.05279L10.5 4.5ZM8.5 8.5L8.72361 8.94721C8.82037 8.89883 8.89883 8.82037 8.94721 8.72361L8.5 8.5ZM7.5 14C3.91015 14 1 11.0899 1 7.5H0C0 11.6421 3.35786 15 7.5 15V14ZM14 7.5C14 11.0899 11.0899 14 7.5 14V15C11.6421 15 15 11.6421 15 7.5H14ZM7.5 1C11.0899 1 14 3.91015 14 7.5H15C15 3.35786 11.6421 0 7.5 0V1ZM7.5 0C3.35786 0 0 3.35786 0 7.5H1C1 3.91015 3.91015 1 7.5 1V0ZM4.94721 10.7236L6.94721 6.72361L6.05279 6.27639L4.05279 10.2764L4.94721 10.7236ZM6.72361 6.94721L10.7236 4.94721L10.2764 4.05279L6.27639 6.05279L6.72361 6.94721ZM10.0528 4.27639L8.05279 8.27639L8.94721 8.72361L10.9472 4.72361L10.0528 4.27639ZM8.27639 8.05279L4.27639 10.0528L4.72361 10.9472L8.72361 8.94721L8.27639 8.05279Z" />
+            </motion.svg>
+          )}
+
           <motion.p
-            className="absolute left-16 hidden text-lg xl:block"
+            className={`${
+              asPath === "/explore" ? "font-bold" : ""
+            } absolute left-16 hidden text-lg xl:block`}
             variants={textVariants}
             animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >
@@ -152,12 +185,18 @@ const Sidebar = () => {
         >
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
             <Avatar
-              className="inline-flex h-7 w-7 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+              className={`${
+                asPath === `/${user.username}`
+                  ? "outline outline-2 outline-black dark:outline-white"
+                  : ""
+              } inline-flex h-7 w-7 select-none items-center justify-center overflow-hidden rounded-full align-middle`}
               user={user}
             />
           </motion.div>
           <motion.p
-            className="absolute left-16 hidden text-lg xl:block"
+            className={`${
+              asPath === `/${user.username}` ? "font-bold" : ""
+            } absolute left-16 hidden text-lg xl:block`}
             variants={textVariants}
             animate={windowWidth < 1280 || panelToggled ? "hidden" : "visible"}
           >

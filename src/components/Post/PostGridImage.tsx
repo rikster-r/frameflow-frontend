@@ -47,6 +47,19 @@ const PostGridImage = ({ post, postOwner, mutatePosts }: Props) => {
           width={200}
           height={200}
         />
+        {post.images.length > 1 && (
+          <div className="absolute top-1 right-1 sm:top-3 sm:right-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="h-6 w-6 fill-white"
+            >
+              <path d="M16.5 6a3 3 0 00-3-3H6a3 3 0 00-3 3v7.5a3 3 0 003 3v-6A4.5 4.5 0 0110.5 6h6z" />
+              <path d="M18 7.5a3 3 0 013 3V18a3 3 0 01-3 3h-7.5a3 3 0 01-3-3v-7.5a3 3 0 013-3H18z" />
+            </svg>
+          </div>
+        )}
+
         <div className="absolute inset-0 hidden items-center justify-center gap-5 text-lg font-semibold text-white group-hover:inline-flex sm:gap-8">
           <div className="flex items-center gap-2">
             <svg

@@ -64,7 +64,7 @@ const NotificationsPanel = (
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
+          fill={toggled ? "currentColor" : "none"}
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"

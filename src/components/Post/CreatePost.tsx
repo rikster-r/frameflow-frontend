@@ -159,11 +159,14 @@ const CreatePost = ({ panelToggled }: Props) => {
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
+          fill={open ? "currentColor" : "none"}
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-7 w-7"
+          className={`${
+            open
+              ? "stroke-white dark:stroke-black"
+              : "stroke-black dark:stroke-white"
+          } h-7 w-7`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
