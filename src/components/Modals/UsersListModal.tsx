@@ -56,7 +56,7 @@ const UsersListModal = ({ open, setOpen, users, title }: Props) => {
                       />
                     </svg>
                   </div>
-                  <Dialog.Title className="flex-1 py-3 text-center font-semibold">
+                  <Dialog.Title className="flex-1 py-3 text-center font-semibold capitalize">
                     {title}
                   </Dialog.Title>
                   <button className="mr-4" onClick={() => setOpen(false)}>

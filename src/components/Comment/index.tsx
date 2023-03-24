@@ -109,7 +109,7 @@ const Comment = ({
           )}
           {commentId && likedBy && (
             <UsersListModal
-              title="likes"
+              title="Likes"
               open={likesCountOpen}
               setOpen={setLikesCountOpen}
               users={likedBy}
