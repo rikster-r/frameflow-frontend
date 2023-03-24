@@ -25,7 +25,7 @@ const Feed = () => {
       setHasMore(false);
       return null;
     }
-    return `${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/feed?page=${index}&perPage=20`;
+    return `${env.NEXT_PUBLIC_API_HOST}/users/${user.username}/feed?page=${index}&perPage=10`;
   }, getPosts);
 
   if (isLoading)

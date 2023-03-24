@@ -26,7 +26,7 @@ const PostImagesGrid = ({ path }: Props) => {
       setHasMore(false);
       return null;
     }
-    return `${env.NEXT_PUBLIC_API_HOST}${path}?page=${index}&perPage=20`;
+    return `${env.NEXT_PUBLIC_API_HOST}${path}?page=${index}&perPage=10`;
   }, getPosts);
   const router = useRouter();
   const loadCondition = router.pathname === "/explore";
