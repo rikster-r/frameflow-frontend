@@ -48,9 +48,9 @@ const ExplorePage: NextPage = ({ user }: Props) => {
       >
         <Layout>
           <div className="w-full flex-1 justify-center sm:flex">
-            <div className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
+            <main className="my-4 flex w-full max-w-[900px] flex-col items-center sm:mx-6 sm:my-8">
               <PostImagesGrid path="/posts/latest" />
-            </div>
+            </main>
           </div>
         </Layout>
       </SWRConfig>

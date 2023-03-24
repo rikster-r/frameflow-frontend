@@ -37,7 +37,7 @@ const PostGridImage = ({ post, postOwner, mutatePosts }: Props) => {
   return (
     <>
       <button
-        className="group relative block filter hover:bg-gray-700"
+        className="group relative block h-full w-full filter hover:bg-gray-700"
         onClick={handleImageClick}
       >
         <Image

@@ -114,7 +114,7 @@ const UserPage: NextPage = ({ user, pageOwner, followers, posts }: Props) => {
                 <ProfileHeader pageOwner={pageOwner} />
               </SWRConfig>
 
-              <main>
+              <main className="w-full">
                 <SWRConfig
                   value={{
                     fallback: {
