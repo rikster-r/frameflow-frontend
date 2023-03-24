@@ -61,61 +61,68 @@ const UsersSection = ({ results, isLoading }: Props) => {
           <Loader />
         </div>
       )}
-      {!results &&
-        !isLoading &&
-        visited &&
-        visited.map((user) => (
-          <Link
-            href={`/${user.username}`}
-            className="flex w-full items-center gap-0.5 truncate px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-900"
-            key={user._id}
-          >
-            <Avatar
-              className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
-              user={user}
-            />
-            <div>
-              <p className="text-sm font-semibold">{user.username}</p>
-              <p className="text-sm text-neutral-400">{user.publicName}</p>
-            </div>
-            <button
-              onClick={() => removeFromVisitedList(false, user._id)}
-              className="ml-auto"
+      {!results && !isLoading && visited && (
+        <div className="overflow-y-auto">
+          {visited.map((person) => (
+            <Link
+              href={`/${person.username}`}
+              className="flex w-full items-center gap-0.5 truncate px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+              key={person._id}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-7 w-7"
+              <Avatar
+                className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+                user={person}
+              />
+              <div>
+                <p className="text-sm font-semibold">{person.username}</p>
+                <p className="text-sm text-neutral-400">{person.publicName}</p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  removeFromVisitedList(false, person._id);
+                }}
+                className="ml-auto"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </Link>
-        ))}
-      {results &&
-        results.map((user) => (
-          <Link
-            href={`/${user.username}`}
-            className="flex w-full items-center gap-0.5 truncate px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-900"
-            key={user._id}
-          >
-            <Avatar
-              className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
-              user={user}
-            />
-            <div>
-              <p className="text-sm font-semibold">{user.username}</p>
-              <p className="text-sm text-neutral-400">{user.publicName}</p>
-            </div>
-          </Link>
-        ))}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-7 w-7"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </Link>
+          ))}
+        </div>
+      )}
+      {results && (
+        <div className="overflow-y-auto">
+          {results.map((user) => (
+            <Link
+              href={`/${user.username}`}
+              className="flex w-full items-center gap-0.5 truncate px-6 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+              key={user._id}
+            >
+              <Avatar
+                className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+                user={user}
+              />
+              <div>
+                <p className="text-sm font-semibold">{user.username}</p>
+                <p className="text-sm text-neutral-400">{user.publicName}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
       {results && results.length === 0 && (
         <div className="flex h-full items-center justify-center text-neutral-500">
           No results.

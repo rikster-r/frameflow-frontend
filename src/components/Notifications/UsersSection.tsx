@@ -35,73 +35,78 @@ const NotificationsUsersSection = () => {
           No notifications.
         </div>
       )}
-      {notifications &&
-        notifications.map((notification) => (
-          <div
-            className="flex w-full items-center gap-0.5 truncate px-6 py-3 "
-            key={notification._id}
-          >
-            <Link href={`/${notification.from.username}`}>
-              <Avatar
-                className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
-                user={notification.from}
-              />
-            </Link>
-            <Link href={`/${notification.from.username}`}>
-              <div>
-                <p className="text-sm font-semibold">
-                  {notification.from.username}
-                </p>
-                <p className="text-sm">
-                  {notification.action === "Follow"
-                    ? "started following you."
-                    : "liked your post."}
-                </p>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {getCurrentTimeDifference(notification.createdAt)}
-                </p>
-              </div>
-            </Link>
-            {notification.action === "Follow" ? (
-              <>
-                {user.follows.includes(notification.from._id) ? (
-                  <button
-                    className="ml-auto h-max w-max rounded-lg bg-neutral-100 px-6 py-1 font-semibold capitalize text-black hover:bg-neutral-200 sm:px-8"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      updateUserFollowList(notification.from, user);
-                    }}
-                  >
-                    Unfollow
-                  </button>
-                ) : (
-                  <button
-                    className="ml-auto h-max w-max rounded-lg bg-blue-500 px-6 py-1 font-semibold capitalize text-white hover:bg-blue-600 sm:px-8"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      updateUserFollowList(notification.from, user);
-                    }}
-                  >
-                    Follow
-                  </button>
-                )}
-              </>
-            ) : (
-              <Link
-                href={`/posts/${notification?.data?.likedPost?._id as string}`}
-                className="ml-auto h-12 w-12 "
-              >
-                <Image
-                  width={100}
-                  height={100}
-                  alt=""
-                  src={notification?.data?.likedPost?.images.at(0) as string}
-                  className="h-full w-full object-cover"
+      {notifications && (
+        <div className="overflow-y-auto">
+          {notifications.map((notification) => (
+            <div
+              className="flex w-full items-center gap-0.5 truncate px-6 py-3 "
+              key={notification._id}
+            >
+              <Link href={`/${notification.from.username}`}>
+                <Avatar
+                  className="mr-4 inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle"
+                  user={notification.from}
                 />
               </Link>
-            )}
-          </div>
-        ))}
+              <Link href={`/${notification.from.username}`}>
+                <div>
+                  <p className="text-sm font-semibold">
+                    {notification.from.username}
+                  </p>
+                  <p className="text-sm">
+                    {notification.action === "Follow"
+                      ? "started following you."
+                      : "liked your post."}
+                  </p>
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    {getCurrentTimeDifference(notification.createdAt)}
+                  </p>
+                </div>
+              </Link>
+              {notification.action === "Follow" ? (
+                <>
+                  {user.follows.includes(notification.from._id) ? (
+                    <button
+                      className="ml-auto h-max w-max rounded-lg bg-neutral-100 px-6 py-1 font-semibold capitalize text-black hover:bg-neutral-200 sm:px-8"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        updateUserFollowList(notification.from, user);
+                      }}
+                    >
+                      Unfollow
+                    </button>
+                  ) : (
+                    <button
+                      className="ml-auto h-max w-max rounded-lg bg-blue-500 px-6 py-1 font-semibold capitalize text-white hover:bg-blue-600 sm:px-8"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        updateUserFollowList(notification.from, user);
+                      }}
+                    >
+                      Follow
+                    </button>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href={`/posts/${
+                    notification?.data?.likedPost?._id as string
+                  }`}
+                  className="ml-auto h-12 w-12 "
+                >
+                  <Image
+                    width={100}
+                    height={100}
+                    alt=""
+                    src={notification?.data?.likedPost?.images.at(0) as string}
+                    className="h-full w-full object-cover"
+                  />
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 };

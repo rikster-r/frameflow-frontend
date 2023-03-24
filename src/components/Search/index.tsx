@@ -168,7 +168,9 @@ const SearchPanel = (
               )}
             </div>
           </div>
-          <SearchUsersSection results={results} isLoading={isLoading} />
+          {toggled && (
+            <SearchUsersSection results={results} isLoading={isLoading} />
+          )}
         </motion.div>
       </motion.div>
     </div>

@@ -102,7 +102,7 @@ const NotificationsPanel = (
           variants={slideChildrenVariants}
           animate={toggled ? "visible" : "hidden"}
         >
-          <NotificationsUsersSection />
+          {toggled && <NotificationsUsersSection />}
         </motion.div>
       </motion.div>
     </div>
