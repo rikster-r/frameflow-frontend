@@ -38,7 +38,7 @@ const UsersListModal = ({ open, setOpen, users, title }: Props) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-110"
             >
-              <Dialog.Panel className="h-[400px] w-[300px] rounded-lg bg-white shadow-xl dark:bg-neutral-800 dark:text-white sm:w-[400px]">
+              <Dialog.Panel className="flex h-[400px] w-[300px] flex-col rounded-lg bg-white shadow-xl dark:bg-neutral-800 dark:text-white sm:w-[400px]">
                 <div className="flex items-center justify-between">
                   <div className="invisible ml-4">
                     <svg
@@ -76,7 +76,7 @@ const UsersListModal = ({ open, setOpen, users, title }: Props) => {
                     </svg>
                   </button>
                 </div>
-                <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto border-t border-neutral-300  dark:border-neutral-700">
+                <div className="overflow-y-auto border-t border-neutral-300 dark:border-neutral-700">
                   {users.map((user) => (
                     <Link
                       onClick={() => setOpen(false)}
