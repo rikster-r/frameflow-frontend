@@ -4,7 +4,7 @@ import axios from "axios";
 import { mutate, type KeyedMutator } from "swr";
 import type { Dispatch, SetStateAction } from "react";
 
-export const updateUserFollowList = (
+export const updateUserFollowList = async (
   userToFollow: IUser,
   currentUser?: IUser
 ) => {
@@ -15,32 +15,44 @@ export const updateUserFollowList = (
     ? currentUser.follows.filter((userId) => userId !== userToFollow._id)
     : [...currentUser.follows, userToFollow._id];
 
-  axios
-    .put(
-      `${env.NEXT_PUBLIC_API_HOST}/users/${currentUser._id}/follows`,
-      {
-        follows: newFollowList,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
+  try {
+    await Promise.all([
+      mutate(
+        `${env.NEXT_PUBLIC_API_HOST}/users/profile`,
+        {
+          ...currentUser,
+          follows: newFollowList,
         },
-      }
-    )
-    .then(async () => {
-      await Promise.all([
-        mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${userToFollow.username}/followers`
-        ),
-        mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
-      ]);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+        { revalidate: false }
+      ),
+      axios.put(
+        `${env.NEXT_PUBLIC_API_HOST}/users/${currentUser._id}/follows`,
+        {
+          follows: newFollowList,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      ),
+    ]);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await Promise.all([
+      mutate(
+        `${env.NEXT_PUBLIC_API_HOST}/users/${userToFollow.username}/followers`
+      ),
+      mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
+    ]);
+  }
 };
 
-export const updateUserSavedList = (postToSave: IPost, currentUser?: IUser) => {
+export const updateUserSavedList = async (
+  postToSave: IPost,
+  currentUser?: IUser
+) => {
   const { userToken } = parseCookies();
   if (!currentUser || !userToken) return;
 
@@ -48,29 +60,33 @@ export const updateUserSavedList = (postToSave: IPost, currentUser?: IUser) => {
     ? currentUser.savedPosts.filter((id) => id !== postToSave._id)
     : [...currentUser.savedPosts, postToSave._id];
 
-  axios
-    .put(
-      `${env.NEXT_PUBLIC_API_HOST}/users/${currentUser._id}/saved`,
-      {
-        savedPosts: newSavedList,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
+  try {
+    await Promise.all([
+      mutate(
+        `${env.NEXT_PUBLIC_API_HOST}/users/profile`,
+        {
+          ...currentUser,
+          savedPosts: newSavedList,
         },
-      }
-    )
-    .then(async () => {
-      await Promise.all([
-        mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`),
-        mutate(
-          `${env.NEXT_PUBLIC_API_HOST}/users/${currentUser.username}/saved`
-        ),
-      ]);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+        { revalidate: false }
+      ),
+      axios.put(
+        `${env.NEXT_PUBLIC_API_HOST}/users/${currentUser._id}/saved`,
+        {
+          savedPosts: newSavedList,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      ),
+    ]);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await mutate(`${env.NEXT_PUBLIC_API_HOST}/users/profile`);
+  }
 };
 
 /*
@@ -78,7 +94,7 @@ export const updateUserSavedList = (postToSave: IPost, currentUser?: IUser) => {
  * @param likeVisible - state setter of like icon visibility over image when like is triggered by double click
  * @param mutatePosts - swr mutator for posts, is an argument because posts could be retrieved from any path
  */
-export const updatePostLikesCount = (
+export const updatePostLikesCount = async (
   post: IPost,
   currentUser?: IUser,
   mutatePosts?: KeyedMutator<IPost[][]>,
@@ -92,36 +108,46 @@ export const updatePostLikesCount = (
     (liker) => liker._id === currentUser._id
   )
     ? post.likedBy.filter((liker) => liker._id !== currentUser._id)
-    : [...post.likedBy, currentUser._id];
+    : [...post.likedBy, currentUser];
 
-  axios
-    .put(
-      `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`,
-      {
-        likedBy: newLikesField,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      }
-    )
-    .then(async () => {
-      if (
-        withAnimation &&
-        setLikeVisible &&
-        newLikesField.length > post.likedBy.length
-      ) {
-        setLikeVisible(true);
-        setTimeout(() => setLikeVisible(false), 1000);
-      }
+  if (withAnimation && setLikeVisible) {
+    setLikeVisible(true);
+    setTimeout(() => setLikeVisible(false), 1000);
+  }
 
+  if (
+    !withAnimation ||
+    (withAnimation && newLikesField.length > post.likedBy.length)
+  ) {
+    try {
+      await Promise.all([
+        mutate(
+          `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`,
+          {
+            ...post,
+            likedBy: newLikesField,
+          },
+          { revalidate: false }
+        ),
+        axios.put(
+          `${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}/likes`,
+          {
+            likedBy: newLikesField,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        ),
+      ]);
+    } catch (err) {
+      console.error(err);
+    } finally {
       await Promise.all([
         mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${post._id}`),
         mutatePosts && mutatePosts(),
       ]);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    }
+  }
 };

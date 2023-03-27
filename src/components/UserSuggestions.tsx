@@ -54,7 +54,7 @@ const UserSuggestions = () => {
               className="ml-auto font-semibold"
               onClick={(e) => {
                 e.preventDefault();
-                updateUserFollowList(follower, user);
+                void updateUserFollowList(follower, user);
               }}
             >
               Unfollow
@@ -64,7 +64,7 @@ const UserSuggestions = () => {
               className="ml-auto font-semibold text-blue-500 hover:text-blue-200 dark:text-blue-400"
               onClick={(e) => {
                 e.preventDefault();
-                updateUserFollowList(follower, user);
+                void updateUserFollowList(follower, user);
               }}
             >
               Follow

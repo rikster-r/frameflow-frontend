@@ -70,7 +70,7 @@ const NotificationsUsersSection = () => {
                       className="ml-auto h-max w-max rounded-lg bg-neutral-100 px-6 py-1 font-semibold capitalize text-black hover:bg-neutral-200 sm:px-8"
                       onClick={(e) => {
                         e.preventDefault();
-                        updateUserFollowList(notification.from, user);
+                        void updateUserFollowList(notification.from, user);
                       }}
                     >
                       Unfollow
@@ -80,7 +80,7 @@ const NotificationsUsersSection = () => {
                       className="ml-auto h-max w-max rounded-lg bg-blue-500 px-6 py-1 font-semibold capitalize text-white hover:bg-blue-600 sm:px-8"
                       onClick={(e) => {
                         e.preventDefault();
-                        updateUserFollowList(notification.from, user);
+                        void updateUserFollowList(notification.from, user);
                       }}
                     >
                       Follow

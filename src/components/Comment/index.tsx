@@ -6,24 +6,25 @@ import { useSWRConfig } from "swr";
 import { UsersListModal, Avatar, ControlsModal } from "..";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import useSWR from "swr";
+import useUser from "../../hooks/useUser";
 
 type Props = {
   author: IUser;
   text: string;
   createdAt: string;
-  likedBy?: IUser[];
-  userId?: string;
   postId?: string;
   commentId?: string;
   commentInputRef?: RefObject<HTMLTextAreaElement>;
 };
 
+const fetcher = (url: string) =>
+  axios.get(url).then((res) => res.data as IComment);
+
 const Comment = ({
   author,
   text,
   createdAt,
-  likedBy,
-  userId,
   postId,
   commentId,
   commentInputRef,
@@ -31,23 +32,46 @@ const Comment = ({
   const [controlsOpen, setControlsOpen] = useState(false);
   const [likesCountOpen, setLikesCountOpen] = useState(false);
   const { mutate } = useSWRConfig();
+  const { user } = useUser();
+  const { data: comment, mutate: mutateComment } = useSWR<IComment>(
+    commentId ? `${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}` : null,
+    fetcher
+  );
 
-  const updatePostLikesCount = () => {
-    if (!likedBy || !userId || !postId || !commentId) return;
+  const updatePostLikesCount = async () => {
+    if (!postId || !comment || !user) return;
 
-    const newLikesField = likedBy.some((liker) => liker._id === userId)
-      ? likedBy.filter((liker) => liker._id !== userId)
-      : [...likedBy, userId];
+    const newLikesField = comment.likedBy.some(
+      (liker) => liker._id === user._id
+    )
+      ? comment.likedBy.filter((liker) => liker._id !== user._id)
+      : [...comment.likedBy, user];
+
+    try {
+      await Promise.all([
+        mutateComment(
+          {
+            ...comment,
+            likedBy: newLikesField,
+          },
+          { revalidate: false }
+        ),
+        axios.put(`${env.NEXT_PUBLIC_API_HOST}/comments/${comment._id}/likes`, {
+          likedBy: newLikesField,
+        }),
+      ]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      await mutateComment();
+    }
 
     axios
-      .put(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}/likes`, {
+      .put(`${env.NEXT_PUBLIC_API_HOST}/comments/${comment._id}/likes`, {
         likedBy: newLikesField,
       })
       .then(async () => {
-        await Promise.all([
-          mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`),
-          mutate(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}/likes`),
-        ]);
+        await mutate(`${env.NEXT_PUBLIC_API_HOST}/posts/${postId}/comments`);
       })
       .catch((err) => {
         console.error(err);
@@ -55,7 +79,7 @@ const Comment = ({
   };
 
   const deleteComment = () => {
-    if (!postId || !userId || !commentId) return;
+    if (!postId || !user || !commentId) return;
 
     axios
       .delete(`${env.NEXT_PUBLIC_API_HOST}/comments/${commentId}`)
@@ -82,7 +106,7 @@ const Comment = ({
   return (
     <div
       className="group flex h-max w-full items-start px-4 py-3 dark:text-white"
-      onDoubleClick={updatePostLikesCount}
+      onDoubleClick={() => void updatePostLikesCount()}
     >
       <Avatar
         className="mr-4 inline-flex h-8 w-8 select-none items-center justify-center overflow-hidden rounded-full align-middle"
@@ -102,23 +126,23 @@ const Comment = ({
           <span className="font-normal">
             {getCurrentTimeDifference(createdAt)}
           </span>
-          {likedBy && Boolean(likedBy.length) && (
+          {comment && comment.likedBy.length > 0 && (
             <button onClick={() => setLikesCountOpen(true)}>
-              Likes: {likedBy.length}
+              Likes: {comment.likedBy.length}
             </button>
           )}
-          {commentId && likedBy && (
+          {comment && comment.likedBy && (
             <UsersListModal
               title="Likes"
               open={likesCountOpen}
               setOpen={setLikesCountOpen}
-              users={likedBy}
+              users={comment.likedBy}
             />
           )}
-          {userId && commentInputRef && userId !== author._id && (
+          {commentInputRef && user?._id !== author._id && (
             <button onClick={addAuthorNameToInput}>Reply</button>
           )}
-          {commentId && userId === author._id && (
+          {comment && user?._id === author._id && (
             <button
               className="invisible group-hover:visible group-focus:visible"
               onClick={() => setControlsOpen(true)}
@@ -149,8 +173,8 @@ const Comment = ({
           </ControlsModal>
         </div>
       </div>
-      {likedBy && userId && (
-        <button onClick={updatePostLikesCount}>
+      {comment && user && (
+        <button onClick={() => void updatePostLikesCount()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -158,7 +182,7 @@ const Comment = ({
             strokeWidth={1.5}
             stroke="currentColor"
             className={`${
-              userId && likedBy.some((liker) => liker._id === userId)
+              user && comment.likedBy.some((liker) => liker._id === user._id)
                 ? "fill-red-500 stroke-red-500 text-red-500"
                 : "hover:text-neutral-400"
             } mt-1 h-5 w-5`}

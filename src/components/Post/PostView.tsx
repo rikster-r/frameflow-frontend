@@ -64,7 +64,13 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
       <PostImagesCarousel
         images={post.images}
         doubleClickHandler={(setLikeVisible) =>
-          updatePostLikesCount(post, user, mutatePosts, true, setLikeVisible)
+          void updatePostLikesCount(
+            post,
+            user,
+            mutatePosts,
+            true,
+            setLikeVisible
+          )
         }
         width={400}
         height={400}
@@ -94,7 +100,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
                   <p className="font-sembibold mx-2 dark:text-white">&bull;</p>
                   <button
                     className="font-semibold text-blue-500"
-                    onClick={() => updateUserFollowList(postOwner, user)}
+                    onClick={() => void updateUserFollowList(postOwner, user)}
                   >
                     Follow
                   </button>
@@ -156,13 +162,11 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
               comments.map((comment) => (
                 <Comment
                   key={comment._id}
-                  userId={user?._id}
-                  postId={post._id}
-                  commentId={comment._id}
                   author={comment.author as IUser}
                   text={comment.text}
-                  likedBy={comment.likedBy}
                   createdAt={comment.createdAt}
+                  postId={post._id}
+                  commentId={comment._id}
                   commentInputRef={commentTextAreaRef}
                 />
               ))}
@@ -177,7 +181,9 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
       <div className="sticky bottom-0 border-y border-neutral-200 bg-white p-4 text-left dark:border-neutral-700 dark:bg-black md:block">
         <div className="flex gap-4">
           <button
-            onClick={() => updatePostLikesCount(post, user, mutatePosts, false)}
+            onClick={() =>
+              void updatePostLikesCount(post, user, mutatePosts, false)
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -220,7 +226,7 @@ const PostView = ({ postId, postOwner, comments, mutatePosts }: Props) => {
           </button>
           <button
             className="ml-auto"
-            onClick={() => updateUserSavedList(post, user)}
+            onClick={() => void updateUserSavedList(post, user)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

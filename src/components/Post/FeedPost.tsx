@@ -105,7 +105,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
                   &bull;
                   <button
                     className="ml-2 font-semibold text-blue-500 hover:text-blue-200 dark:text-blue-400"
-                    onClick={() => updateUserFollowList(postOwner, user)}
+                    onClick={() => void updateUserFollowList(postOwner, user)}
                   >
                     Follow
                   </button>
@@ -139,7 +139,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
             {user.follows.includes(postOwner._id) && (
               <button
                 className="w-full py-4 font-semibold text-red-500"
-                onClick={() => updateUserFollowList(postOwner, user)}
+                onClick={() => void updateUserFollowList(postOwner, user)}
               >
                 Unfollow
               </button>
@@ -155,7 +155,13 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
         <PostImagesCarousel
           images={post.images}
           doubleClickHandler={(setLikeVisible) =>
-            updatePostLikesCount(post, user, mutatePosts, true, setLikeVisible)
+            void updatePostLikesCount(
+              post,
+              user,
+              mutatePosts,
+              true,
+              setLikeVisible
+            )
           }
           width={400}
           height={400}
@@ -163,7 +169,9 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
         />
         <div className="flex gap-4 py-4 px-2">
           <button
-            onClick={() => updatePostLikesCount(post, user, mutatePosts, false)}
+            onClick={() =>
+              void updatePostLikesCount(post, user, mutatePosts, false)
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +210,7 @@ const FeedPost = ({ postId, mutatePosts }: Props) => {
           </button>
           <button
             className="ml-auto"
-            onClick={() => updateUserSavedList(post, user)}
+            onClick={() => void updateUserSavedList(post, user)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -61,14 +61,14 @@ const ProfileHeader = ({ pageOwner }: Props) => {
                     {user.follows.includes(pageOwner._id) ? (
                       <button
                         className="h-max w-max rounded-lg bg-neutral-100 px-12 py-1 font-semibold capitalize text-black hover:bg-neutral-200 focus:outline-none focus:ring focus:ring-neutral-300 focus:ring-opacity-80 sm:px-10"
-                        onClick={() => updateUserFollowList(pageOwner, user)}
+                        onClick={() => void updateUserFollowList(pageOwner, user)}
                       >
                         Unfollow
                       </button>
                     ) : (
                       <button
                         className="h-max w-max rounded-lg bg-blue-500 px-12 py-1 font-semibold capitalize text-white hover:bg-blue-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-blue-300 focus-visible:ring-opacity-80 sm:px-10"
-                        onClick={() => updateUserFollowList(pageOwner, user)}
+                        onClick={() => void updateUserFollowList(pageOwner, user)}
                       >
                         Follow
                       </button>
