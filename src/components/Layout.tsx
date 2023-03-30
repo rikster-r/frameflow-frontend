@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useContext } from "react";
 import { Header, BottomNav, Sidebar } from "./index";
 import useUser from "../hooks/useUser";
 import { useRouter } from "next/router";
+import { PageLoadContext } from "../pages/_app";
 
 type Props = {
   children: ReactNode | ReactNode[];
@@ -10,6 +11,27 @@ type Props = {
 const Layout = ({ children }: Props) => {
   const { user } = useUser();
   const router = useRouter();
+  const { setPageLoadProgress } = useContext(PageLoadContext);
+
+  useEffect(() => {
+    const handleStart = () => {
+      setPageLoadProgress(50);
+    };
+
+    const handleStop = () => {
+      setPageLoadProgress(100);
+    };
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleStop);
+    router.events.on("routeChangeError", handleStop);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleStop);
+      router.events.off("routeChangeError", handleStop);
+    };
+  }, [router]);
 
   return (
     <div

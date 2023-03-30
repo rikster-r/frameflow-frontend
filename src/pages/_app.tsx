@@ -3,10 +3,16 @@ import "../styles/globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createContext, useEffect, useState } from "react";
+import LoadingBar from "react-top-loading-bar";
 
 type ThemeContextType = {
   isDark: boolean;
   setIsDark: (isDark: boolean) => void;
+};
+
+type PageLoadContextType = {
+  pageLoadProgress: number;
+  setPageLoadProgress: (progress: number) => void;
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
@@ -15,8 +21,15 @@ export const ThemeContext = createContext<ThemeContextType>({
   setIsDark: () => {},
 });
 
+export const PageLoadContext = createContext<PageLoadContextType>({
+  pageLoadProgress: 0,
+  //eslint-disable-next-line
+  setPageLoadProgress: () => {},
+});
+
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [isDark, setIsDark] = useState(false);
+  const [pageLoadProgress, setPageLoadProgress] = useState(0);
 
   useEffect(() => {
     const definedTheme = localStorage.getItem("theme");
@@ -39,12 +52,25 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <ThemeContext.Provider value={{ isDark, setIsDark }}>
-      <Component {...pageProps} />
-      <ToastContainer
-        position="top-center"
-        hideProgressBar={true}
-        autoClose={2500}
-      />
+      <PageLoadContext.Provider
+        value={{ pageLoadProgress, setPageLoadProgress }}
+      >
+        <Component {...pageProps} />
+        <ToastContainer
+          position="top-center"
+          hideProgressBar={true}
+          autoClose={2500}
+        />
+        <LoadingBar
+          className="rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500"
+          height={4}
+          progress={pageLoadProgress}
+          loaderSpeed={500}
+          waitingTime={400}
+          shadow={false}
+          onLoaderFinished={() => setPageLoadProgress(0)}
+        />
+      </PageLoadContext.Provider>
     </ThemeContext.Provider>
   );
 };
