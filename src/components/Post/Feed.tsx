@@ -59,7 +59,7 @@ const Feed = () => {
       next={() => setSize(size + 1)}
       hasMore={hasMore}
       loader={
-        <div className="inline-flex">
+        <div className="inline-flex justify-center py-6">
           <Loader />
         </div>
       }
