@@ -5,22 +5,9 @@
 @tailwind utilities;
 
 @layer base {
-  /* Firefox */
-  html.dark {
-    scrollbar-color: #404040 #262626;
-  }
-
   /* Chrome, Safari */
-  html.dark::-webkit-scrollbar {
-    background: #262626;
-  }
-
-  html.dark::-webkit-scrollbar-track {
-    background: #262626;
-  }
-
-  html.dark::-webkit-scrollbar-thumb {
-    background-color: #404040;
+  html.dark {
+    color-scheme: dark;
   }
 }
 
